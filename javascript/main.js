@@ -89,9 +89,7 @@ var Main = {
     Emu: false,
     seriesC: false,
     seriesE: false,
-	seriesD: false,
-    Tsnake: false,
-    Supe_ext: false,
+    seriesD: false,
     FirstStart: true,
     Update_Page: false,
     SetZoom: false,
@@ -105,7 +103,7 @@ var Main = {
     ver: "2014"
 };
 
-Main.onLoad = function () {
+Main.onLoad = function() {
     try {
         this["Network"] = getId("pluginNetwork");
         this["MAC"] = this["Network"].GetMAC();
@@ -121,13 +119,13 @@ Main.onLoad = function () {
             if (this["hardware"]["indexOf"]("C") > 1) {
                 Main.seriesC = true;
             } else {
-				if (this["hardware"]["indexOf"]("D") > 1) {
-					Main.seriesD = true;
-				} else {
-					if (this["hardware"]["indexOf"]("E") > 1 || (this["hardware"]["indexOf"]("C") < 0 && this["hardware"]["indexOf"]("D") < 0)) {
-						Main.seriesE = true;
-					}
-				}
+                if (this["hardware"]["indexOf"]("D") > 1) {
+                    Main.seriesD = true;
+                } else {
+                    if (this["hardware"]["indexOf"]("E") > 1 || (this["hardware"]["indexOf"]("C") < 0 && this["hardware"]["indexOf"]("D") < 0)) {
+                        Main.seriesE = true;
+                    }
+                }
             }
         } if (API.init() && Player.init()) {
             window.onShow = Main.onShowEventTVKey;
@@ -135,93 +133,42 @@ Main.onLoad = function () {
             Main.init_id_url = Math.round((Math.random() * 2.99) + 0.51) - 1;
             Display.status("Загрузка!", 14000);
             Display.loadingshow();
-			var src;
-			if(Main.seriesC || Main.seriesD) {
-			src = '$MANAGER_WIDGET/Common/IME/ime2.js';
-			} else {
-			src = '$MANAGER_WIDGET/Common/IME_XT9/ime.js';
-			}
-			var script = document.createElement('script');
-			script.src = src;
-			document.documentElement.children[0].appendChild(script);
-            Main.url_arr = ["javascript/URLtoXML.js", "javascript/URLtoXML.js", "javascript/URLtoXML.js"];
-            setTimeout("Main.LoadExtScript('URLtoXML',Main.url_arr);", 200);
+            var src;
+            if (Main.seriesC || Main.seriesD) {
+                src = '$MANAGER_WIDGET/Common/IME/ime2.js';
+            } else {
+                src = '$MANAGER_WIDGET/Common/IME_XT9/ime.js';
+            }
+            var script = document.createElement('script');
+            script.src = src;
+            document.documentElement.children[0].appendChild(script);
+            setTimeout(Main.Init(), 200);
         }
     } catch (b) {}
 };
-//script - имя скрипта, src - ссылки в array
-Main.LoadExtScript = function (script, src) {
-    var name = script;
-    script = document.createElement("script");
-    script.language = "javascript";
-    script.type = "text/javascript";
-    if (Main.init_ext_js_step == 4 || Main.init_ext_js_step == 9) {
-        Main.init_id_url = (Main.init_id_url <= 1) ? Main.init_id_url + 1 : 0;
-        script.src = src[Main.init_id_url];
+
+Main.Init = function() {
+    Main.url_arr = [];
+    if (API.star_url["indexOf"]("fav.dat") > 0) {
+        Main.FAV = true;
+        Main.opencommonFile(API.star_url);
     } else {
-        script.src = src[Main.init_id_url];
-    }
-    getTN("head")[0]["appendChild"](script);
-    if (name == "URLtoXML") {
-        setTimeout("Main.InitTsnake()", 500);
-    } else {
-        setTimeout("Main.InitExtScript()", 500);
-    }
-};
-Main.InitTsnake = function () {
-    if (typeof StartParseTsnake != "undefined") {
-        Main.Tsnake = true;
-        alert("############ InitTsnake! ############");
-    } else {
-        if (Main.init_ext_js_step == 4 || Main.init_ext_js_step == 9) {
-            Main.LoadExtScript("URLtoXML", Main.url_arr);
-        } else {
-            if (Main.init_ext_js_step < 14) {
-                setTimeout("Main.InitTsnake();", 500);
-            }
-        }
-    } if (Main.Tsnake || Main.init_ext_js_step == 14) {
-        Main.init_ext_js_step = -1;
-        Main.url_arr = ["javascript/Super_ext_2_2.js", "javascript/Super_ext_2_2.js", "javascript/Super_ext_2_2.js"];
-        Main.init_id_url = Math.round((Math.random() * 2.99) + 0.51) - 1;
-        setTimeout("Main.LoadExtScript('Super_ext',Main.url_arr);", 20);
-    }
-    Main.init_ext_js_step++
-};
-Main.InitExtScript = function () {
-    if (typeof Super_Start != "undefined") {
-        Super_Start();
-    }
-    if (Main.Supe_ext || Main.init_ext_js_step == 14) {
-        Main.url_arr = [];
-        if (API.star_url["indexOf"]("fav.dat") > 0) {
-            Main.FAV = true;
-            Main.opencommonFile(API.star_url);
-        } else {
-            if (API.star_url["indexOf"]("OpenFav") == 0) {
-                if (API.fav_start_channels["length"] > 1) {
-                    Main.ReadPlArr("OpenFav", API.fav_start_channels);
-                } else {
-                    Main.FAV = true;
-                    Main.opencommonFile(Main.fav_url);
-                }
+        if (API.star_url["indexOf"]("OpenFav") == 0) {
+            if (API.fav_start_channels["length"] > 1) {
+                Main.ReadPlArr("OpenFav", API.fav_start_channels);
             } else {
-                API.XML_URL = API.star_url;
-                API.Request(API.star_url);
+                Main.FAV = true;
+                Main.opencommonFile(Main.fav_url);
             }
-        }
-        setTimeout("setGen()", 15000)
-    } else {
-        if (Main.init_ext_js_step == 4 || Main.init_ext_js_step == 9) {
-            Main.LoadExtScript("Super_ext", Main.url_arr);
         } else {
-            setTimeout("Main.InitExtScript()", 500);
+            API.XML_URL = API.star_url;
+            API.Request(API.star_url);
         }
     }
-    Main.init_ext_js_step++;
+    setTimeout("setGen()", 15000)
 };
 //key приходит кнопка
-SetVolume = function (key) {
+SetVolume = function(key) {
     if (Main.audio_output_device == 3 || Main.hardware_type == 2) {
         Display.status("Недоступно!");
     } else {
@@ -236,7 +183,7 @@ SetVolume = function (key) {
         Display.status("<b style='color:#00ccff;'>ГРОМКОСТЬ</b>  - " + strVolume + " - <b style='color:yellow;'>" + symbol + "</b>");
     }
 };
-Main.onShowEventTVKey = function () {
+Main.onShowEventTVKey = function() {
     pluginAPI.setOffScreenSaver();
     pluginAPI.setOffIdleEvent();
     pluginAPI.SetBannerState(1);
@@ -266,17 +213,17 @@ Main.onShowEventTVKey = function () {
     pluginAPI.registKey(78);
     pluginAPI.registKey(1249);
 };
-curWidget.onWidgetEvent = function () {
+curWidget.onWidgetEvent = function() {
     Main.onShowEventTVKey();
 };
-Main.registVOLTVKey = function () {
+Main.registVOLTVKey = function() {
     pluginAPI.registKey(tvKey.KEY_VOL_UP);
     pluginAPI.registKey(tvKey.KEY_VOL_DOWN);
     pluginAPI.registKey(tvKey.KEY_PANEL_VOL_UP);
     pluginAPI.registKey(tvKey.KEY_PANEL_VOL_DOWN);
     pluginAPI.registKey(tvKey.KEY_MUTE);
 };
-Main.ResetSelectedPosition = function () {
+Main.ResetSelectedPosition = function() {
     this["selected_channel"] = 0;
     this["selected_page"] = 0;
     this["chan_array_index"] = 0;
@@ -284,51 +231,46 @@ Main.ResetSelectedPosition = function () {
         this["prev_ch_array"] = [];
     }
 };
-Main.SaveSelectedPosition = function () {
+Main.SaveSelectedPosition = function() {
     this["play_selected_channel"] = this["selected_channel"];
     this["play_selected_page"] = this["selected_page"];
     this["play_chan_array_index"] = this["chan_array_index"];
 };
-Main.SetSelectedPosition = function () {
+Main.SetSelectedPosition = function() {
     this["selected_channel"] = this["play_selected_channel"];
     this["selected_page"] = this["play_selected_page"];
     this["chan_array_index"] = this["play_chan_array_index"];
 };
-Main.SetFavSelectedPosition = function () {
+Main.SetFavSelectedPosition = function() {
     Main.fav_num = Main.temp_fav_num;
     Main.fav_name = Main.temp_fav_name;
     Main.fav_url = Main.temp_fav_url;
 };
-Main.showCategorySelector = function () {
+Main.showCategorySelector = function() {
     getIdn("rightHalf");
     KeyHandler.setFocus(4);
     Selectbox.setBox("КАТЕГОРИИ", API.categories);
     getId("selectbox")["style"]["top"] = "60px";
     getId("selectbox")["style"]["left"] = "550px";
 };
-Main.showFavSelector = function () {
+Main.showFavSelector = function() {
     getIdn("rightHalf");
     KeyHandler.setFocus(4);
     Selectbox.setBox("Выбор избранного", API.favorites);
     getId("selectbox")["style"]["top"] = "60px";
     getId("selectbox")["style"]["left"] = "550px";
 };
-Main.showSiseSelector = function () {
+Main.showSiseSelector = function() {
     KeyHandler.setFocus(4);
     Selectbox.setBox("Выбор качества", Main.url_arr);
     getId("selectbox")["style"]["top"] = "120px";
     getId("selectbox")["style"]["left"] = "330px";
 };
-Main.Menu = function () {
+Main.Menu = function() {
     if (Main.FirstStart) {
-        if (!Main.Supe_ext && this["init_ext_js_step"] == 15) {
-            setTimeout("Display.status('Нет связи с внешним сервером!',8000)", 1000);
-        } else {
-            if ((API.Timemode == 0 || API.Timemode == 1) && this["init_ext_js_step"] < 16) {
-                setTimeout("Display.status('Используется автосинхронизация времени!')", 1000);
-            }
+        if ((API.Timemode == 0 || API.Timemode == 1)) {
+            setTimeout("Display.status('Используется автосинхронизация времени!')", 1000);
         }
-        this["init_ext_js_step"] = 16
     }
     setTimeout("Main.FirstStart=false;", 3000);
     clearTimeout(this["load_timer"]);
@@ -368,11 +310,8 @@ Main.Menu = function () {
     Main.updatePage();
     getIdb("channelList");
     getIdb("main");
-    if (!this["RED"] && Main.Supe_ext && !Main.Emu) {
-        Super_serv_text();
-    }
 };
-Main.UpdateHelpBar = function () {
+Main.UpdateHelpBar = function() {
     getIdn("0_help");
     getIdn("1_help");
     getIdb("2_help");
@@ -496,7 +435,7 @@ Main.UpdateHelpBar = function () {
     widgetAPI.putInnerHTML(getId("version"), title)
 };
 //el - елемент, src - путь, flag - флаг
-LogoStyle = function (el, src, flag) {
+LogoStyle = function(el, src, flag) {
     var left, width;
     if (flag == 1 && (API.Forma == 1 || API.Forma == 3)) {
         left = "67px";
@@ -529,7 +468,7 @@ LogoStyle = function (el, src, flag) {
     getId(el)["style"]["left"] = left;
     getId(el)["style"]["width"] = width;
 };
-Main.updatePage = function () {
+Main.updatePage = function() {
     try {
         clearTimeout(this["load_timer"]);
         this["Update_Page"] = false;
@@ -579,7 +518,7 @@ Main.updatePage = function () {
         }
     } catch (f) {}
 };
-getLogo1 = function (url, src) {
+getLogo1 = function(url, src) {
     var path = "logos/";
     if (src.indexOf(":") >= 0) {
         if (API.Forma == 0 || API.Forma == 1) {
@@ -591,7 +530,7 @@ getLogo1 = function (url, src) {
     src = path + src;
     return src;
 };
-getLogo2 = function (b, a, d) {
+getLogo2 = function(b, a, d) {
     b = lrdPr(b);
     var src = "";
     if (API.XML_URL["indexOf"]("help") > 0) {
@@ -617,16 +556,16 @@ getLogo2 = function (b, a, d) {
     }
     return src;
 };
-Main.UpdateChannelBar = function () {
+Main.UpdateChannelBar = function() {
     getId("number" + this["pre_selected_channel"])["style"]["backgroundImage"] = "";
-	getId("chan" + this["pre_selected_channel"])["style"]["backgroundImage"] = "";
+    getId("chan" + this["pre_selected_channel"])["style"]["backgroundImage"] = "";
     getId("title" + this["pre_selected_channel"])["style"]["color"] = "#FFFFFF";
     getId("number" + this["selected_channel"])["style"]["backgroundImage"] = "url(img/number_bar.png)";
     getId("chan" + this["selected_channel"])["style"]["backgroundImage"] = "url(img/chan_bar.png)";
     getId("title" + this["selected_channel"])["style"]["color"] = "#ffff99";
     this["pre_selected_channel"] = this["selected_channel"];
 };
-Main.updateChannel = function () {
+Main.updateChannel = function() {
     clearTimeout(this["load_timer"]);
     if (KeyHandler.Focus == 0 || KeyHandler.Focus == 5 || KeyHandler.Focus == 6) {
         YaAbort();
@@ -642,7 +581,7 @@ Main.updateChannel = function () {
         Main.UpdateChannelInfo();
     }
 };
-Main.UpdateChannelInfo = function () {
+Main.UpdateChannelInfo = function() {
     Main.scrolling = 0;
     Main.ya_base_info = false;
     this["chan_array_index"] = 10 * this["selected_page"] + this["selected_channel"];
@@ -685,24 +624,24 @@ Main.UpdateChannelInfo = function () {
     }
     this["block_info"] = false;
 };
-GetYindex = function () {
+GetYindex = function() {
     var a = (Ach(3) != "" && Ach(3)["indexOf"]("/m.tv.yandex.") > 0) ? Ach(3) : (!isNaN(Ach(3)) && Ach(3) > 0 && Ach(3) < 2000) ? Ach(3) : (Main.ya_auto && Main.name != "") ? Ya_name_index_obj[Main.name["toLowerCase"]()["replace"](/\_/g, " ")] : "";
     if (a == undefined) {
         a = "";
     }
     return a;
 };
-Main.UpdatePlayerStatusbar = function () {
+Main.UpdatePlayerStatusbar = function() {
     widgetAPI.putInnerHTML(getId("ch_number"), this["ch_num"]);
     widgetAPI.putInnerHTML(getId("ch_name"), Main.name);
     var src = (Main.logo != "") ? getLogo1(Main.pl_url, Main.logo) : getLogo2(Main.name, Ach(3), Main.pl_url);
     LogoStyle("ch_img", src, 0);
 };
-Main.LoadTimer = function (b, a) {
+Main.LoadTimer = function(b, a) {
     clearTimeout(this["load_timer"]);
     this["load_timer"] = setTimeout(b, a);
 };
-Main.showinfoList = function (b) {
+Main.showinfoList = function(b) {
     if (KeyHandler.Focus == 0 || KeyHandler.Focus == 6) {
         getIdn("infoList");
         getIdn("ya_date");
@@ -758,7 +697,7 @@ Main.showinfoList = function (b) {
         }
     }
 };
-Main.PlayPrevChannel = function () {
+Main.PlayPrevChannel = function() {
     var a = this["prev_ch_array"]["length"] - 1;
     if (a > 0) {
         var b = this["prev_ch_array"][a - 1];
@@ -773,16 +712,16 @@ Main.PlayPrevChannel = function () {
         Display.status("Стартовый канал");
     }
 };
-Main.SavePrevChannel = function () {
+Main.SavePrevChannel = function() {
     if (this["play_prev"]) {
         var a = [this["selected_channel"], this["selected_page"], this["chan_array_index"]];
         this["prev_ch_array"]["push"](a);
     }
 };
-Main.PlayPrevPlaylist = function () {
+Main.PlayPrevPlaylist = function() {
     if (KeyHandler.bl && this["prev_pl_array"]["length"] > this["nuber_p"]) {
         if (this["url"] != "" && (API.next_page_url == "" || API.prev_page_url == "")) {
-            this["nuber_p"]++;
+            this["nuber_p"] ++;
         }
         for (var f = 0; f < this["nuber_p"] - 1; f++) {
             this["prev_pl_array"]["pop"]();
@@ -843,7 +782,7 @@ Main.PlayPrevPlaylist = function () {
         }
     }
 };
-Main.SavePrevPlaylist = function () {
+Main.SavePrevPlaylist = function() {
     if (this["playlist_prev"]) {
         var c = [];
         var b = [];
@@ -858,21 +797,21 @@ Main.SavePrevPlaylist = function () {
         this["playlist_prev"] = false;
     }
 };
-Main.selectNextChannel = function () {
+Main.selectNextChannel = function() {
     if (Main.Update_Page) {
-        this["selected_channel"]++;
+        this["selected_channel"] ++;
         if (this["selected_channel"] >= 10 || (this["selected_page"] == API.chan_pages - 1 && this["selected_channel"] == API.last_page_channels_counter)) {
             this["selected_channel"] = 0;
-            this["selected_page"]++;
+            this["selected_page"] ++;
             Main.updatePage();
         } else {
             Main.updateChannel();
         }
     }
 };
-Main.selectPrevChannel = function () {
+Main.selectPrevChannel = function() {
     if (Main.Update_Page) {
-        this["selected_channel"]--;
+        this["selected_channel"] --;
         if (this["selected_page"] == 0 && this["selected_channel"] < 0) {
             this["selected_channel"] = API.last_page_channels_counter - 1;
             this["selected_page"] = API.chan_pages - 1;
@@ -880,7 +819,7 @@ Main.selectPrevChannel = function () {
         } else {
             if (this["selected_channel"] < 0) {
                 this["selected_channel"] = 9;
-                this["selected_page"]--;
+                this["selected_page"] --;
                 Main.updatePage();
             } else {
                 Main.updateChannel();
@@ -901,12 +840,12 @@ function ListNextPage() {
         Display.status("недоступно!");
     }
 }
-Main.selectNextPage = function () {
+Main.selectNextPage = function() {
     if (API.next_page_url != "" && this["selected_page"] == API.chan_pages - 1) {
         ListNextPage();
     } else {
         if (Main.Update_Page) {
-            this["selected_page"]++;
+            this["selected_page"] ++;
             Main.updatePage();
         }
     }
@@ -927,12 +866,12 @@ function ListPrevPage() {
         Display.status("недоступно!");
     }
 }
-Main.selectPrevPage = function () {
+Main.selectPrevPage = function() {
     if (API.prev_page_url != "" && this["selected_page"] == 0) {
         ListPrevPage();
     } else {
         if (Main.Update_Page) {
-            this["selected_page"]--;
+            this["selected_page"] --;
             Main.updatePage();
         }
     }
@@ -947,7 +886,7 @@ function Super_Block() {
         API.playlist_name = "Доступ заблокирован!";
     }
 }
-Main.PlayChannel = function () {
+Main.PlayChannel = function() {
     try {
         clearTimeout(this["load_timer"]);
         Super_Block();
@@ -993,7 +932,7 @@ Main.PlayChannel = function () {
         }
     } catch (a) {}
 };
-Main.playlist = function () {
+Main.playlist = function() {
     try {
         this["pl_url"] = decLongUrl(this["pl_url"]);
         this["pre_pl_url"] = API.XML_URL;
@@ -1093,18 +1032,18 @@ Main.playlist = function () {
         }
     } catch (d) {}
 };
-StartSlideShow = function () {
+StartSlideShow = function() {
     Main.block_info = true;
     Main.selectNextChannel();
     setTimeout("Main.PlayChannel()", 20);
 };
-StopSlideShow = function () {
+StopSlideShow = function() {
     if (Main.SlideShowInterval !== null) {
         clearInterval(Main.SlideShowInterval);
         Main.SlideShowInterval = null;
     }
 };
-Main.PlayNoFlashStream = function () {
+Main.PlayNoFlashStream = function() {
     Foto = /\.(gif|jpg|jpeg|bmp|tiff|raw )$/i;
     if (Foto.exec(this["url"]) != null) {
         Main.Foto = true;
@@ -1160,7 +1099,7 @@ Main.PlayNoFlashStream = function () {
         setTimeout("Main.Menu();", 2000);
     }
 };
-Main.PlayFlashStream = function () {
+Main.PlayFlashStream = function() {
     Player.next = false;
     Player.state = Player.PLAYING_LIVE;
     Main.saveHistory("live_history.dat");
@@ -1175,17 +1114,17 @@ Main.PlayFlashStream = function () {
     widgetAPI.putInnerHTML(getId("flashplayer"), b);
     setTimeout("Main.setPlayer();", 500);
 };
-Main.setPlayer = function () {
+Main.setPlayer = function() {
     Main.player = window.rmtpplayerHD;
 };
-Main.stopFPlayer = function () {
+Main.stopFPlayer = function() {
     delete Main.player;
     getIdn("flashplayer");
     Display.hidestatus();
     widgetAPI.putInnerHTML(getId("flashplayer"), "");
     Player.state = Player.STOPPED;
 };
-Main.readBase = function (d, e) {
+Main.readBase = function(d, e) {
     var c = new FileSystem();
     var b = c.openFile("base/" + e, "r");
     if (b) {
@@ -1196,9 +1135,9 @@ Main.readBase = function (d, e) {
             }
             d.push(a);
         }
-	}
+    }
 };
-Main.readFile = function (d, e) {
+Main.readFile = function(d, e) {
     var c = new FileSystem();
     var b = c.openCommonFile(curWidget.id + "/" + e, "r");
     if (!b) {
@@ -1215,7 +1154,7 @@ Main.readFile = function (d, e) {
         c.closeCommonFile(b);
     }
 };
-Main.writeFile = function (d, e) {
+Main.writeFile = function(d, e) {
     var c = new FileSystem();
     if (!c.isValidCommonPath(curWidget.id)) {
         c.createCommonDir(curWidget.id);
@@ -1228,7 +1167,7 @@ Main.writeFile = function (d, e) {
         c.closeCommonFile(b);
     }
 };
-Main.saveHistory = function (d) {
+Main.saveHistory = function(d) {
     var c = [dSp(dI(Main.name) + "|" + dI(this["url"]) + "|" + dI(this["logo"]) + "|" + dI(Ach(3)) + "||" + dI(this["pl_url"]) + "|" + this["ssize"] + "|" + this["a_num"] + "|" + this["buffer"] + "|" + this["ibuffer"] + "|" + this["timeshift"] + "|" + this["region"] + "|" + dI(this["parser"]) + "|" + dI(this["search_on"]))];
     Main.readFile(c, d);
     if (c.length > 10) {
@@ -1243,18 +1182,18 @@ Main.saveHistory = function (d) {
     }
     Main.writeFile(c, d);
 };
-Main.delHistory = function (a) {
+Main.delHistory = function(a) {
     var b = [];
     Main.writeFile(b, a);
     Main.PlayPrevPlaylist();
 };
-Main.saveFavorites = function () {
+Main.saveFavorites = function() {
     var a = [dSp(dI(Main.name) + "|" + dI(this["url"]) + "|" + dI(this["logo"]) + "|" + dI(Ach(3)) + "||" + dI(this["pl_url"]) + "|" + this["ssize"] + "|" + this["a_num"] + "|" + this["buffer"] + "|" + this["ibuffer"] + "|" + this["timeshift"] + "|" + this["region"] + "|" + dI(this["parser"]) + "|" + dI(this["search_on"]))];
     Main.readFile(a, Main.fav_url);
     Main.writeFile(a, Main.fav_url);
     Display.status('<b style="color:green">Добавленно в избранное №' + Main.fav_num + ' - "' + Main.fav_name + '"</b>', 1500);
 };
-Main.delFavorites = function () {
+Main.delFavorites = function() {
     var a = this["ch_num"] - 1;
     var b = [];
     Main.readFile(b, Main.fav_url);
@@ -1276,7 +1215,7 @@ Main.delFavorites = function () {
         Main.opencommonFile(Main.fav_url);
     }
 };
-Main.moveFavorites = function (c) {
+Main.moveFavorites = function(c) {
     var a = this["ch_num"] - 1;
     var d = [];
     Main.readFile(d, Main.fav_url);
@@ -1295,7 +1234,7 @@ Main.moveFavorites = function (c) {
         }
     }
 };
-Main.opencommonFile = function (c) {
+Main.opencommonFile = function(c) {
     var f = [];
     Main.readFile(f, c);
     if (f.length == 0) {
@@ -1339,7 +1278,7 @@ Main.opencommonFile = function (c) {
         Main.ReadPlArr(c, d);
     }
 };
-Main.ReadPlArr = function (b, a, d, c) {
+Main.ReadPlArr = function(b, a, d, c) {
     Main.SavePrevPlaylist();
     API.ResetAll();
     API.channels = a;
@@ -1435,7 +1374,7 @@ function ReadUsbDirN() {
     Video = /\.(avi|asf|3gp|3g2|3gp2|3gpp|flv|mp4|mp4v|m4v|m2v|m2ts|m2t|mp2v|mov|mpg|mpe|mpeg|mkv|swf|mts|wm|wmv|vob|vro|f4v|ts|tts)$/i;
     Audio = /\.(mp3|mp4a|dts|ac3|wav|wma|flac)$/i;
     Foto = /\.(png|gif|jpg|jpeg|bmp|ico|tiff|mpo|raw)$/i;
-    var q = function (H, F, E, D, G, I) {
+    var q = function(H, F, E, D, G, I) {
         s++;
         i = [F, E, D, G, "", I, "", "", "", "", "", "", "", ""];
         H.push(i);
@@ -1535,7 +1474,7 @@ function ReSize(b) {
     var a = (b >= 1073741824) ? (b / 1073741824)["toFixed"](2) + " ГБ" : (b >= 1048576) ? (b / 1048576)["toFixed"](2) + " МБ" : (b >= 1024) ? (b / 1024)["toFixed"](2) + " КБ" : (b >= 0) ? b + " Байт" : (b < 0) ? (2 + b / 1073741824)["toFixed"](2) + " ГБ" : "";
     return a;
 }
-Main.onUnload = function () {
+Main.onUnload = function() {
     if (Main.PlayerMode == "0") {
         Main.stopFPlayer();
     }
@@ -1568,7 +1507,7 @@ var T = {
 function SyncInetTime() {
     var a = null;
     a = new XMLHttpRequest();
-    a.onreadystatechange = function () {
+    a.onreadystatechange = function() {
         if (a.readyState == 4) {
             var b = Math.round(Number(a.responseText));
             if (!isNaN(b) && b > 0) {
@@ -1679,7 +1618,7 @@ function TimeInfo(e, d) {
         getId("timeInfo")["innerHTML"] = a;
     }
 }
-msecToStr = function (a, b) {
+msecToStr = function(a, b) {
     a = Math.floor(a / 1000);
     m = Math.floor(a / 60);
     a = a % 60;
@@ -1739,7 +1678,7 @@ var API = {
     prev_page_text: "",
     fn: ""
 };
-API.init = function () {
+API.init = function() {
     try {
         Main.MAC = Main.Network.GetMAC();
         API.fn = parseInt(Main.MAC, 16) + "254s.dat";
@@ -1814,7 +1753,7 @@ API.init = function () {
     }
     return true;
 };
-GetYaBaseInfo = function () {
+GetYaBaseInfo = function() {
     tempArr = [];
     var c = "";
     Main.readBase(tempArr, API.CODE + "_ya_name_index_url.dat");
@@ -1834,7 +1773,7 @@ GetYaBaseInfo = function () {
     c = "В базе для " + e + API.CODE + "</font> региона " + e + tempArr.length + " </font> " + b + " : " + c;
     Main.showinfoList(c);
 };
-API.loadComplete = function () {
+API.loadComplete = function() {
     if (API.channels["length"] == 0) {
         Display.status('<b style="color:yellow">ОШИБКА В СТРУКТУРЕ ПЛЕЙЛИСТА!</b>');
         if (Main.prev_pl_array["length"] == 0 && API.XML_URL == "start.xml") {
@@ -1847,73 +1786,68 @@ API.loadComplete = function () {
         Main.Menu();
     }
 };
-API.Request = function (b) {
+API.Request = function(b) {
     try {
         Main.guide = false;
-        if (API.AsReqMode && Main.Tsnake && Main.parser == "tsnakeman") {
-            KeyHandler.setFocus(1);
-            StartParseTsnake(b);
-        } else {
-            if (API.AsReqMode && b.indexOf("://") > 0) {
-                var a = "?";
-                if (b.indexOf("?") > 1) {
-                    if ((b.length - 1) == b.indexOf("?")) {
-                        a = "";
-                    } else {
-                        a = "&";
-                    }
-                }
-                if (API.search_string != "" && Main.search) {
-                    b += a + "search=" + API.search_string;
-                    a = "&";
-                }
-                if (dPr(API.Surl) != "" && dPr(API.Login) != "" && dPr(API.Pasword) != "" && b.indexOf(API.Surl) >= 0) {
-                    b += a + API.Login + "&" + API.Pasword;
-                    a = "&";
-                }
-                if (API.Mac == "1") {
-                    b += a + "box_mac=" + Main.MAC;
-                }
-                b = Super_Send(b);
-                alert("xml_url 1 =" + b);
-            }
-            if (API.XHRObj != null) {
-                API.XHRObj["destroy"]();
-                API.XHRObj = null;
-            }
-            API.XHRObj = new XMLHttpRequest();
-            if (API.AsReqMode) {
-                KeyHandler.setFocus(1);
-                API.stReq_timeout = setTimeout("API.stopRequest()", API.stReq_time);
-                API.XHRObj["onreadystatechange"] = function () {
-                    if (API.XHRObj["readyState"] == 4) {
-                        API.recieveData(b);
-                    }
-                };
-                if (Main.seriesE && API.XHRObj["overrideMimeType"]) {
-                    API.XHRObj["overrideMimeType"]("text/xml");
-                }
-            }
-            API.XHRObj["open"]("GET", b, API.AsReqMode);
-            if (!API.AsReqMode || API.Header == "1") {
-                API.XHRObj["setRequestHeader"]("Accept-Encoding", "identity");
-                API.XHRObj["setRequestHeader"]("Accept-Language", "en-us,en;q=0.5");
-                API.XHRObj["setRequestHeader"]("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-                API.XHRObj["setRequestHeader"]("User-Agent", "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.6) Gecko/20100627 Firefox/3.6.6");
-                API.XHRObj["setRequestHeader"]("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
-                API.XHRObj["setRequestHeader"]("Connection", "close");
-            }
-            API.XHRObj["send"](null);
-            if (!API.AsReqMode) {
-                if ((API.XHRObj["status"] == 302 || API.XHRObj["status"] == 303) && API.XHRObj["getResponseHeader"]("Location") != null) {
-                    b = API.XHRObj["getResponseHeader"]("Location");
-                    return API.Request(b);
+        if (API.AsReqMode && b.indexOf("://") > 0) {
+            var a = "?";
+            if (b.indexOf("?") > 1) {
+                if ((b.length - 1) == b.indexOf("?")) {
+                    a = "";
                 } else {
-                    if (API.XHRObj["readyState"] == 4 && API.XHRObj["status"] == 200) {
-                        return API.XHRObj["responseText"];
-                    } else {
-                        return "";
-                    }
+                    a = "&";
+                }
+            }
+            if (API.search_string != "" && Main.search) {
+                b += a + "search=" + API.search_string;
+                a = "&";
+            }
+            if (dPr(API.Surl) != "" && dPr(API.Login) != "" && dPr(API.Pasword) != "" && b.indexOf(API.Surl) >= 0) {
+                b += a + API.Login + "&" + API.Pasword;
+                a = "&";
+            }
+            if (API.Mac == "1") {
+                b += a + "box_mac=" + Main.MAC;
+            }
+            b = Super_Send(b);
+            alert("xml_url 1 =" + b);
+        }
+        if (API.XHRObj != null) {
+            API.XHRObj["destroy"]();
+            API.XHRObj = null;
+        }
+        API.XHRObj = new XMLHttpRequest();
+        if (API.AsReqMode) {
+            KeyHandler.setFocus(1);
+            API.stReq_timeout = setTimeout("API.stopRequest()", API.stReq_time);
+            API.XHRObj["onreadystatechange"] = function() {
+                if (API.XHRObj["readyState"] == 4) {
+                    API.recieveData(b);
+                }
+            };
+            if (Main.seriesE && API.XHRObj["overrideMimeType"]) {
+                API.XHRObj["overrideMimeType"]("text/xml");
+            }
+        }
+        API.XHRObj["open"]("GET", b, API.AsReqMode);
+        if (!API.AsReqMode || API.Header == "1") {
+            API.XHRObj["setRequestHeader"]("Accept-Encoding", "identity");
+            API.XHRObj["setRequestHeader"]("Accept-Language", "en-us,en;q=0.5");
+            API.XHRObj["setRequestHeader"]("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+            API.XHRObj["setRequestHeader"]("User-Agent", "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.6) Gecko/20100627 Firefox/3.6.6");
+            API.XHRObj["setRequestHeader"]("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
+            API.XHRObj["setRequestHeader"]("Connection", "close");
+        }
+        API.XHRObj["send"](null);
+        if (!API.AsReqMode) {
+            if ((API.XHRObj["status"] == 302 || API.XHRObj["status"] == 303) && API.XHRObj["getResponseHeader"]("Location") != null) {
+                b = API.XHRObj["getResponseHeader"]("Location");
+                return API.Request(b);
+            } else {
+                if (API.XHRObj["readyState"] == 4 && API.XHRObj["status"] == 200) {
+                    return API.XHRObj["responseText"];
+                } else {
+                    return "";
                 }
             }
         }
@@ -1924,7 +1858,7 @@ function AGen() {
     if (!Main.FirstStart && KeyHandler.Focus != 1 && !Player.jump && API.AsReqMode) {
         var a = null;
         a = new XMLHttpRequest();
-        a.onreadystatechange = function () {
+        a.onreadystatechange = function() {
             if (a.readyState == 4 && a.status == 200) {
                 API.Gen = true;
             }
@@ -1935,7 +1869,7 @@ function AGen() {
         setTimeout("if(API.Gen){if(API.GenT>=1000)API.GenT=API.GenT/2;API.Gen=false;}else if(API.GenT<512000)API.GenT=API.GenT*2; AGen();", parseInt(API.GenT));
     }
 }
-API.recieveData = function (a) {
+API.recieveData = function(a) {
     clearTimeout(API.stReq_timeout);
     if (API.XHRObj["status"] == 200) {
         if (a.toLowerCase()["indexOf"](".m3u") >= 0 && API.XHRObj["responseText"] != null && API.XHRObj["responseText"] != "") {
@@ -1962,7 +1896,7 @@ API.recieveData = function (a) {
         }
     }
 };
-API.stopRequest = function () {
+API.stopRequest = function() {
     clearTimeout(API.stReq_timeout);
     if (API.XHRObj != null) {
         API.XHRObj["abort"]();
@@ -1971,7 +1905,7 @@ API.stopRequest = function () {
         API.loadComplete();
     }
 };
-API.ResetAll = function () {
+API.ResetAll = function() {
     API.chan_counter = 0;
     API.channels = [];
     API.all_channels = [];
@@ -1991,8 +1925,8 @@ API.ResetAll = function () {
     }
     Main.DEL = false;
 };
-API.getChannel_list = function (y) {
-    var x = function (X, W, V) {
+API.getChannel_list = function(y) {
+    var x = function(X, W, V) {
         try {
             var U = X.getElementsByTagName(W)[0]["childNodes"][0]["nodeValue"];
             if (U == null) {
@@ -2007,7 +1941,7 @@ API.getChannel_list = function (y) {
             return "";
         }
     };
-    var w = function (X, W, U) {
+    var w = function(X, W, U) {
         try {
             var V = X.getElementsByTagName(W)[0]["getAttributeNode"](U)["nodeValue"];
             if (V == null) {
@@ -2192,7 +2126,7 @@ API.getChannel_list = function (y) {
     }
     API.loadComplete();
 };
-API.setCategory = function (c) {
+API.setCategory = function(c) {
     API.channels = [];
     Main.ResetSelectedPosition();
     for (var a = 0; a < API.all_channels["length"]; a++) {
@@ -2210,7 +2144,7 @@ API.setCategory = function (c) {
     }
     API.countPages();
 };
-API.countPages = function () {
+API.countPages = function() {
     if (API.channels["length"] > 0) {
         API.chan_pages = API.channels["length"];
         API.last_page_channels_counter = API.channels["length"] % 10;
@@ -2231,7 +2165,7 @@ var Selectbox = {
     pages: 0,
     last_page_counter: 0
 };
-Selectbox.setBox = function (c, b) {
+Selectbox.setBox = function(c, b) {
     try {
         if (this["title"] != c) {
             this["selected"] = 0;
@@ -2251,12 +2185,12 @@ Selectbox.setBox = function (c, b) {
         }
         this["pages"] = Math.round(b.length / 10);
         if (this["last_page_counter"] > 0 && this["last_page_counter"] < 5) {
-            this["pages"]++;
+            this["pages"] ++;
         }
         Selectbox.updateBox();
     } catch (a) {}
 };
-Selectbox.updateBox = function () {
+Selectbox.updateBox = function() {
     try {
         var f = 10;
         this["selected_page"] = (this["selected_page"] > this["pages"] - 1) ? 0 : (this["selected_page"] < 0) ? this["pages"] - 1 : this["selected_page"];
@@ -2288,35 +2222,35 @@ Selectbox.updateBox = function () {
         getIdb("selectbox");
     } catch (g) {}
 };
-Selectbox.selectNextItem = function () {
-    this["selected"]++;
+Selectbox.selectNextItem = function() {
+    this["selected"] ++;
     if (this["selected"] >= 10 || (this["selected_page"] == this["pages"] - 1 && this["selected"] == this["last_page_counter"])) {
         this["selected"] = 0;
-        this["selected_page"]++;
+        this["selected_page"] ++;
     }
     Selectbox.updateBox();
 };
-Selectbox.selectPrevItem = function () {
-    this["selected"]--;
+Selectbox.selectPrevItem = function() {
+    this["selected"] --;
     if (this["selected_page"] == 0 && this["selected_channel"] < 0) {
         this["selected"] = this["last_page_counter"] - 1;
         this["selected_page"] = this["pages"] - 1;
     }
     if (this["selected"] < 0) {
         this["selected"] = 10;
-        this["selected_page"]--;
+        this["selected_page"] --;
     }
     Selectbox.updateBox();
 };
-Selectbox.selectNextPage = function () {
-    this["selected_page"]++;
+Selectbox.selectNextPage = function() {
+    this["selected_page"] ++;
     Selectbox.updateBox();
 };
-Selectbox.selectPrevPage = function () {
-    this["selected_page"]--;
+Selectbox.selectPrevPage = function() {
+    this["selected_page"] --;
     Selectbox.updateBox();
 };
-Selectbox.SelectCategory = function () {
+Selectbox.SelectCategory = function() {
     var a = this["select_list"][10 * this["selected_page"] + this["selected"]][0];
     getIdn("selectbox");
     Main.SavePrevPlaylist();
@@ -2324,7 +2258,7 @@ Selectbox.SelectCategory = function () {
     getIdb("rightHalf");
     Main.Menu();
 };
-Selectbox.SelectFav = function () {
+Selectbox.SelectFav = function() {
     var a = this["select_list"][10 * this["selected_page"] + this["selected"]][0];
     Main.temp_fav_num = Main.fav_num;
     Main.fav_num = 1 + parseInt(a);
@@ -2346,7 +2280,7 @@ Selectbox.SelectFav = function () {
     getIdn("selectbox");
     getIdb("rightHalf");
 };
-Selectbox.SelectSize = function () {
+Selectbox.SelectSize = function() {
     this["url_selected"] = this["selected"];
     var a = this["select_list"][10 * this["selected_page"] + this["selected"]][0];
     a = decLongUrl(a);
@@ -2362,7 +2296,7 @@ var Display = {
     index: 1,
     run: false
 };
-Display.loadingshow = function () {
+Display.loadingshow = function() {
     if (!this["run"]) {
         getIdb("loading");
         Display.loadingshowTimer();
@@ -2370,18 +2304,18 @@ Display.loadingshow = function () {
         Display.loadingstep();
     }
 };
-Display.loadinghide = function () {
+Display.loadinghide = function() {
     this["run"] = false;
     clearTimeout(this["loadingshow_timer"]);
     getIdn("loading");
 };
-Display.loadingstep = function () {
+Display.loadingstep = function() {
     if (this["index"] < 10) {
         getId("imgAnim")["src"] = "img/loading/loading_0" + this["index"] + ".png";
     } else {
         getId("imgAnim")["src"] = "img/loading/loading_" + this["index"] + ".png";
     }
-    this["index"]++;
+    this["index"] ++;
     if (this["index"] > 10) {
         this["index"] = 1;
     }
@@ -2389,10 +2323,10 @@ Display.loadingstep = function () {
         setTimeout("Display.loadingstep();", 200);
     }
 };
-Display.loadingshowTimer = function () {
+Display.loadingshowTimer = function() {
     this["loadingshow_timer"] = setTimeout("Player.ReturnMenu();", 60000);
 };
-Display.showplayer = function () {
+Display.showplayer = function() {
     if (KeyHandler.Focus != 0) {
         if (Player.state == Player.PLAYING_VOD || Player.state == Player.PAUSA_VOD) {
             Main.ya_epg_info_arr = [];
@@ -2500,7 +2434,7 @@ Display.showplayer = function () {
         }
     }
 };
-Display.hideplayer = function () {
+Display.hideplayer = function() {
     getIdn("player");
     getId("statusbar")["style"]["top"] = "10px";
     if (Main.epg_info_step != 0) {
@@ -2508,10 +2442,10 @@ Display.hideplayer = function () {
         GetNextEpgInfo();
     }
 };
-Display.infobarTimer = function () {
+Display.infobarTimer = function() {
     this["infobar_timer"] = setTimeout("Display.hideplayer()", 8000);
 };
-Display.status = function (b, a) {
+Display.status = function(b, a) {
     getIdn("version");
     getIdb("statusbar");
     widgetAPI.putInnerHTML(getId("status"), b);
@@ -2524,20 +2458,20 @@ Display.status = function (b, a) {
         }
     }
 };
-Display.status1 = function (a) {
+Display.status1 = function(a) {
     getIdb("statusbar1");
     widgetAPI.putInnerHTML(getId("status1"), a);
     clearTimeout(this["status1_timer"]);
     Display.status1Timer();
 };
-Display.hidestatus = function () {
+Display.hidestatus = function() {
     getIdn("statusbar");
     getIdb("version");
 };
-Display.statusTimer = function (a) {
+Display.statusTimer = function(a) {
     this["status_timer"] = setTimeout("Display.hidestatus()", a);
 };
-Display.status1Timer = function () {
+Display.status1Timer = function() {
     this["status1_timer"] = setTimeout('getIdn("statusbar1")', 3000);
 };
 var KeyHandler = {
@@ -2578,48 +2512,48 @@ function SmartExit() {
         Player.ReturnMenu();
     }
 }
-KeyHandler.setFocus = function (a) {
+KeyHandler.setFocus = function(a) {
     KeyHandler.Focus = a;
     switch (a) {
-    case 0:
-        getId("MainMenu_Anchor")["focus"]();
-        if (!Main.seriesC) {
-            pluginAPI.registKey(tvKey.KEY_TOOLS);
-        }
-        break;
-    case 1:
-        getId("LoadingPlayer_Anchor")["focus"]();
-        break;
-    case 2:
-        getId("LivePlayer_Anchor")["focus"]();
-        if (!Main.seriesC) {
-            pluginAPI.unregistKey(tvKey.KEY_TOOLS);
-        }
-        break;
-    case 3:
-        getId("VODPlayer_Anchor")["focus"]();
-        if (!Main.seriesC) {
-            pluginAPI.unregistKey(tvKey.KEY_TOOLS);
-        }
-        break;
-    case 4:
-        getId("Selectbox_Anchor")["focus"]();
-        break;
-    case 5:
-        getId("RedFav_Anchor")["focus"]();
-        break;
-    case 6:
-        getId("Guide_Anchor")["focus"]();
-        break;
-    case 7:
-        getId("Setap_Anchor")["focus"]();
-        break;
-    default:
-        alert("Unhandled key");
-        break;
+        case 0:
+            getId("MainMenu_Anchor")["focus"]();
+            if (!Main.seriesC) {
+                pluginAPI.registKey(tvKey.KEY_TOOLS);
+            }
+            break;
+        case 1:
+            getId("LoadingPlayer_Anchor")["focus"]();
+            break;
+        case 2:
+            getId("LivePlayer_Anchor")["focus"]();
+            if (!Main.seriesC) {
+                pluginAPI.unregistKey(tvKey.KEY_TOOLS);
+            }
+            break;
+        case 3:
+            getId("VODPlayer_Anchor")["focus"]();
+            if (!Main.seriesC) {
+                pluginAPI.unregistKey(tvKey.KEY_TOOLS);
+            }
+            break;
+        case 4:
+            getId("Selectbox_Anchor")["focus"]();
+            break;
+        case 5:
+            getId("RedFav_Anchor")["focus"]();
+            break;
+        case 6:
+            getId("Guide_Anchor")["focus"]();
+            break;
+        case 7:
+            getId("Setap_Anchor")["focus"]();
+            break;
+        default:
+            alert("Unhandled key");
+            break;
     }
 };
-KeyHandler.KanalSelector = function () {
+KeyHandler.KanalSelector = function() {
     if (KeyHandler.NumberEntered > API.channels["length"]) {
         Display.status("ошибка ввода");
     } else {
@@ -2641,42 +2575,42 @@ KeyHandler.KanalSelector = function () {
     }
     KeyHandler.NumberEntered = "";
 };
-KeyHandler.Keys10 = function (b) {
+KeyHandler.Keys10 = function(b) {
     var a = "";
     switch (b) {
-    case tvKey.KEY_1:
-        a = "1";
-        break;
-    case tvKey.KEY_2:
-        a = "2";
-        break;
-    case tvKey.KEY_3:
-        a = "3";
-        break;
-    case tvKey.KEY_4:
-        a = "4";
-        break;
-    case tvKey.KEY_5:
-        a = "5";
-        break;
-    case tvKey.KEY_6:
-        a = "6";
-        break;
-    case tvKey.KEY_7:
-        a = "7";
-        break;
-    case tvKey.KEY_8:
-        a = "8";
-        break;
-    case tvKey.KEY_9:
-        a = "9";
-        break;
-    case tvKey.KEY_0:
-        a = "0";
-        break;
-    default:
-        alert("Unhandled key");
-        break;
+        case tvKey.KEY_1:
+            a = "1";
+            break;
+        case tvKey.KEY_2:
+            a = "2";
+            break;
+        case tvKey.KEY_3:
+            a = "3";
+            break;
+        case tvKey.KEY_4:
+            a = "4";
+            break;
+        case tvKey.KEY_5:
+            a = "5";
+            break;
+        case tvKey.KEY_6:
+            a = "6";
+            break;
+        case tvKey.KEY_7:
+            a = "7";
+            break;
+        case tvKey.KEY_8:
+            a = "8";
+            break;
+        case tvKey.KEY_9:
+            a = "9";
+            break;
+        case tvKey.KEY_0:
+            a = "0";
+            break;
+        default:
+            alert("Unhandled key");
+            break;
     }
     KeyHandler.NumberEntered = KeyHandler.NumberEntered + a;
     if (KeyHandler.NumberEntered != "") {
@@ -2690,1010 +2624,1005 @@ KeyHandler.Keys10 = function (b) {
         this["ChSelectorTimeout"] = setTimeout("KeyHandler.KanalSelector()", 2000);
     }
 };
-KeyHandler.RedFavKeyDown = function () {
+KeyHandler.RedFavKeyDown = function() {
     var a = event.keyCode;
     switch (a) {
-    case tvKey.KEY_EXIT:
-        SmartExit();
-        break;
-    case 106:
-    case tvKey.KEY_DOWN:
-        Main.selectNextChannel();
-        break;
-    case 105:
-    case tvKey.KEY_UP:
-        Main.selectPrevChannel();
-        break;
-    case tvKey.KEY_LEFT:
-        Main.selectPrevPage();
-        break;
-    case tvKey.KEY_RIGHT:
-        Main.selectNextPage();
-        break;
-    case tvKey.KEY_RED:
-        Main.delFavorites();
-        break;
-    case tvKey.KEY_GREEN:
-        Main.moveFavorites(1);
-        break;
-    case tvKey.KEY_YELLOW:
-        Main.moveFavorites(-1);
-        break;
-    case tvKey.KEY_BLUE:
-        if (API.favorites["length"] > 1) {
-            Main.showFavSelector()
-        }
-        break;
-    case tvKey.KEY_RETURN:
-        widgetAPI.blockNavigation(event);
-        Main.RED = false;
-        Main.Menu();
-        break;
-    case tvKey.KEY_STOP:
-        widgetAPI.blockNavigation(event);
-        if (Player.state != Player.STOPPED) {
-            Player.stopV()
-        }
-        setTimeout("getIdn('main')", 100);
-        Main.LoadTimer("ChannelSetupFormular()", 600);
-        break;
-    default:
-        alert("Unhandled key");
-        break;
+        case tvKey.KEY_EXIT:
+            SmartExit();
+            break;
+        case 106:
+        case tvKey.KEY_DOWN:
+            Main.selectNextChannel();
+            break;
+        case 105:
+        case tvKey.KEY_UP:
+            Main.selectPrevChannel();
+            break;
+        case tvKey.KEY_LEFT:
+            Main.selectPrevPage();
+            break;
+        case tvKey.KEY_RIGHT:
+            Main.selectNextPage();
+            break;
+        case tvKey.KEY_RED:
+            Main.delFavorites();
+            break;
+        case tvKey.KEY_GREEN:
+            Main.moveFavorites(1);
+            break;
+        case tvKey.KEY_YELLOW:
+            Main.moveFavorites(-1);
+            break;
+        case tvKey.KEY_BLUE:
+            if (API.favorites["length"] > 1) {
+                Main.showFavSelector()
+            }
+            break;
+        case tvKey.KEY_RETURN:
+            widgetAPI.blockNavigation(event);
+            Main.RED = false;
+            Main.Menu();
+            break;
+        case tvKey.KEY_STOP:
+            widgetAPI.blockNavigation(event);
+            if (Player.state != Player.STOPPED) {
+                Player.stopV()
+            }
+            setTimeout("getIdn('main')", 100);
+            Main.LoadTimer("ChannelSetupFormular()", 600);
+            break;
+        default:
+            alert("Unhandled key");
+            break;
     }
 };
-KeyHandler.GuideKeyDown = function () {
+KeyHandler.GuideKeyDown = function() {
     var a = event.keyCode;
     switch (a) {
-    case 256:
-    case 1057:
-    case tvKey.KEY_RETURN:
-    case tvKey.KEY_GUIDE:
-        widgetAPI.blockNavigation(event);
-        Main.PlayPrevPlaylist();
-        if (Player.state == Player.PLAYING_LIVE) {
-            this["guide_step"] = 1
-        }
-        break;
-    case tvKey.KEY_EXIT:
-        SmartExit();
-        break;
-    case 106:
-    case tvKey.KEY_DOWN:
-        Main.selectNextChannel();
-        break;
-    case 105:
-    case tvKey.KEY_UP:
-        Main.selectPrevChannel();
-        break;
-    case tvKey.KEY_LEFT:
-        Main.selectPrevPage();
-        break;
-    case tvKey.KEY_RIGHT:
-        Main.selectNextPage();
-        break;
-    case 68:
-    case 1078:
-        Scrol("allInfo", -28);
-        break;
-    case 65:
-    case 1080:
-        Scrol("allInfo", 28);
-        break;
-    default:
-        alert("Unhandled key");
-        break;
+        case 256:
+        case 1057:
+        case tvKey.KEY_RETURN:
+        case tvKey.KEY_GUIDE:
+            widgetAPI.blockNavigation(event);
+            Main.PlayPrevPlaylist();
+            if (Player.state == Player.PLAYING_LIVE) {
+                this["guide_step"] = 1
+            }
+            break;
+        case tvKey.KEY_EXIT:
+            SmartExit();
+            break;
+        case 106:
+        case tvKey.KEY_DOWN:
+            Main.selectNextChannel();
+            break;
+        case 105:
+        case tvKey.KEY_UP:
+            Main.selectPrevChannel();
+            break;
+        case tvKey.KEY_LEFT:
+            Main.selectPrevPage();
+            break;
+        case tvKey.KEY_RIGHT:
+            Main.selectNextPage();
+            break;
+        case 68:
+        case 1078:
+            Scrol("allInfo", -28);
+            break;
+        case 65:
+        case 1080:
+            Scrol("allInfo", 28);
+            break;
+        default:
+            alert("Unhandled key");
+            break;
     }
 };
-KeyHandler.MainMenuKeyDown = function () {
+KeyHandler.MainMenuKeyDown = function() {
     var b = event.keyCode;
     KeyHandler.Keys10(b);
     switch (b) {
-    case tvKey.KEY_SOURCE:
-        if (!Main.FirstStart) {
-            Main.pl_url = "ScanUSB";
-            Main.playlist();
-        }
-        break;
-    case 1086:
-    case 84:
-        if (API.XML_URL["indexOf"]("start.xml") != 0) {
-            Main.start = true;
-            Main.playlist();
-        } else {
-            Main.PlayPrevPlaylist();
-        }
-        break;
-    case 256:
-    case 1057:
-    case tvKey.KEY_GUIDE:
-        widgetAPI.blockNavigation(event);
-        if (Main.play_chan_array_index != Main.chan_array_index) {
-            this["guide_step"] = 0;
-        }
-        if (Main.yandextv_mode && this["guide_step"] == 0 && Main.ya_prog_info_arr["length"] > 0) {
-            Main.guide = true;
-            Main.ReadPlArr(API.XML_URL, Main.ya_prog_info_arr);
-        } else {
-            if (Player.state == Player.PLAYING_LIVE && this["guide_step"] == 1) {
+        case tvKey.KEY_SOURCE:
+            if (!Main.FirstStart) {
+                Main.pl_url = "ScanUSB";
+                Main.playlist();
+            }
+            break;
+        case 1086:
+        case 84:
+            if (API.XML_URL["indexOf"]("start.xml") != 0) {
+                Main.start = true;
+                Main.playlist();
+            } else {
+                Main.PlayPrevPlaylist();
+            }
+            break;
+        case 256:
+        case 1057:
+        case tvKey.KEY_GUIDE:
+            widgetAPI.blockNavigation(event);
+            if (Main.play_chan_array_index != Main.chan_array_index) {
+                this["guide_step"] = 0;
+            }
+            if (Main.yandextv_mode && this["guide_step"] == 0 && Main.ya_prog_info_arr["length"] > 0) {
+                Main.guide = true;
+                Main.ReadPlArr(API.XML_URL, Main.ya_prog_info_arr);
+            } else {
+                if (Player.state == Player.PLAYING_LIVE && this["guide_step"] == 1) {
+                    this["guide_step"] = 0;
+                    Main.SetSelectedPosition();
+                    getIdn("main");
+                    Display.hidestatus();
+                    KeyHandler.setFocus(2);
+                    Display.showplayer();
+                } else {
+                    Display.status("Подробной программки нет!");
+                }
+            }
+            break;
+        case tvKey.KEY_INFO:
+            if (API.channels["length"] < 1000) {
+                if (Main.help_info) {
+                    for (var a = 0; a < Main.help_step; a++) {
+                        Main.prev_pl_array["pop"]();
+                    }
+                    Main.help_step = 0;
+                    Main.PlayPrevPlaylist();
+                } else {
+                    Main.pl_url = API.help_url;
+                    Main.help_info = true;
+                    Main.playlist();
+                }
+            } else {
+                Display.status("Недоступно!");
+                setTimeout("Display.status('Большой плейлист!')", 2000);
+            }
+            break;
+        case tvKey.KEY_TOOLS:
+            if (!Main.FirstStart && !Main.help_info) {
+                if (Player.state != Player.STOPPED) {
+                    Player.stopV();
+                    setTimeout("getIdn('main')", 700);
+                    Main.LoadTimer("SetupFormular();", 1500);
+                } else {
+                    getIdn("main");
+                    Main.LoadTimer("SetupFormular();", 600);
+                }
+            }
+            break;
+        case 1118:
+        case tvKey.KEY_PANEL_MENU:
+        case tvKey.KEY_MENU:
+            widgetAPI.blockNavigation(event);
+            ShowMenuTV();
+            break;
+        case 78:
+        case 259:
+            if (!Main.help_info) {
+                Main.PlayPrevChannel();
+            }
+            break;
+        case tvKey.KEY_EXIT:
+            SmartExit();
+            break;
+        case tvKey.KEY_RETURN:
+            widgetAPI.blockNavigation(event);
+            if (Player.state != Player.STOPPED && Main.XML_URL == API.XML_URL) {
                 this["guide_step"] = 0;
                 Main.SetSelectedPosition();
                 getIdn("main");
                 Display.hidestatus();
-                KeyHandler.setFocus(2);
+                if (Player.state == Player.PLAYING_LIVE) {
+                    KeyHandler.setFocus(2);
+                } else {
+                    KeyHandler.setFocus(3);
+                }
                 Display.showplayer();
             } else {
-                Display.status("Подробной программки нет!");
-            }
-        }
-        break;
-    case tvKey.KEY_INFO:
-        if (API.channels["length"] < 1000) {
-            if (Main.help_info) {
-                for (var a = 0; a < Main.help_step; a++) {
-                    Main.prev_pl_array["pop"]();
-                }
-                Main.help_step = 0;
                 Main.PlayPrevPlaylist();
+            }
+            break;
+        case 106:
+        case tvKey.KEY_DOWN:
+            Main.selectNextChannel();
+            break;
+        case 105:
+        case tvKey.KEY_UP:
+            Main.selectPrevChannel();
+            break;
+        case tvKey.KEY_LEFT:
+            Main.selectPrevPage();
+            break;
+        case tvKey.KEY_RIGHT:
+            Main.selectNextPage();
+            break;
+        case 612:
+        case 309:
+        case tvKey.KEY_ENTER:
+            if (KeyHandler.NumberEntered != "") {
+                clearTimeout(this.ChSelectorTimeout);
+                KeyHandler.KanalSelector();
             } else {
-                Main.pl_url = API.help_url;
-                Main.help_info = true;
-                Main.playlist();
+                if (Main.help_info) {
+                    Main.help_step++;
+                }
+                Main.PlayChannel();
             }
-        } else {
-            Display.status("Недоступно!");
-            setTimeout("Display.status('Большой плейлист!')", 2000);
-        }
-        break;
-    case tvKey.KEY_TOOLS:
-        if (!Main.FirstStart && !Main.help_info) {
-            if (Player.state != Player.STOPPED) {
-                Player.stopV();
-                setTimeout("getIdn('main')", 700);
-                Main.LoadTimer("SetupFormular();", 1500);
+            break;
+        case tvKey.KEY_RED:
+            if (!Main.help_info && !Main.FAV && API.categories["length"] > 2) {
+                Main.showCategorySelector();
             } else {
-                getIdn("main");
-                Main.LoadTimer("SetupFormular();", 600);
+                if (API.XML_URL["indexOf"]("history.dat") > 0) {
+                    Main.delHistory(API.XML_URL);
+                } else {
+                    Display.status("Недоступно!");
+                }
             }
-        }
-        break;
-    case 1118:
-    case tvKey.KEY_PANEL_MENU:
-    case tvKey.KEY_MENU:
-        widgetAPI.blockNavigation(event);
-        ShowMenuTV();
-        break;
-    case 78:
-    case 259:
-        if (!Main.help_info) {
-            Main.PlayPrevChannel();
-        }
-        break;
-    case tvKey.KEY_EXIT:
-        SmartExit();
-        break;
-    case tvKey.KEY_RETURN:
-        widgetAPI.blockNavigation(event);
-        if (Player.state != Player.STOPPED && Main.XML_URL == API.XML_URL) {
-            this["guide_step"] = 0;
-            Main.SetSelectedPosition();
-            getIdn("main");
-            Display.hidestatus();
-            if (Player.state == Player.PLAYING_LIVE) {
-                KeyHandler.setFocus(2);
-            } else {
-                KeyHandler.setFocus(3);
-            }
-            Display.showplayer();
-        } else {
-            Main.PlayPrevPlaylist();
-        }
-        break;
-    case 106:
-    case tvKey.KEY_DOWN:
-        Main.selectNextChannel();
-        break;
-    case 105:
-    case tvKey.KEY_UP:
-        Main.selectPrevChannel();
-        break;
-    case tvKey.KEY_LEFT:
-        Main.selectPrevPage();
-        break;
-    case tvKey.KEY_RIGHT:
-        Main.selectNextPage();
-        break;
-    case 612:
-    case 309:
-    case tvKey.KEY_ENTER:
-        if (KeyHandler.NumberEntered != "") {
-            clearTimeout(this.ChSelectorTimeout);
-            KeyHandler.KanalSelector();
-        } else {
-            if (Main.help_info) {
-                Main.help_step++;
-            }
-            Main.PlayChannel();
-        }
-        break;
-    case tvKey.KEY_RED:
-        if (!Main.help_info && !Main.FAV && API.categories["length"] > 2) {
-            Main.showCategorySelector();
-        } else {
-            if (API.XML_URL["indexOf"]("history.dat") > 0) {
-                Main.delHistory(API.XML_URL);
+            break;
+        case tvKey.KEY_GREEN:
+            if (!Main.FAV && !Main.block_fav && API.XML_URL["indexOf"]("Open") < 0) {
+                if (API.favorites["length"] > 1) {
+                    Main.showFavSelector();
+                } else {
+                    Main.saveFavorites();
+                }
             } else {
                 Display.status("Недоступно!");
             }
-        }
-        break;
-    case tvKey.KEY_GREEN:
-        if (!Main.FAV && !Main.block_fav && API.XML_URL["indexOf"]("Open") < 0) {
-            if (API.favorites["length"] > 1) {
-                Main.showFavSelector();
-            } else {
-                Main.saveFavorites();
-            }
-        } else {
-            Display.status("Недоступно!");
-        }
-        break;
-    case tvKey.KEY_YELLOW:
-        if (!Main.block_fav && API.XML_URL["indexOf"]("Open") < 0) {
-            if (API.favorites["length"] < 2 && !Main.FAV) {
-                Main.FAV = true;
-                Main.opencommonFile(Main.fav_url);
-            } else {
-                if (API.favorites["length"] > 1) {
+            break;
+        case tvKey.KEY_YELLOW:
+            if (!Main.block_fav && API.XML_URL["indexOf"]("Open") < 0) {
+                if (API.favorites["length"] < 2 && !Main.FAV) {
                     Main.FAV = true;
-                    Main.showFavSelector();
+                    Main.opencommonFile(Main.fav_url);
+                } else {
+                    if (API.favorites["length"] > 1) {
+                        Main.FAV = true;
+                        Main.showFavSelector();
+                    }
                 }
-            }
-        } else {
-            Display.status("Недоступно!");
-        }
-        break;
-    case tvKey.KEY_BLUE:
-        if (Main.FAV && !Main.block_fav) {
-            Main.RED = true;
-            Main.Menu();
-        } else {
-            if (Player.state == Player.STOPPED) {
-                if (Main.ret) {
-                    this["bl"] = true;
-                }
-                Main.PlayPrevPlaylist();
-            }
-        }
-        break;
-    case tvKey.KEY_FF:
-        widgetAPI.blockNavigation(event);
-        if (Main.yandextv_mode) {
-            T.delta++;
-            if (T.delta == 101) {
-                T.delta = 0;
-            }
-            YandexGetUrl(GetYindex());
-        } else {
-            ListNextPage();
-        }
-        break;
-    case tvKey.KEY_PAUSE:
-        widgetAPI.blockNavigation(event);
-        if (Player.total_time != 0) {
-            if (Player.state == Player.PAUSA_VOD) {
-                Player.resumeVideo();
             } else {
-                Player.pauseVideo();
+                Display.status("Недоступно!");
             }
-        } else {
+            break;
+        case tvKey.KEY_BLUE:
+            if (Main.FAV && !Main.block_fav) {
+                Main.RED = true;
+                Main.Menu();
+            } else {
+                if (Player.state == Player.STOPPED) {
+                    if (Main.ret) {
+                        this["bl"] = true;
+                    }
+                    Main.PlayPrevPlaylist();
+                }
+            }
+            break;
+        case tvKey.KEY_FF:
+            widgetAPI.blockNavigation(event);
             if (Main.yandextv_mode) {
-                Main.Ya_flag_step++;
+                T.delta++;
+                if (T.delta == 101) {
+                    T.delta = 0;
+                }
                 YandexGetUrl(GetYindex());
             } else {
-                if (API.XML_URL["indexOf"]("start.xml") == 0) {
-                    if (Main.ya_auto && !Main.ya_base_info) {
-                        GetYaBaseInfo();
+                ListNextPage();
+            }
+            break;
+        case tvKey.KEY_PAUSE:
+            widgetAPI.blockNavigation(event);
+            if (Player.total_time != 0) {
+                if (Player.state == Player.PAUSA_VOD) {
+                    Player.resumeVideo();
+                } else {
+                    Player.pauseVideo();
+                }
+            } else {
+                if (Main.yandextv_mode) {
+                    Main.Ya_flag_step++;
+                    YandexGetUrl(GetYindex());
+                } else {
+                    if (API.XML_URL["indexOf"]("start.xml") == 0) {
+                        if (Main.ya_auto && !Main.ya_base_info) {
+                            GetYaBaseInfo();
+                        }
                     }
                 }
             }
-        }
-        break;
-    case tvKey.KEY_RW:
-        widgetAPI.blockNavigation(event);
-        if (Main.yandextv_mode) {
-            T.delta--;
-            if (T.delta == 99) {
-                T.delta = 0;
-            }
-            YandexGetUrl(GetYindex());
-        } else {
-            ListPrevPage();
-        }
-        break;
-    case 68:
-    case 1078:
-        Scrol("allInfo", -31);
-        break;
-    case 65:
-    case 1080:
-        Scrol("allInfo", 31);
-        break;
-    case tvKey.KEY_PLAY:
-        widgetAPI.blockNavigation(event);
-        if (Player.state == Player.PAUSA_VOD) {
-            Player.resumeVideo();
-        } else {
+            break;
+        case tvKey.KEY_RW:
+            widgetAPI.blockNavigation(event);
             if (Main.yandextv_mode) {
-                if (!Main.ya_all_day) {
-                    Main.ya_all_day = true;
-                } else {
-                    Main.ya_all_day = false;
+                T.delta--;
+                if (T.delta == 99) {
+                    T.delta = 0;
                 }
                 YandexGetUrl(GetYindex());
             } else {
-                if (Player.state == Player.STOPPED) {
-                    Main.PlayChannel();
-                    Player.next = true;
+                ListPrevPage();
+            }
+            break;
+        case 68:
+        case 1078:
+            Scrol("allInfo", -31);
+            break;
+        case 65:
+        case 1080:
+            Scrol("allInfo", 31);
+            break;
+        case tvKey.KEY_PLAY:
+            widgetAPI.blockNavigation(event);
+            if (Player.state == Player.PAUSA_VOD) {
+                Player.resumeVideo();
+            } else {
+                if (Main.yandextv_mode) {
+                    if (!Main.ya_all_day) {
+                        Main.ya_all_day = true;
+                    } else {
+                        Main.ya_all_day = false;
+                    }
+                    YandexGetUrl(GetYindex());
                 } else {
-                    if (Player.total_time != 0) {
-                        if (!Player.next && !Player.repeat) {
-                            Player.next = true;
-                            Display.status("Последовательное воспроизведение");
-                        } else {
-                            if (Player.next && !Player.repeat) {
-                                Player.repeat = true;
-                                Display.status("Повторное воспроизведение");
+                    if (Player.state == Player.STOPPED) {
+                        Main.PlayChannel();
+                        Player.next = true;
+                    } else {
+                        if (Player.total_time != 0) {
+                            if (!Player.next && !Player.repeat) {
+                                Player.next = true;
+                                Display.status("Последовательное воспроизведение");
                             } else {
-                                if (Player.next && Player.repeat) {
-                                    Player.next = false;
-                                    Player.repeat = false;
-                                    Display.status("Все режимы отключены !");
+                                if (Player.next && !Player.repeat) {
+                                    Player.repeat = true;
+                                    Display.status("Повторное воспроизведение");
+                                } else {
+                                    if (Player.next && Player.repeat) {
+                                        Player.next = false;
+                                        Player.repeat = false;
+                                        Display.status("Все режимы отключены !");
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-        }
-        break;
-    case tvKey.KEY_STOP:
-        widgetAPI.blockNavigation(event);
-        if (Main.FAV) {
-            if (Player.state != Player.STOPPED) {
-                Player.stopV();
-            }
-            setTimeout("getIdn('main')", 100);
-            Main.LoadTimer("ChannelSetupFormular()", 600);
-        } else {
-            if (!Main.help_info) {
+            break;
+        case tvKey.KEY_STOP:
+            widgetAPI.blockNavigation(event);
+            if (Main.FAV) {
                 if (Player.state != Player.STOPPED) {
                     Player.stopV();
                 }
                 setTimeout("getIdn('main')", 100);
-                Main.LoadTimer("SearchFormular()", 600);
+                Main.LoadTimer("ChannelSetupFormular()", 600);
             } else {
-                if (Player.state != Player.STOPPED) {
-                    Player.ReturnMenu();
+                if (!Main.help_info) {
+                    if (Player.state != Player.STOPPED) {
+                        Player.stopV();
+                    }
+                    setTimeout("getIdn('main')", 100);
+                    Main.LoadTimer("SearchFormular()", 600);
+                } else {
+                    if (Player.state != Player.STOPPED) {
+                        Player.ReturnMenu();
+                    }
                 }
             }
-        }
-        break;
-    case 1249:
-    case 192:
-        widgetAPI.blockNavigation(event);
-        Display.status("MAC = " + Main.MAC + " | Parser = " + Main.Supe_ext + " | Tsnake = " + Main.Tsnake, 30000);
-        break;
-    case 1236:
-    case 1089:
-    case tvKey.KEY_SUBTITLE:
-        Player.SEFSetNextAudioStream();
-        break;
-    default:
-        alert("Unhandled key");
-        break;
+            break;
+        case 1249:
+        case 192:
+            widgetAPI.blockNavigation(event);
+            break;
+        case 1236:
+        case 1089:
+        case tvKey.KEY_SUBTITLE:
+            Player.SEFSetNextAudioStream();
+            break;
+        default:
+            alert("Unhandled key");
+            break;
     }
 };
-KeyHandler.LoadingPlayerKeyDown = function () {
+KeyHandler.LoadingPlayerKeyDown = function() {
     var a = event.keyCode;
     KeyHandler.Keys10(a);
     switch (a) {
-    case tvKey.KEY_UP:
-    case 105:
-    case 68:
-    case 1078:
-        if (!Main.loading_pl) {
-            Main.block_info = true;
-            Main.selectNextChannel();
-            setTimeout("Main.PlayChannel()", 50);
-        }
-        break;
-    case tvKey.KEY_DOWN:
-    case 106:
-    case 65:
-    case 1080:
-        if (!Main.loading_pl) {
-            Main.block_info = true;
-            Main.selectPrevChannel();
-            setTimeout("Main.PlayChannel()", 50);
-        }
-        break;
-    case 78:
-    case 259:
-        if (!Main.loading_pl) {
-            Main.PlayPrevChannel();
-        }
-        break;
-    case tvKey.KEY_EXIT:
-        widgetAPI.blockNavigation(event);
-        if (!Main.loading_pl) {
-            Player.ReturnMenu();
-        } else {
-            if (Main.parser == "tsnakeman") {
-                URLtoXML.stopRequest();
+        case tvKey.KEY_UP:
+        case 105:
+        case 68:
+        case 1078:
+            if (!Main.loading_pl) {
+                Main.block_info = true;
+                Main.selectNextChannel();
+                setTimeout("Main.PlayChannel()", 50);
+            }
+            break;
+        case tvKey.KEY_DOWN:
+        case 106:
+        case 65:
+        case 1080:
+            if (!Main.loading_pl) {
+                Main.block_info = true;
+                Main.selectPrevChannel();
+                setTimeout("Main.PlayChannel()", 50);
+            }
+            break;
+        case 78:
+        case 259:
+            if (!Main.loading_pl) {
+                Main.PlayPrevChannel();
+            }
+            break;
+        case tvKey.KEY_EXIT:
+            widgetAPI.blockNavigation(event);
+            if (!Main.loading_pl) {
+                Player.ReturnMenu();
             } else {
                 API.stopRequest();
             }
-        }
-        break;
-    case tvKey.KEY_RETURN:
-        widgetAPI.blockNavigation(event);
-        if (!Main.loading_pl) {
-            Player.ReturnMenu();
-        }
-        break;
-    case tvKey.KEY_STOP:
-        widgetAPI.blockNavigation(event);
-        if (!Main.loading_pl) {
-            Player.ReturnMenu();
-        }
-        break;
-    default:
-        alert("Unhandled key");
-        break;
+            break;
+        case tvKey.KEY_RETURN:
+            widgetAPI.blockNavigation(event);
+            if (!Main.loading_pl) {
+                Player.ReturnMenu();
+            }
+            break;
+        case tvKey.KEY_STOP:
+            widgetAPI.blockNavigation(event);
+            if (!Main.loading_pl) {
+                Player.ReturnMenu();
+            }
+            break;
+        default:
+            alert("Unhandled key");
+            break;
     }
 };
-KeyHandler.SelectboxKeyDown = function () {
+KeyHandler.SelectboxKeyDown = function() {
     var a = event.keyCode;
     switch (a) {
-    case tvKey.KEY_DOWN:
-        Selectbox.selectNextItem();
-        break;
-    case tvKey.KEY_UP:
-        Selectbox.selectPrevItem();
-        break;
-    case tvKey.KEY_ENTER:
-        if (Selectbox.title == "Выбор качества") {
-            Selectbox.SelectSize();
-        } else {
+        case tvKey.KEY_DOWN:
+            Selectbox.selectNextItem();
+            break;
+        case tvKey.KEY_UP:
+            Selectbox.selectPrevItem();
+            break;
+        case tvKey.KEY_ENTER:
+            if (Selectbox.title == "Выбор качества") {
+                Selectbox.SelectSize();
+            } else {
+                if (Selectbox.title == "Выбор избранного") {
+                    Selectbox.SelectFav();
+                } else {
+                    Selectbox.SelectCategory();
+                }
+            }
+            break;
+        case tvKey.KEY_LEFT:
+            Selectbox.selectPrevPage();
+            break;
+        case tvKey.KEY_RIGHT:
+            Selectbox.selectNextPage();
+            break;
+        case tvKey.KEY_EXIT:
+        case tvKey.KEY_RETURN:
+            widgetAPI.blockNavigation(event);
+            if (API.XML_URL != Main.fav_url) {
+                Main.FAV = false;
+            }
+            getIdn("selectbox");
+            getIdb("rightHalf");
+            if (Selectbox.title == "Выбор качества") {
+                KeyHandler.setFocus(3);
+            } else {
+                if (!Main.RED) {
+                    KeyHandler.setFocus(0);
+                } else {
+                    KeyHandler.setFocus(5);
+                }
+            }
+            break;
+        case tvKey.KEY_GREEN:
             if (Selectbox.title == "Выбор избранного") {
                 Selectbox.SelectFav();
-            } else {
-                Selectbox.SelectCategory();
             }
-        }
-        break;
-    case tvKey.KEY_LEFT:
-        Selectbox.selectPrevPage();
-        break;
-    case tvKey.KEY_RIGHT:
-        Selectbox.selectNextPage();
-        break;
-    case tvKey.KEY_EXIT:
-    case tvKey.KEY_RETURN:
-        widgetAPI.blockNavigation(event);
-        if (API.XML_URL != Main.fav_url) {
-            Main.FAV = false;
-        }
-        getIdn("selectbox");
-        getIdb("rightHalf");
-        if (Selectbox.title == "Выбор качества") {
-            KeyHandler.setFocus(3);
-        } else {
-            if (!Main.RED) {
-                KeyHandler.setFocus(0);
-            } else {
-                KeyHandler.setFocus(5);
+            break;
+        case tvKey.KEY_YELLOW:
+            if (Selectbox.title == "Выбор избранного") {
+                Selectbox.SelectFav();
             }
-        }
-        break;
-    case tvKey.KEY_GREEN:
-        if (Selectbox.title == "Выбор избранного") {
-            Selectbox.SelectFav();
-        }
-        break;
-    case tvKey.KEY_YELLOW:
-        if (Selectbox.title == "Выбор избранного") {
-            Selectbox.SelectFav();
-        }
-        break;
-    case tvKey.KEY_BLUE:
-        if (Selectbox.title == "Выбор избранного") {
-            Selectbox.SelectFav();
-        }
-        break;
-    default:
-        alert("Unhandled key");
-        break;
+            break;
+        case tvKey.KEY_BLUE:
+            if (Selectbox.title == "Выбор избранного") {
+                Selectbox.SelectFav();
+            }
+            break;
+        default:
+            alert("Unhandled key");
+            break;
     }
 };
-KeyHandler.LivePlayerKeyDown = function () {
+KeyHandler.LivePlayerKeyDown = function() {
     var a = event.keyCode;
     KeyHandler.Keys10(a);
     switch (a) {
-    case 1086:
-    case 84:
-        if (Player.size == 5) {
-            if (Main.SetZoom) {
+        case 1086:
+        case 84:
+            if (Player.size == 5) {
+                if (Main.SetZoom) {
+                    Main.SetZoom = false;
+                } else {
+                    Main.SetZoom = true;
+                    Display.status('<table><tr><td><img src="img/buttons/move_m.png"></img></td><td>- Изменить размеры</td></tr></table>', 0);
+                }
+            }
+            break;
+        case 1057:
+        case 256:
+        case tvKey.KEY_GUIDE:
+            widgetAPI.blockNavigation(event);
+            if (Main.yandextv_mode) {
+                Display.hideplayer();
+                Main.Menu();
+            } else {
+                Display.status("Программки НЕТ !");
+            }
+            break;
+        case tvKey.KEY_TOOLS:
+            if (Main.serieC) {
+                widgetAPI.blockNavigation(event);
+            }
+            break;
+        case 1118:
+        case tvKey.KEY_PANEL_MENU:
+        case tvKey.KEY_MENU:
+            widgetAPI.blockNavigation(event);
+            ShowMenuTV();
+            break;
+        case tvKey.KEY_GREEN:
+            if (Main.hardware_type == 0 || Main.hardware_type == 1) {
+                Main.registVOLTVKey();
+                pluginAPI.ShowTools(0);
+            } else {
+                Player.SEFSetNextAudioStream();
+            }
+            break;
+        case tvKey.KEY_YELLOW:
+            Main.registVOLTVKey();
+            pluginAPI.ShowTools(1);
+            break;
+        case 78:
+        case 259:
+            Main.PlayPrevChannel();
+            break;
+        case tvKey.KEY_BLUE:
+        case 653:
+        case 1249:
+        case 1083:
+            widgetAPI.blockNavigation(event);
+            if (Main.PlayerMode == "1") {
+                if (Player.size >= 6) {
+                    Player.setSize(0, 1, 0);
+                } else {
+                    Player.setSize(Player.size + 1, 1, 0);
+                }
                 Main.SetZoom = false;
             } else {
-                Main.SetZoom = true;
-                Display.status('<table><tr><td><img src="img/buttons/move_m.png"></img></td><td>- Изменить размеры</td></tr></table>', 0);
+                Display.status("недоступно!");
             }
-        }
-        break;
-    case 1057:
-    case 256:
-    case tvKey.KEY_GUIDE:
-        widgetAPI.blockNavigation(event);
-        if (Main.yandextv_mode) {
-            Display.hideplayer();
-            Main.Menu();
-        } else {
-            Display.status("Программки НЕТ !");
-        }
-        break;
-    case tvKey.KEY_TOOLS:
-        if (Main.serieC) {
-            widgetAPI.blockNavigation(event);
-        }
-        break;
-    case 1118:
-    case tvKey.KEY_PANEL_MENU:
-    case tvKey.KEY_MENU:
-        widgetAPI.blockNavigation(event);
-        ShowMenuTV();
-        break;
-    case tvKey.KEY_GREEN:
-        if (Main.hardware_type == 0 || Main.hardware_type == 1) {
-            Main.registVOLTVKey();
-            pluginAPI.ShowTools(0);
-        } else {
-            Player.SEFSetNextAudioStream();
-        }
-        break;
-    case tvKey.KEY_YELLOW:
-        Main.registVOLTVKey();
-        pluginAPI.ShowTools(1);
-        break;
-    case 78:
-    case 259:
-        Main.PlayPrevChannel();
-        break;
-    case tvKey.KEY_BLUE:
-    case 653:
-    case 1249:
-    case 1083:
-        widgetAPI.blockNavigation(event);
-        if (Main.PlayerMode == "1") {
-            if (Player.size >= 6) {
-                Player.setSize(0, 1, 0);
+            break;
+        case 1219:
+            if (Main.PlayerMode == "1") {
+                if (Player.get3DMode() >= 2) {
+                    Player.change3DMode(0);
+                } else {
+                    Player.change3DMode(Player.get3DMode() + 1);
+                }
             } else {
-                Player.setSize(Player.size + 1, 1, 0);
+                Display.status("недоступно!");
             }
-            Main.SetZoom = false;
-        } else {
-            Display.status("недоступно!");
-        }
-        break;
-    case 1219:
-        if (Main.PlayerMode == "1") {
+            break;
+        case tvKey.KEY_UP:
+        case 105:
+        case 68:
+        case 1078:
+            if (Main.SetZoom) {
+                if (Player.Ph < 150) {
+                    Player.Ph++;
+                    Player.setSize(Player.size, 1, 0);
+                }
+            } else {
+                Main.block_info = true;
+                Main.selectNextChannel();
+                setTimeout("Main.PlayChannel()", 20);
+            }
+            break;
+        case tvKey.KEY_DOWN:
+        case 106:
+        case 65:
+        case 1080:
+            if (Main.SetZoom) {
+                if (Player.Ph > 50) {
+                    Player.Ph--;
+                    Player.setSize(Player.size, 1, 0);
+                }
+            } else {
+                Main.block_info = true;
+                Main.selectPrevChannel();
+                setTimeout("Main.PlayChannel()", 20);
+            }
+            break;
+        case tvKey.KEY_RIGHT:
+            if (Main.SetZoom) {
+                if (Player.Pw < 150) {
+                    Player.Pw++;
+                    Player.setSize(Player.size, 1, 0);
+                }
+            } else {
+                SetVolume(0);
+            }
+            break;
+        case tvKey.KEY_LEFT:
+            if (Main.SetZoom) {
+                if (Player.Pw > 50) {
+                    Player.Pw--;
+                    Player.setSize(Player.size, 1, 0);
+                }
+            } else {
+                SetVolume(1);
+            }
+            break;
+        case tvKey.KEY_INFO:
+        case tvKey.KEY_ENTER:
+            if (KeyHandler.NumberEntered != "") {
+                clearTimeout(this.ChSelectorTimeout);
+                KeyHandler.KanalSelector();
+            } else {
+                if (Main.PlayerMode == "0") {
+                    Main.player["info"]("Флеш-Плеер");
+                }
+                Display.showplayer();
+            }
+            break;
+        case 612:
+        case 309:
+        case tvKey.KEY_STOP:
+        case tvKey.KEY_EXIT:
+            widgetAPI.blockNavigation(event);
+            if (Main.PlayerMode == "0") {
+                Main.stopFPlayer();
+                Main.Menu();
+            } else {
+                Player.ReturnMenu();
+            }
+            break;
+        case tvKey.KEY_RETURN:
+            widgetAPI.blockNavigation(event);
+            if (Main.PlayerMode == "0") {
+                Main.stopFPlayer();
+            } else {
+                Display.hideplayer();
+            }
+            Main.Menu();
+            break;
+        case tvKey.KEY_PLAY:
+            if (Main.Foto) {
+                if (Main.SlideShowInterval == null) {
+                    Main.SlideShowInterval = setInterval("StartSlideShow();", 8000);
+                    Display.status("Пуск слайдшоу", 0);
+                } else {
+                    Display.status("Стоп слайдшоу");
+                    StopSlideShow();
+                }
+            } else {
+                if (Main.PlayerMode == "1") {
+                    Player.play(Player.url, 0);
+                } else {
+                    Display.status("недоступно!");
+                }
+            }
+            break;
+        case tvKey.KEY_FF:
+            widgetAPI.blockNavigation(event);
+            if (Main.PlayerMode == "1") {
+                if (Main.epg_info_step <= Main.ya_epg_info_arr["length"] - 1) {
+                    Main.epg_info_step++;
+                    GetNextEpgInfo();
+                } else {
+                    Display.status("Нет данных!");
+                }
+            } else {
+                Display.status("недоступно!");
+            }
+            break;
+        case tvKey.KEY_PAUSE:
+            widgetAPI.blockNavigation(event);
+            if (Main.PlayerMode == "1") {
+                Main.epg_info_step = 0;
+                GetNextEpgInfo();
+            } else {
+                Display.status("недоступно!");
+            }
+            break;
+        case tvKey.KEY_RW:
+            widgetAPI.blockNavigation(event);
+            if (Main.PlayerMode == "1") {
+                if (Main.epg_info_step > 0) {
+                    Main.epg_info_step--;
+                    GetNextEpgInfo();
+                } else {
+                    Display.status("Нет данных!");
+                }
+            } else {
+                Display.status("недоступно!");
+            }
+            break;
+        case 192:
+            if (this["black_line"]) {
+                getIdn("black_line_top");
+                this["black_line"] = false;
+            } else {
+                getIdb("black_line_top");
+                this["black_line"] = true;
+            }
+            break;
+        case 655:
+        case 1089:
+        case tvKey.KEY_SUBTITLE:
+            if (Main.PlayerMode == "1") {
+                Player.SEFSetNextAudioStream();
+            } else {
+                Display.status("недоступно!");
+            }
+            break;
+        default:
+            alert("Unhandled key");
+            break;
+    }
+};
+KeyHandler.VODPlayerKeyDown = function() {
+    var a = event.keyCode;
+    switch (a) {
+        case tvKey.KEY_0:
+            Player.PercentJump(0);
+            Display.status("0%");
+            break;
+        case tvKey.KEY_1:
+            Player.PercentJump(1);
+            break;
+        case tvKey.KEY_2:
+            Player.PercentJump(2);
+            break;
+        case tvKey.KEY_3:
+            Player.PercentJump(3);
+            break;
+        case tvKey.KEY_4:
+            Player.PercentJump(4);
+            break;
+        case tvKey.KEY_5:
+            Player.PercentJump(5);
+            break;
+        case tvKey.KEY_6:
+            Player.PercentJump(6);
+            break;
+        case tvKey.KEY_7:
+            Player.PercentJump(7);
+            break;
+        case tvKey.KEY_8:
+            Player.PercentJump(8);
+            break;
+        case tvKey.KEY_9:
+            Player.PercentJump(9);
+            break;
+        case 1086:
+        case 84:
+            if (Player.size == 5) {
+                if (Main.SetZoom) {
+                    Main.SetZoom = false;
+                } else {
+                    Main.SetZoom = true;
+                    Display.status('<table><tr><td><img src="img/buttons/move_m.png"></img></td><td>- Изменить размеры</td></tr></table>', 0);
+                }
+            }
+            break;
+        case 78:
+        case 259:
+            Main.PlayPrevChannel();
+            break;
+        case 105:
+        case 68:
+        case 1078:
+            Main.block_info = true;
+            Main.selectNextChannel();
+            setTimeout("Main.PlayChannel()", 20);
+            break;
+        case 106:
+        case 65:
+        case 1080:
+            Main.block_info = true;
+            Main.selectPrevChannel();
+            setTimeout("Main.PlayChannel()", 20);
+            break;
+        case tvKey.KEY_TOOLS:
+            if (Main.serieC) {
+                widgetAPI.blockNavigation(event);
+            }
+            break;
+        case tvKey.KEY_INFO:
+            Display.showplayer();
+            break;
+        case 1118:
+        case tvKey.KEY_PANEL_MENU:
+        case tvKey.KEY_MENU:
+            widgetAPI.blockNavigation(event);
+            ShowMenuTV();
+            break;
+        case tvKey.KEY_UP:
+            if (Main.SetZoom) {
+                if (Player.Ph > 50) {
+                    Player.Ph++;
+                    Player.setSize(Player.size, 1, 0);
+                }
+            } else {
+                Player.MinutesJump(2);
+            }
+            break;
+        case tvKey.KEY_DOWN:
+            if (Main.SetZoom) {
+                if (Player.Ph > 50) {
+                    Player.Ph--;
+                    Player.setSize(Player.size, 1, 0);
+                }
+            } else {
+                Player.MinutesJump(-2);
+            }
+            break;
+        case tvKey.KEY_LEFT:
+            if (Main.SetZoom) {
+                if (Player.Pw > 50) {
+                    Player.Pw--;
+                    Player.setSize(Player.size, 1, 0);
+                }
+            } else {
+                Player.MinutesJump(-0.1);
+            }
+            break;
+        case tvKey.KEY_RIGHT:
+            if (Main.SetZoom) {
+                if (Player.Pw < 150) {
+                    Player.Pw++;
+                    Player.setSize(Player.size, 1, 0);
+                }
+            } else {
+                Player.MinutesJump(0.1);
+            }
+            break;
+        case tvKey.KEY_BLUE:
+        case 653:
+        case 1249:
+        case 1083:
+            widgetAPI.blockNavigation(event);
+            if (Main.PlayerMode == "1") {
+                if (Player.size >= 6) {
+                    Player.setSize(0, 1, 0);
+                } else {
+                    Player.setSize(Player.size + 1, 1, 0);
+                }
+                Main.SetZoom = false
+            } else {
+                Display.status("недоступно!");
+            }
+            break;
+        case tvKey.KEY_ENTER:
+            if (Player.save_time != 0) {
+                Player.PlaySeveTime();
+            } else {
+                if (Player.state == Player.PAUSA_VOD) {
+                    Player.resumeVideo();
+                } else {
+                    Player.pauseVideo();
+                }
+            }
+            break;
+        case tvKey.KEY_RETURN:
+            widgetAPI.blockNavigation(event);
+            if (Player.total_time == 0) {
+                Player.stopV();
+            }
+            Main.Menu();
+            break;
+        case 612:
+        case 309:
+        case tvKey.KEY_STOP:
+        case tvKey.KEY_EXIT:
+            widgetAPI.blockNavigation(event);
+            Player.ReturnMenu();
+            break;
+        case tvKey.KEY_RED:
+            if (Main.url_arr["length"] > 1) {
+                Main.showSiseSelector();
+                Main.LoadTimer("getIdn('selectbox');getIdb('rightHalf');KeyHandler.setFocus(3);", 20000);
+            } else {
+                Display.status("Недоступно!");
+            }
+            break;
+        case tvKey.KEY_GREEN:
+            if (Main.hardware_type == 0 || Main.hardware_type == 1) {
+                Main.registVOLTVKey();
+                pluginAPI.ShowTools(0);
+            } else {
+                Player.SEFSetNextAudioStream();
+            }
+            break;
+        case tvKey.KEY_YELLOW:
+            Main.registVOLTVKey();
+            pluginAPI.ShowTools(1);
+            break;
+        case 1219:
             if (Player.get3DMode() >= 2) {
                 Player.change3DMode(0);
             } else {
                 Player.change3DMode(Player.get3DMode() + 1);
             }
-        } else {
-            Display.status("недоступно!");
-        }
-        break;
-    case tvKey.KEY_UP:
-    case 105:
-    case 68:
-    case 1078:
-        if (Main.SetZoom) {
-            if (Player.Ph < 150) {
-                Player.Ph++;
-                Player.setSize(Player.size, 1, 0);
-            }
-        } else {
-            Main.block_info = true;
-            Main.selectNextChannel();
-            setTimeout("Main.PlayChannel()", 20);
-        }
-        break;
-    case tvKey.KEY_DOWN:
-    case 106:
-    case 65:
-    case 1080:
-        if (Main.SetZoom) {
-            if (Player.Ph > 50) {
-                Player.Ph--;
-                Player.setSize(Player.size, 1, 0);
-            }
-        } else {
-            Main.block_info = true;
-            Main.selectPrevChannel();
-            setTimeout("Main.PlayChannel()", 20);
-        }
-        break;
-    case tvKey.KEY_RIGHT:
-        if (Main.SetZoom) {
-            if (Player.Pw < 150) {
-                Player.Pw++;
-                Player.setSize(Player.size, 1, 0);
-            }
-        } else {
-            SetVolume(0);
-        }
-        break;
-    case tvKey.KEY_LEFT:
-        if (Main.SetZoom) {
-            if (Player.Pw > 50) {
-                Player.Pw--;
-                Player.setSize(Player.size, 1, 0);
-            }
-        } else {
-            SetVolume(1);
-        }
-        break;
-    case tvKey.KEY_INFO:
-    case tvKey.KEY_ENTER:
-        if (KeyHandler.NumberEntered != "") {
-            clearTimeout(this.ChSelectorTimeout);
-            KeyHandler.KanalSelector();
-        } else {
-            if (Main.PlayerMode == "0") {
-                Main.player["info"]("Флеш-Плеер");
-            }
-            Display.showplayer();
-        }
-        break;
-    case 612:
-    case 309:
-    case tvKey.KEY_STOP:
-    case tvKey.KEY_EXIT:
-        widgetAPI.blockNavigation(event);
-        if (Main.PlayerMode == "0") {
-            Main.stopFPlayer();
-            Main.Menu();
-        } else {
-            Player.ReturnMenu();
-        }
-        break;
-    case tvKey.KEY_RETURN:
-        widgetAPI.blockNavigation(event);
-        if (Main.PlayerMode == "0") {
-            Main.stopFPlayer();
-        } else {
-            Display.hideplayer();
-        }
-        Main.Menu();
-        break;
-    case tvKey.KEY_PLAY:
-        if (Main.Foto) {
-            if (Main.SlideShowInterval == null) {
-                Main.SlideShowInterval = setInterval("StartSlideShow();", 8000);
-                Display.status("Пуск слайдшоу", 0);
-            } else {
-                Display.status("Стоп слайдшоу");
-                StopSlideShow();
-            }
-        } else {
-            if (Main.PlayerMode == "1") {
-                Player.play(Player.url, 0);
-            } else {
-                Display.status("недоступно!");
-            }
-        }
-        break;
-    case tvKey.KEY_FF:
-        widgetAPI.blockNavigation(event);
-        if (Main.PlayerMode == "1") {
-            if (Main.epg_info_step <= Main.ya_epg_info_arr["length"] - 1) {
-                Main.epg_info_step++;
-                GetNextEpgInfo();
-            } else {
-                Display.status("Нет данных!");
-            }
-        } else {
-            Display.status("недоступно!");
-        }
-        break;
-    case tvKey.KEY_PAUSE:
-        widgetAPI.blockNavigation(event);
-        if (Main.PlayerMode == "1") {
-            Main.epg_info_step = 0;
-            GetNextEpgInfo();
-        } else {
-            Display.status("недоступно!");
-        }
-        break;
-    case tvKey.KEY_RW:
-        widgetAPI.blockNavigation(event);
-        if (Main.PlayerMode == "1") {
-            if (Main.epg_info_step > 0) {
-                Main.epg_info_step--;
-                GetNextEpgInfo();
-            } else {
-                Display.status("Нет данных!");
-            }
-        } else {
-            Display.status("недоступно!");
-        }
-        break;
-    case 192:
-        if (this["black_line"]) {
-            getIdn("black_line_top");
-            this["black_line"] = false;
-        } else {
-            getIdb("black_line_top");
-            this["black_line"] = true;
-        }
-        break;
-    case 655:
-    case 1089:
-    case tvKey.KEY_SUBTITLE:
-        if (Main.PlayerMode == "1") {
-            Player.SEFSetNextAudioStream();
-        } else {
-            Display.status("недоступно!");
-        }
-        break;
-    default:
-        alert("Unhandled key");
-        break;
-    }
-};
-KeyHandler.VODPlayerKeyDown = function () {
-    var a = event.keyCode;
-    switch (a) {
-    case tvKey.KEY_0:
-        Player.PercentJump(0);
-        Display.status("0%");
-        break;
-    case tvKey.KEY_1:
-        Player.PercentJump(1);
-        break;
-    case tvKey.KEY_2:
-        Player.PercentJump(2);
-        break;
-    case tvKey.KEY_3:
-        Player.PercentJump(3);
-        break;
-    case tvKey.KEY_4:
-        Player.PercentJump(4);
-        break;
-    case tvKey.KEY_5:
-        Player.PercentJump(5);
-        break;
-    case tvKey.KEY_6:
-        Player.PercentJump(6);
-        break;
-    case tvKey.KEY_7:
-        Player.PercentJump(7);
-        break;
-    case tvKey.KEY_8:
-        Player.PercentJump(8);
-        break;
-    case tvKey.KEY_9:
-        Player.PercentJump(9);
-        break;
-    case 1086:
-    case 84:
-        if (Player.size == 5) {
-            if (Main.SetZoom) {
-                Main.SetZoom = false;
-            } else {
-                Main.SetZoom = true;
-                Display.status('<table><tr><td><img src="img/buttons/move_m.png"></img></td><td>- Изменить размеры</td></tr></table>', 0);
-            }
-        }
-        break;
-    case 78:
-    case 259:
-        Main.PlayPrevChannel();
-        break;
-    case 105:
-    case 68:
-    case 1078:
-        Main.block_info = true;
-        Main.selectNextChannel();
-        setTimeout("Main.PlayChannel()", 20);
-        break;
-    case 106:
-    case 65:
-    case 1080:
-        Main.block_info = true;
-        Main.selectPrevChannel();
-        setTimeout("Main.PlayChannel()", 20);
-        break;
-    case tvKey.KEY_TOOLS:
-        if (Main.serieC) {
+            break;
+        case tvKey.KEY_FF:
             widgetAPI.blockNavigation(event);
-        }
-        break;
-    case tvKey.KEY_INFO:
-        Display.showplayer();
-        break;
-    case 1118:
-    case tvKey.KEY_PANEL_MENU:
-    case tvKey.KEY_MENU:
-        widgetAPI.blockNavigation(event);
-        ShowMenuTV();
-        break;
-    case tvKey.KEY_UP:
-        if (Main.SetZoom) {
-            if (Player.Ph > 50) {
-                Player.Ph++;
-                Player.setSize(Player.size, 1, 0);
-            }
-        } else {
-            Player.MinutesJump(2);
-        }
-        break;
-    case tvKey.KEY_DOWN:
-        if (Main.SetZoom) {
-            if (Player.Ph > 50) {
-                Player.Ph--;
-                Player.setSize(Player.size, 1, 0);
-            }
-        } else {
-            Player.MinutesJump(-2);
-        }
-        break;
-    case tvKey.KEY_LEFT:
-        if (Main.SetZoom) {
-            if (Player.Pw > 50) {
-                Player.Pw--;
-                Player.setSize(Player.size, 1, 0);
-            }
-        } else {
-            Player.MinutesJump(-0.1);
-        }
-        break;
-    case tvKey.KEY_RIGHT:
-        if (Main.SetZoom) {
-            if (Player.Pw < 150) {
-                Player.Pw++;
-                Player.setSize(Player.size, 1, 0);
-            }
-        } else {
-            Player.MinutesJump(0.1);
-        }
-        break;
-    case tvKey.KEY_BLUE:
-    case 653:
-    case 1249:
-    case 1083:
-        widgetAPI.blockNavigation(event);
-        if (Main.PlayerMode == "1") {
-            if (Player.size >= 6) {
-                Player.setSize(0, 1, 0);
-            } else {
-                Player.setSize(Player.size + 1, 1, 0);
-            }
-            Main.SetZoom = false
-        } else {
-            Display.status("недоступно!");
-        }
-        break;
-    case tvKey.KEY_ENTER:
-        if (Player.save_time != 0) {
-            Player.PlaySeveTime();
-        } else {
+            Player.MinutesJump(0.5);
+            break;
+        case tvKey.KEY_PAUSE:
+            widgetAPI.blockNavigation(event);
             if (Player.state == Player.PAUSA_VOD) {
                 Player.resumeVideo();
             } else {
                 Player.pauseVideo();
             }
-        }
-        break;
-    case tvKey.KEY_RETURN:
-        widgetAPI.blockNavigation(event);
-        if (Player.total_time == 0) {
-            Player.stopV();
-        }
-        Main.Menu();
-        break;
-    case 612:
-    case 309:
-    case tvKey.KEY_STOP:
-    case tvKey.KEY_EXIT:
-        widgetAPI.blockNavigation(event);
-        Player.ReturnMenu();
-        break;
-    case tvKey.KEY_RED:
-        if (Main.url_arr["length"] > 1) {
-            Main.showSiseSelector();
-            Main.LoadTimer("getIdn('selectbox');getIdb('rightHalf');KeyHandler.setFocus(3);", 20000);
-        } else {
-            Display.status("Недоступно!");
-        }
-        break;
-    case tvKey.KEY_GREEN:
-        if (Main.hardware_type == 0 || Main.hardware_type == 1) {
-            Main.registVOLTVKey();
-            pluginAPI.ShowTools(0);
-        } else {
-            Player.SEFSetNextAudioStream();
-        }
-        break;
-    case tvKey.KEY_YELLOW:
-        Main.registVOLTVKey();
-        pluginAPI.ShowTools(1);
-        break;
-    case 1219:
-        if (Player.get3DMode() >= 2) {
-            Player.change3DMode(0);
-        } else {
-            Player.change3DMode(Player.get3DMode() + 1);
-        }
-        break;
-    case tvKey.KEY_FF:
-        widgetAPI.blockNavigation(event);
-        Player.MinutesJump(0.5);
-        break;
-    case tvKey.KEY_PAUSE:
-        widgetAPI.blockNavigation(event);
-        if (Player.state == Player.PAUSA_VOD) {
-            Player.resumeVideo();
-        } else {
-            Player.pauseVideo();
-        }
-        break;
-    case tvKey.KEY_RW:
-        widgetAPI.blockNavigation(event);
-        Player.MinutesJump(-0.5);
-        break;
-    case 192:
-        if (this["black_line"]) {
-            getIdn("black_line_top");
-            this["black_line"] = false;
-        } else {
-            getIdb("black_line_top");
-            this["black_line"] = true;
-        }
-        break;
-    case tvKey.KEY_PLAY:
-        if (Player.state == Player.PAUSA_VOD) {
-            Player.resumeVideo();
-        } else {
-            if (!Player.next && !Player.repeat) {
-                Player.next = true;
-                Display.status("Последовательное воспроизведение");
+            break;
+        case tvKey.KEY_RW:
+            widgetAPI.blockNavigation(event);
+            Player.MinutesJump(-0.5);
+            break;
+        case 192:
+            if (this["black_line"]) {
+                getIdn("black_line_top");
+                this["black_line"] = false;
             } else {
-                if (Player.next && !Player.repeat) {
-                    Player.repeat = true;
-                    Display.status("Повторное воспроизведение");
+                getIdb("black_line_top");
+                this["black_line"] = true;
+            }
+            break;
+        case tvKey.KEY_PLAY:
+            if (Player.state == Player.PAUSA_VOD) {
+                Player.resumeVideo();
+            } else {
+                if (!Player.next && !Player.repeat) {
+                    Player.next = true;
+                    Display.status("Последовательное воспроизведение");
                 } else {
-                    if (Player.next && Player.repeat) {
-                        Player.next = false;
-                        Player.repeat = false;
-                        Display.status("Все режимы отключенны !");
+                    if (Player.next && !Player.repeat) {
+                        Player.repeat = true;
+                        Display.status("Повторное воспроизведение");
+                    } else {
+                        if (Player.next && Player.repeat) {
+                            Player.next = false;
+                            Player.repeat = false;
+                            Display.status("Все режимы отключенны !");
+                        }
                     }
                 }
             }
-        }
-        break;
-    case 655:
-    case 1089:
-    case tvKey.KEY_SUBTITLE:
-        Player.SEFSetNextAudioStream();
-        break;
-    default:
-        alert("Unhandled key");
-        break;
+            break;
+        case 655:
+        case 1089:
+        case tvKey.KEY_SUBTITLE:
+            Player.SEFSetNextAudioStream();
+            break;
+        default:
+            alert("Unhandled key");
+            break;
     }
 };
 var Player = {
@@ -3733,7 +3662,7 @@ var Player = {
     ch: false,
     ch_t: 0
 };
-Player.init = function () {
+Player.init = function() {
     var b = true;
     this["state"] = this["STOPPED"];
     var a = getId("pluginObjectNNavi");
@@ -3766,7 +3695,7 @@ Player.init = function () {
     }
     return b;
 };
-Player.get3DMode = function () {
+Player.get3DMode = function() {
     try {
         if (this["Screen3Dplugin"] != null) {
             if (1 == this["Screen3Dplugin"].Flag3DEffectSupport() || this["Screen3Dplugin"].Flag3DTVConnect() == 1) {
@@ -3779,21 +3708,21 @@ Player.get3DMode = function () {
         return 0;
     }
 };
-Player.change3DMode = function (a) {
+Player.change3DMode = function(a) {
     if (this["Screen3Dplugin"] != null) {
         this["mode3D"] = a;
         this["status3D"] = "";
         if (1 == this["Screen3Dplugin"].Flag3DEffectSupport() || this["Screen3Dplugin"].Flag3DTVConnect() == 1) {
             switch (a) {
-            case 0:
-                this["status3D"] = "3D OFF";
-                break;
-            case 1:
-                this["status3D"] = "SIDE - BY - SIDE";
-                break;
-            case 2:
-                this["status3D"] = "TOP - BOTTOM";
-                break;
+                case 0:
+                    this["status3D"] = "3D OFF";
+                    break;
+                case 1:
+                    this["status3D"] = "SIDE - BY - SIDE";
+                    break;
+                case 2:
+                    this["status3D"] = "TOP - BOTTOM";
+                    break;
             }
             if (Main.seriesC) {
                 if (this["Screen3Dplugin"].Check3DEffectMode(a) == 1) {
@@ -3805,23 +3734,23 @@ Player.change3DMode = function (a) {
         }
     }
 };
-Player.OnConnectionFailed = function () {
+Player.OnConnectionFailed = function() {
     Player.error(9);
 };
-Player.OnNetworkDisconnected = function () {
+Player.OnNetworkDisconnected = function() {
     Player.error(8);
 };
-Player.OnStreamNotFound = function () {
+Player.OnStreamNotFound = function() {
     Player.error(7);
 };
-Player.OnRenderError = function (a) {
+Player.OnRenderError = function(a) {
     Player.error(a);
 };
-Player.error = function (a) {
+Player.error = function(a) {
     if (this["state"] != this["STOPPED"] && a >= 1) {
         this["eerr"] = (a == 1) ? "Неподдерживаемый контейнер" : (a == 2) ? "Неподдерживаемый видео кодек" : (a == 3) ? "Неподдерживаемый аудио кодек" : (a == 4) ? "Неподдерживаемое разрешение видео" : (a == 5) ? "Неправильная частота кадров" : (a == 6) ? "Поток повреждён !" : (a == 7) ? "Файл не найден" : (a == 8) ? "Обрыв сетевого соединения" : (a == 9) ? "Подключиться не удалось" : this["eerr"];
         if (a < 7 && this["serr"] < 3) {
-            this["serr"]++;
+            this["serr"] ++;
             if (a < 3 && a != 6) {
                 Player.play(this["url"], 0);
             }
@@ -3833,7 +3762,7 @@ Player.error = function (a) {
         }
     }
 };
-Player.AutoReStart = function () {
+Player.AutoReStart = function() {
     if (this["state"] != this["LOADING"] && this["total_time"] == 0) {
         var a = 10000;
         if (Main.serieC && this["url"]["indexOf"]("udp://") >= 0) {
@@ -3843,7 +3772,7 @@ Player.AutoReStart = function () {
         Display.status("Авторестарт", 3000);
     }
 };
-Player.OnBufferingStart = function () {
+Player.OnBufferingStart = function() {
     if (this["state"] != this["STOPPED"]) {
         Player.AutoReStart();
         if (!this["jump"] && !Main.Foto) {
@@ -3851,14 +3780,14 @@ Player.OnBufferingStart = function () {
         }
     }
 };
-Player.OnBufferingProgress = function (a) {
+Player.OnBufferingProgress = function(a) {
     if (this["state"] != this["STOPPED"]) {
         if (!this["jump"] && !Main.Foto) {
             Display.status("Буфер : " + a + "%", 5000);
         }
     }
 };
-Player.OnBufferingComplete = function () {
+Player.OnBufferingComplete = function() {
     clearTimeout(this["buffering_timer"]);
     if (this["state"] != this["STOPPED"]) {
         if (this["state"] == this["LOADING"]) {
@@ -3902,11 +3831,11 @@ Player.OnBufferingComplete = function () {
         Display.hidestatus();
     }
 };
-Player.BufferingTimer = function (b, a) {
+Player.BufferingTimer = function(b, a) {
     clearTimeout(this["buffering_timer"]);
     this["buffering_timer"] = setTimeout(b, a);
 };
-Player.SetBuffer = function () {
+Player.SetBuffer = function() {
     if (Main.buffer != "") {
         var a = parseInt((Main.buffer * 1048576), 10);
         var b = (Main.ibuffer > 0) ? parseInt((Main.buffer * a / 100), 10) : parseInt((a / 5), 10);
@@ -3923,15 +3852,15 @@ Player.SetBuffer = function () {
         }
     }
 };
-Player.ReturnMenu = function () {
+Player.ReturnMenu = function() {
     Player.stopV();
     Main.Menu();
 };
-Player.deinit = function () {
+Player.deinit = function() {
     Player.stop();
     alert("Player deinit");
 };
-Player.stop = function () {
+Player.stop = function() {
     clearTimeout(this["buffering_timer"]);
     this["message"] = "";
     this["eerr"] = "";
@@ -3962,7 +3891,7 @@ Player.stop = function () {
         }
     }
 };
-Player.stopV = function () {
+Player.stopV = function() {
     Player.stop();
     this["repeat"] = false;
     this["next"] = false;
@@ -3976,7 +3905,7 @@ Player.stopV = function () {
     Display.hideplayer();
     Display.hidestatus();
 };
-Player.play = function (a, b) {
+Player.play = function(a, b) {
     this["url"] = a;
     Player.stop();
     Player.state = Player.LOADING;
@@ -3995,7 +3924,7 @@ Player.play = function (a, b) {
         this["plugin"].Play(this["url"]);
     }
 };
-Player.SaveUrl = function () {
+Player.SaveUrl = function() {
     if (this["cur_time"] > 0) {
         var a = [this["url"] + "|" + this["cur_time"]];
         Main.readFile(a, "url.dat");
@@ -4011,7 +3940,7 @@ Player.SaveUrl = function () {
         Main.writeFile(a, "url.dat");
     }
 };
-Player.getSaveTime = function () {
+Player.getSaveTime = function() {
     if (this["state"] == this["PLAYING_VOD"]) {
         if (this["ch_t"] > 0 && this["ch"]) {
             this["save_time"] = this["ch_t"];
@@ -4033,7 +3962,7 @@ Player.getSaveTime = function () {
         }
     }
 };
-Player.PlaySeveTime = function () {
+Player.PlaySeveTime = function() {
     if (this["state"] == this["PLAYING_VOD"]) {
         var a = (this["save_time"] - this["cur_time"]) / 1000;
         this["statusmessage"] = "Возобновляем!";
@@ -4044,7 +3973,7 @@ Player.PlaySeveTime = function () {
         Player.BufferingTimer('Display.status("Возобновить не удалось!",2000);Player.play(Player.url,0);', 10000);
     }
 };
-Player.GetResolution = function () {
+Player.GetResolution = function() {
     if (this["state"] != this["STOPPED"]) {
         if (this["url"]["indexOf"](".mp3") < 0 && this["w"] == 0) {
             try {
@@ -4090,7 +4019,7 @@ Player.GetResolution = function () {
         widgetAPI.putInnerHTML(getId("resolution"), a);
     }
 };
-Player.GetVideoSize = function () {
+Player.GetVideoSize = function() {
     if (this["state"] != this["STOPPED"]) {
         if (this["w"] == 0 || this["w"] == "") {
             Player.GetResolution();
@@ -4104,7 +4033,7 @@ Player.GetVideoSize = function () {
         }
     }
 };
-Player.setSize = function (c, b, a) {
+Player.setSize = function(c, b, a) {
     if (this["state"] != this["STOPPED"] && this["state"] != this["PAUSA_VOD"]) {
         var d = this["w"];
         var f = this["h"];
@@ -4130,144 +4059,144 @@ Player.setSize = function (c, b, a) {
         g = d;
         o = f;
         switch (c) {
-        case 0:
-            if (d / f < 1.79 || this["w"] == 0) {
-                e = "16x9 FULL";
-            } else {
-                e = "ORIGINAL";
-                k = 960 * f / d;
-                n = (540 - k) / 2;
-            }
-            break;
-        case 1:
-            if (d == 0) {
-                e = "w/h=1.67";
-                p = 30;
-                l = 900;
-            } else {
-                e = "14x9";
-                i = 0.0625 * f;
-                g = d;
-                o = 0.875 * f;
-            }
-            break;
-        case 2:
-            if (d == 0) {
-                e = "w/h=1.56";
-                p = 60;
-                l = 840;
-            } else {
-                if (d / f < 1.35) {
-                    e = "4x3 ZOOM 2";
-                    i = 0.115 * f;
-                    g = d;
-                    o = 0.77 * f;
+            case 0:
+                if (d / f < 1.79 || this["w"] == 0) {
+                    e = "16x9 FULL";
                 } else {
-                    return Player.setSize(5, b, a);
+                    e = "ORIGINAL";
+                    k = 960 * f / d;
+                    n = (540 - k) / 2;
                 }
-            }
-            break;
-        case 3:
-            if (d == 0) {
-                e = "w/h=1.45";
-                p = 90;
-                l = 780;
-            } else {
-                if (d / f < 1.35) {
-                    e = "4x3 ZOOM 1";
-                    p = 60;
-                    l = 840;
+                break;
+            case 1:
+                if (d == 0) {
+                    e = "w/h=1.67";
+                    p = 30;
+                    l = 900;
+                } else {
+                    e = "14x9";
                     i = 0.0625 * f;
                     g = d;
                     o = 0.875 * f;
+                }
+                break;
+            case 2:
+                if (d == 0) {
+                    e = "w/h=1.56";
+                    p = 60;
+                    l = 840;
+                } else {
+                    if (d / f < 1.35) {
+                        e = "4x3 ZOOM 2";
+                        i = 0.115 * f;
+                        g = d;
+                        o = 0.77 * f;
+                    } else {
+                        return Player.setSize(5, b, a);
+                    }
+                }
+                break;
+            case 3:
+                if (d == 0) {
+                    e = "w/h=1.45";
+                    p = 90;
+                    l = 780;
+                } else {
+                    if (d / f < 1.35) {
+                        e = "4x3 ZOOM 1";
+                        p = 60;
+                        l = 840;
+                        i = 0.0625 * f;
+                        g = d;
+                        o = 0.875 * f;
+                    } else {
+                        return Player.setSize(5, b, a);
+                    }
+                }
+                break;
+            case 4:
+                if (d / f < 1.35 || this["w"] == 0) {
+                    e = "4x3";
+                    p = 120;
+                    l = 720;
                 } else {
                     return Player.setSize(5, b, a);
                 }
-            }
-            break;
-        case 4:
-            if (d / f < 1.35 || this["w"] == 0) {
-                e = "4x3";
-                p = 120;
-                l = 720;
-            } else {
-                return Player.setSize(5, b, a);
-            }
-            break;
-        case 5:
-            if (d == 0) {
-                e = "w/h=2";
-                n = 30;
-                k = 480;
-            } else {
-                if (Player.Pw <= 100) {
-                    l = 9.6 * Player.Pw;
-                    p = (960 - l) / 2;
+                break;
+            case 5:
+                if (d == 0) {
+                    e = "w/h=2";
+                    n = 30;
+                    k = 480;
                 } else {
-                    g = d * (2 - Player.Pw / 100);
-                    j = d * (Player.Pw / 200 - 0.5)
-                } if (Player.Ph <= 100) {
-                    k = 5.4 * Player.Ph;
-                    n = (540 - k) / 2;
-                } else {
-                    o = f * (2 - Player.Ph / 100);
-                    i = f * (Player.Ph / 200 - 0.5);
-                }
-                e = "X-ZOOM";
-                if (Main.SetZoom) {
-                    e += " _ w=" + Player.Pw + "% _ h=" + Player.Ph + "%";
-                }
-            }
-            break;
-        case 6:
-            if (d == 0) {
-                return Player.setSize(0, 0, a);
-            } else {
-                if (d / f < 1.35) {
-                    return Player.setSize(parseInt(API.a_size1), 0, a);
-                } else {
-                    if (d / f < 1.79) {
-                        return Player.setSize(parseInt(API.a_size2), 0, a);
+                    if (Player.Pw <= 100) {
+                        l = 9.6 * Player.Pw;
+                        p = (960 - l) / 2;
                     } else {
-                        return Player.setSize(parseInt(API.a_size3), 0, a);
+                        g = d * (2 - Player.Pw / 100);
+                        j = d * (Player.Pw / 200 - 0.5)
+                    } if (Player.Ph <= 100) {
+                        k = 5.4 * Player.Ph;
+                        n = (540 - k) / 2;
+                    } else {
+                        o = f * (2 - Player.Ph / 100);
+                        i = f * (Player.Ph / 200 - 0.5);
+                    }
+                    e = "X-ZOOM";
+                    if (Main.SetZoom) {
+                        e += " _ w=" + Player.Pw + "% _ h=" + Player.Ph + "%";
                     }
                 }
-            }
-            break;
-        case 7:
-            if (d / f >= 1.79) {
-                e = "ORIGINAL ZOOM 1";
-                k = 960 * f / (d * 0.85);
-                n = (540 - k) / 2;
-                j = 0.075 * d;
-                g = 0.85 * d;
-            } else {
-                e = "16x9 ZOOM 1";
-                j = 0.0625 * d;
-                i = 0.0625 * f;
-                g = 0.875 * d;
-                o = 0.875 * f;
-            }
-            break;
-        case 8:
-            if (d / f >= 1.79) {
-                e = "ORIGINAL ZOOM 2";
-                k = 960 * f / (d * 0.75);
-                n = (540 - k) / 2;
-                j = 0.125 * d;
-                g = 0.75 * d;
-            } else {
-                e = "16x9 ZOOM 2";
-                j = 0.125 * d;
-                i = 0.125 * f;
-                g = 0.75 * d;
-                o = 0.75 * f;
-            }
-            break;
-        default:
-            alert("Не определён");
-            e = "Не определён!";
-            break;
+                break;
+            case 6:
+                if (d == 0) {
+                    return Player.setSize(0, 0, a);
+                } else {
+                    if (d / f < 1.35) {
+                        return Player.setSize(parseInt(API.a_size1), 0, a);
+                    } else {
+                        if (d / f < 1.79) {
+                            return Player.setSize(parseInt(API.a_size2), 0, a);
+                        } else {
+                            return Player.setSize(parseInt(API.a_size3), 0, a);
+                        }
+                    }
+                }
+                break;
+            case 7:
+                if (d / f >= 1.79) {
+                    e = "ORIGINAL ZOOM 1";
+                    k = 960 * f / (d * 0.85);
+                    n = (540 - k) / 2;
+                    j = 0.075 * d;
+                    g = 0.85 * d;
+                } else {
+                    e = "16x9 ZOOM 1";
+                    j = 0.0625 * d;
+                    i = 0.0625 * f;
+                    g = 0.875 * d;
+                    o = 0.875 * f;
+                }
+                break;
+            case 8:
+                if (d / f >= 1.79) {
+                    e = "ORIGINAL ZOOM 2";
+                    k = 960 * f / (d * 0.75);
+                    n = (540 - k) / 2;
+                    j = 0.125 * d;
+                    g = 0.75 * d;
+                } else {
+                    e = "16x9 ZOOM 2";
+                    j = 0.125 * d;
+                    i = 0.125 * f;
+                    g = 0.75 * d;
+                    o = 0.75 * f;
+                }
+                break;
+            default:
+                alert("Не определён");
+                e = "Не определён!";
+                break;
         }
         if ((b == 1 || (this["size"] == 6 && b == 0)) && a == 1) {
             Player.message = "<tr><center>" + e + "</center></tr>" + Player.message;
@@ -4284,7 +4213,7 @@ Player.setSize = function (c, b, a) {
         }
     }
 };
-Player.JumpForward = function (a) {
+Player.JumpForward = function(a) {
     if (this["state"] == this["PLAYING_VOD"]) {
         Display.status(this["statusmessage"], 2000);
         this["jump"] = true;
@@ -4296,7 +4225,7 @@ Player.JumpForward = function (a) {
         this["statusmessage"] = "";
     }
 };
-Player.JumpBackward = function (b) {
+Player.JumpBackward = function(b) {
     if (this["state"] == this["PLAYING_VOD"]) {
         if (b > 3) {
             Display.status(this["statusmessage"], 2000);
@@ -4315,7 +4244,7 @@ Player.JumpBackward = function (b) {
         this["statusmessage"] = "";
     }
 };
-Player.MinutesJump = function (d) {
+Player.MinutesJump = function(d) {
     if (this["state"] == this["PLAYING_VOD"] && !this["jump"]) {
         var b = this["cur_time"] / 60000 * -1;
         var a = this["delta_time"] / 60000;
@@ -4339,7 +4268,7 @@ Player.MinutesJump = function (d) {
         }
     }
 };
-Player.PercentJump = function (b) {
+Player.PercentJump = function(b) {
     if (this["state"] == this["PLAYING_VOD"] && !this["jump"]) {
         this["statusmessage"] = b * 10 + "%";
         var a = (this["total_time"] * b / 10 - this["cur_time"]) / 1000;
@@ -4352,7 +4281,7 @@ Player.PercentJump = function (b) {
         }
     }
 };
-Player.resumeVideo = function () {
+Player.resumeVideo = function() {
     if (this["state"] == this["PAUSA_VOD"]) {
         Display.status(" > > > ");
         if (this["Sef"]) {
@@ -4369,7 +4298,7 @@ Player.resumeVideo = function () {
         this["long_pause"] = false;
     }
 };
-Player.pauseVideo = function () {
+Player.pauseVideo = function() {
     if (this["state"] == this["PLAYING_VOD"]) {
         if (this["Sef"]) {
             this["SefPlugin"].Execute("Pause");
@@ -4383,7 +4312,7 @@ Player.pauseVideo = function () {
         Player.BufferingTimer("Player.long_pause=true;", 30000);
     }
 };
-Player.OnCurrentPlayTime = function (a) {
+Player.OnCurrentPlayTime = function(a) {
     if (this["total_time"] > 0) {
         this["cur_time"] = parseInt(a, 10);
         TimeInfo(this["cur_time"], this["total_time"]);
@@ -4391,7 +4320,7 @@ Player.OnCurrentPlayTime = function (a) {
         Player.TestTime();
     }
 };
-Player.TestTime = function () {
+Player.TestTime = function() {
     if (this["delta_time"] == 0 && this["total_time"] != 0 && this["cur_time"] != 0) {
         if (this["repeat"] && this["next"]) {
             Player.play(this["url"]);
@@ -4411,7 +4340,7 @@ Player.TestTime = function () {
         }
     }
 };
-Player.SEFPlay = function (a, b) {
+Player.SEFPlay = function(a, b) {
     this["SefPlugin"].Open("Player", "1.000", "Player");
     this["SefPlugin"].Execute("InitPlayer", a);
     this["SefPlugin"]["OnEvent"] = "Player.SefOnEvent";
@@ -4432,34 +4361,34 @@ Player.SEFPlay = function (a, b) {
     Player.setSize(0, 0, 1);
     this["SefPlugin"].Execute("StartPlayback", b);
 };
-Player.SefOnEvent = function (a, b) {
+Player.SefOnEvent = function(a, b) {
     switch (a) {
-    case 1:
-        Player.OnConnectionFailed();
-        break;
-    case 3:
-        Player.OnStreamNotFound();
-        break;
-    case 4:
-        Player.OnNetworkDisconnected();
-        break;
-    case 6:
-        Player.OnRenderError(b);
-    case 11:
-        Player.OnBufferingStart();
-        break;
-    case 13:
-        Player.OnBufferingProgress(b);
-        break;
-    case 12:
-        Player.OnBufferingComplete();
-        break;
-    case 14:
-        Player.OnCurrentPlayTime(b);
-        break;
+        case 1:
+            Player.OnConnectionFailed();
+            break;
+        case 3:
+            Player.OnStreamNotFound();
+            break;
+        case 4:
+            Player.OnNetworkDisconnected();
+            break;
+        case 6:
+            Player.OnRenderError(b);
+        case 11:
+            Player.OnBufferingStart();
+            break;
+        case 13:
+            Player.OnBufferingProgress(b);
+            break;
+        case 12:
+            Player.OnBufferingComplete();
+            break;
+        case 14:
+            Player.OnCurrentPlayTime(b);
+            break;
     }
 };
-Player.SEFSetNextAudioStream = function () {
+Player.SEFSetNextAudioStream = function() {
     if (this["state"] != this["STOPPED"]) {
         if (!this["Sef"]) {
             Display.status("Функция недоступна!");
@@ -4492,7 +4421,7 @@ Player.LangCodes = {
     7565409: "Испанская",
     8026747: "Украинская"
 };
-Player.SetAudioStream = function (d, b) {
+Player.SetAudioStream = function(d, b) {
     if (this["tnum"] > d) {
         Main.a_num = (d + 1).toString();
         this["SefPlugin"].Execute("SetStreamID", 1, d);
@@ -4508,7 +4437,7 @@ Player.SetAudioStream = function (d, b) {
         Player.message += "<tr><td>Не правильный № звукой дорожки!</td></tr>";
     }
 };
-Player.GetAudioNum = function () {
+Player.GetAudioNum = function() {
     if (this["Sef"]) {
         try {
             this["tnum"] = this["SefPlugin"].Execute("GetTotalNumOfStreamID", 1);
@@ -4564,7 +4493,7 @@ function HelpSet() {
     getIdb("main");
     widgetAPI.putInnerHTML(getId("infoList"), "");
 }
-SearchFormular = function () {
+SearchFormular = function() {
     var f = 7;
     var d = 34;
     var c = 44;
@@ -4605,17 +4534,17 @@ SearchFormular = function () {
     b += "</div>";
     widgetAPI.putInnerHTML(getId("infoList"), b);
     var a = new IMEShell(g, ime_callback);
-	if(Main.seriesC || Main.seriesD) {
-		a.setKeypadPos(110, 75);
-	} else {
-		a.setKeypadPos(110, 75);
-		a.setQWERTYPos(0, 75);
-	}
+    if (Main.seriesC || Main.seriesD) {
+        a.setKeypadPos(110, 75);
+    } else {
+        a.setKeypadPos(110, 75);
+        a.setQWERTYPos(0, 75);
+    }
     if (!Main.xxx) {
         var e = (Main.search) ? API.search_string : (Main.url != "") ? Main.url : Main.pl_url;
         a.setString(e);
     }
-    a.setKeyFunc(tvKey.KEY_RETURN, function (i) {
+    a.setKeyFunc(tvKey.KEY_RETURN, function(i) {
         widgetAPI.blockNavigation(event);
         if (Main.xxx) {
             Main.prev_pl_array["pop"]();
@@ -4623,7 +4552,7 @@ SearchFormular = function () {
         Main.Menu();
         return false;
     });
-    a.setKeyFunc(tvKey.KEY_EXIT, function (i) {
+    a.setKeyFunc(tvKey.KEY_EXIT, function(i) {
         widgetAPI.blockNavigation(event);
         if (Main.xxx) {
             Main.prev_pl_array["pop"]();
@@ -4634,7 +4563,7 @@ SearchFormular = function () {
     a.setEnterFunc(Search_ok);
     getId(g)["focus"]();
 };
-Search_ok = function (b) {
+Search_ok = function(b) {
     var b = "search";
     if (Main.search || Main.xxx) {
         b = "search_h";
@@ -4651,7 +4580,7 @@ Search_ok = function (b) {
             if (Main.search || Main.xxx) {
                 if (Main.pl_url["indexOf"]("history.dat") > 0) {
                     setTimeout("Main.opencommonFile(Main.pl_url)", 1000);
-                } else { 
+                } else {
                     API.XML_URL = Main.pl_url;
                     Main.loading_pl = true;
                     setTimeout("API.Request(API.XML_URL)", 500);
@@ -4688,14 +4617,14 @@ function RunImeS(e, c) {
     var b = (e == "0") ? e : (parseInt(e) - 1).toString();
     var a = (parseInt(e) + 1).toString();
     var d = new IMEShell(e, ime_callback);
-	if (Main.seriesC || Main.seriesD) {
-		d.setKeypadPos(110,75);
-	} else {
-		d.setQWERTYPos(0,75);
-		d.setKeypadPos(110,75);
-	}
+    if (Main.seriesC || Main.seriesD) {
+        d.setKeypadPos(110, 75);
+    } else {
+        d.setQWERTYPos(0, 75);
+        d.setKeypadPos(110, 75);
+    }
     getId(e)["focus"]();
-    d.setKeyFunc(tvKey.KEY_UP, function (f) {
+    d.setKeyFunc(tvKey.KEY_UP, function(f) {
         if (e != "0") {
             SetStyle1(e);
             Scrol("allInput", c[parseInt(b)]);
@@ -4703,7 +4632,7 @@ function RunImeS(e, c) {
             getId(b)["focus"]();
         }
     });
-    d.setKeyFunc(tvKey.KEY_DOWN, function (f) {
+    d.setKeyFunc(tvKey.KEY_DOWN, function(f) {
         if (c[parseInt(e)] != 0 || e == "0" || e == "1") {
             SetStyle1(e);
             Scrol("allInput", -c[parseInt(e)]);
@@ -4711,19 +4640,19 @@ function RunImeS(e, c) {
             RunImeS(a, c);
         }
     });
-    d.setKeyFunc(tvKey.KEY_RETURN, function (f) {
+    d.setKeyFunc(tvKey.KEY_RETURN, function(f) {
         widgetAPI.blockNavigation(event);
         Main.Menu();
         return false;
     });
-    d.setKeyFunc(tvKey.KEY_EXIT, function (f) {
+    d.setKeyFunc(tvKey.KEY_EXIT, function(f) {
         widgetAPI.blockNavigation(event);
         Main.Menu();
         return false;
     });
     d.setEnterFunc(SaveValue)
 }
-ChannelSetupFormular = function () {
+ChannelSetupFormular = function() {
     var i = 52;
     var g = 6;
     if (Main.seriesE) {
@@ -4805,7 +4734,7 @@ ChannelSetupFormular = function () {
     RunImeS("0", a);
     SetStyle2("0");
 };
-SaveValue = function () {
+SaveValue = function() {
     try {
         var l = lrdPr(getId("0")["value"]);
         if (Main.url != "") {
@@ -4855,12 +4784,12 @@ SaveValue = function () {
         Main.Menu();
     } catch (n) {}
 };
-Scrol = function (b, a) {
+Scrol = function(b, a) {
     Main.scrolling = Main.scrolling + a;
     getId(b)["style"]["margin"] = Main.scrolling + "px 0px 0px 0px ";
 };
-KeyHandler.SetapKeyDown = function () {
-    var f = function () {
+KeyHandler.SetapKeyDown = function() {
+    var f = function() {
         var l = getId(Main.setap_id)["value"];
         for (var k = 0; k < a.length; k++) {
             if (l == a[k]) {
@@ -4874,162 +4803,162 @@ KeyHandler.SetapKeyDown = function () {
     var d = 0;
     var c = 0;
     switch (Main.setap_id) {
-    case "9":
-        a = ["ru", "ua", "by"];
-        d = 36;
-        e = 36;
-        break;
-    case "10":
-        a = ["-12", "-11", "-10", "-9", "-8", "-7", "-6", "-5", "-4", "-3", "-2", "-1", "0", "+1", "+2", "+3", "+4", "+5", "+6", "+7", "+8", "+9", "+10", "+11", "+12"];
-        d = 36;
-        e = 36;
-        break;
-    case "11":
-        a = ["авто-синхра", "авто-unix", "ручное из тв"];
-        d = 36;
-        e = 36;
-        break;
-    case "12":
-        a = ["-12", "-11", "-10", "-9", "-8", "-7", "-6", "-5", "-4", "-3", "-2", "-1", "0", "+1", "+2", "+3", "+4", "+5", "+6", "+7", "+8", "+9", "+10", "+11", "+12"];
-        d = 36;
-        e = 36;
-        break;
-    case "13":
-        a = ["16X9", "14X9", "4X3-ZOOM 2", "4X3-ZOOM 1", "4X3", "X-ZOOM", "АВТО", "Не установлен"];
-        d = 36;
-        e = 36;
-        break;
-    case "14":
-        for (var j = 0; j < 101; j++) {
-            a[j] = (j + 50).toString();
-        }
-        d = 36;
-        e = 36;
-        break;
-    case "15":
-        for (var j = 0; j < 101; j++) {
-            a[j] = (j + 50).toString();
-        }
-        d = 36;
-        e = 36;
-        break;
-    case "16":
-        a = ["4X3", "4X3 ZOOM 1", "4X3 ZOOM 2", "14X9", "X-ZOOM"];
-        d = 36;
-        e = 36;
-        break;
-    case "17":
-        a = ["16X9", "16X9 ZOOM 1", "16X9 ZOOM 2", "14X9", "X-ZOOM"];
-        d = 36;
-        e = 36;
-        break;
-    case "18":
-        a = ["ORIGINAL", "ORIG.ZOOM 1", "ORIG.ZOOM 2"];
-        d = 36;
-        e = 36;
-        break;
-    case "19":
-        a = ["квадратная", "прямоугольная"];
-        d = 36;
-        e = 36;
-        break;
-    case "20":
-        a = ["вкл", "выкл"];
-        d = 72;
-        e = 36;
-        break;
-    case "21":
-        a = ["0", "0.5", "0.6", "0.7", "0.8", "0.9", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"];
-        d = 108;
-        e = 72;
-        break;
-    case "22":
-        a = ["0", "10", "15", "20", "25", "30", "35", "40", "45", "50"];
-        d = 36;
-        e = 108;
-        break;
-    case "23":
-        a = ["вкл", "выкл"];
-        d = 36;
-        e = 36;
-        break;
-    case "24":
-        a = ["вкл", "выкл"];
-        d = 36;
-        e = 36;
-        break;
-    case "25":
-        a = ["вкл", "выкл"];
-        d = 36;
-        e = 36;
-        break;
-    case "26":
-        a = ["240p", "360p", "480p", "720p", "1080p"];
-        d = 36;
-        e = 36;
-        break;
-    case "27":
-        a = ["вкл", "выкл"];
-        d = 0;
-        e = 36;
-        break;
+        case "9":
+            a = ["ru", "ua", "by"];
+            d = 36;
+            e = 36;
+            break;
+        case "10":
+            a = ["-12", "-11", "-10", "-9", "-8", "-7", "-6", "-5", "-4", "-3", "-2", "-1", "0", "+1", "+2", "+3", "+4", "+5", "+6", "+7", "+8", "+9", "+10", "+11", "+12"];
+            d = 36;
+            e = 36;
+            break;
+        case "11":
+            a = ["авто-синхра", "авто-unix", "ручное из тв"];
+            d = 36;
+            e = 36;
+            break;
+        case "12":
+            a = ["-12", "-11", "-10", "-9", "-8", "-7", "-6", "-5", "-4", "-3", "-2", "-1", "0", "+1", "+2", "+3", "+4", "+5", "+6", "+7", "+8", "+9", "+10", "+11", "+12"];
+            d = 36;
+            e = 36;
+            break;
+        case "13":
+            a = ["16X9", "14X9", "4X3-ZOOM 2", "4X3-ZOOM 1", "4X3", "X-ZOOM", "АВТО", "Не установлен"];
+            d = 36;
+            e = 36;
+            break;
+        case "14":
+            for (var j = 0; j < 101; j++) {
+                a[j] = (j + 50).toString();
+            }
+            d = 36;
+            e = 36;
+            break;
+        case "15":
+            for (var j = 0; j < 101; j++) {
+                a[j] = (j + 50).toString();
+            }
+            d = 36;
+            e = 36;
+            break;
+        case "16":
+            a = ["4X3", "4X3 ZOOM 1", "4X3 ZOOM 2", "14X9", "X-ZOOM"];
+            d = 36;
+            e = 36;
+            break;
+        case "17":
+            a = ["16X9", "16X9 ZOOM 1", "16X9 ZOOM 2", "14X9", "X-ZOOM"];
+            d = 36;
+            e = 36;
+            break;
+        case "18":
+            a = ["ORIGINAL", "ORIG.ZOOM 1", "ORIG.ZOOM 2"];
+            d = 36;
+            e = 36;
+            break;
+        case "19":
+            a = ["квадратная", "прямоугольная"];
+            d = 36;
+            e = 36;
+            break;
+        case "20":
+            a = ["вкл", "выкл"];
+            d = 72;
+            e = 36;
+            break;
+        case "21":
+            a = ["0", "0.5", "0.6", "0.7", "0.8", "0.9", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"];
+            d = 108;
+            e = 72;
+            break;
+        case "22":
+            a = ["0", "10", "15", "20", "25", "30", "35", "40", "45", "50"];
+            d = 36;
+            e = 108;
+            break;
+        case "23":
+            a = ["вкл", "выкл"];
+            d = 36;
+            e = 36;
+            break;
+        case "24":
+            a = ["вкл", "выкл"];
+            d = 36;
+            e = 36;
+            break;
+        case "25":
+            a = ["вкл", "выкл"];
+            d = 36;
+            e = 36;
+            break;
+        case "26":
+            a = ["240p", "360p", "480p", "720p", "1080p"];
+            d = 36;
+            e = 36;
+            break;
+        case "27":
+            a = ["вкл", "выкл"];
+            d = 0;
+            e = 36;
+            break;
     }
     var i = (parseInt(Main.setap_id) - 1).toString();
     var g = (Main.setap_id < 27) ? (parseInt(Main.setap_id) + 1).toString() : Main.setap_id;
     event.preventDefault();
     var b = event.keyCode;
     switch (b) {
-    case tvKey.KEY_RETURN:
-    case tvKey.KEY_EXIT:
-        Return(0);
-        break;
-    case tvKey.KEY_ENTER:
-        onEnter();
-        break;
-    case tvKey.KEY_RIGHT:
-        c = f();
-        if (c < a.length - 1) {
-            c++;
-        } else {
-            c = 0;
-        }
-        SetString(Main.setap_id, a[c]);
-        break;
-    case tvKey.KEY_LEFT:
-        c = f();
-        if (c > 0) {
-            c--;
-        } else {
-            c = a.length - 1;
-        }
-        SetString(Main.setap_id, a[c]);
-        break;
-    case tvKey.KEY_UP:
-        SetStyle1(Main.setap_id);
-        Scrol("allInput", e);
-        SetStyle2(i);
-        if (Main.setap_id == 9) {
-            getId("8")["focus"]();
-        } else {
-            Main.setap_id = i;
-        }
-        break;
-    case tvKey.KEY_DOWN:
-        if (Main.setap_id < 27) {
+        case tvKey.KEY_RETURN:
+        case tvKey.KEY_EXIT:
+            Return(0);
+            break;
+        case tvKey.KEY_ENTER:
+            onEnter();
+            break;
+        case tvKey.KEY_RIGHT:
+            c = f();
+            if (c < a.length - 1) {
+                c++;
+            } else {
+                c = 0;
+            }
+            SetString(Main.setap_id, a[c]);
+            break;
+        case tvKey.KEY_LEFT:
+            c = f();
+            if (c > 0) {
+                c--;
+            } else {
+                c = a.length - 1;
+            }
+            SetString(Main.setap_id, a[c]);
+            break;
+        case tvKey.KEY_UP:
             SetStyle1(Main.setap_id);
-            Scrol("allInput", -d);
-            SetStyle2(g);
-        }
-        Main.setap_id = g;
-        break;
-    default:
-        alert("Unhandled key");
-        break;
+            Scrol("allInput", e);
+            SetStyle2(i);
+            if (Main.setap_id == 9) {
+                getId("8")["focus"]();
+            } else {
+                Main.setap_id = i;
+            }
+            break;
+        case tvKey.KEY_DOWN:
+            if (Main.setap_id < 27) {
+                SetStyle1(Main.setap_id);
+                Scrol("allInput", -d);
+                SetStyle2(g);
+            }
+            Main.setap_id = g;
+            break;
+        default:
+            alert("Unhandled key");
+            break;
     }
     return false
 };
-ime_callback = function () {};
-RunIme = function (e) {
+ime_callback = function() {};
+RunIme = function(e) {
     var c = [0, 108, 72, 36, 36, 36, 36, 108, 36, 36];
     if (API.star_url == API.XML_URL) {
         c[1] = 72;
@@ -5040,14 +4969,14 @@ RunIme = function (e) {
     var b = (e == "0") ? e : (parseInt(e) - 1).toString();
     var a = (parseInt(e) + 1).toString();
     var d = new IMEShell(e, ime_callback, "en");
-	if (Main.seriesC || Main.seriesD) {
-		d.setKeypadPos(110, 75);
-	} else {
-		d.setKeypadPos(110, 75);
-		d.setQWERTYPos(0, 75);
-	}
+    if (Main.seriesC || Main.seriesD) {
+        d.setKeypadPos(110, 75);
+    } else {
+        d.setKeypadPos(110, 75);
+        d.setQWERTYPos(0, 75);
+    }
     getId(e)["focus"]();
-    d.setKeyFunc(tvKey.KEY_UP, function (f) {
+    d.setKeyFunc(tvKey.KEY_UP, function(f) {
         if (e != "0") {
             SetStyle1(e);
             Scrol("allInput", c[parseInt(e)]);
@@ -5055,7 +4984,7 @@ RunIme = function (e) {
             getId(b)["focus"]();
         }
     });
-    d.setKeyFunc(tvKey.KEY_DOWN, function (f) {
+    d.setKeyFunc(tvKey.KEY_DOWN, function(f) {
         SetStyle1(e);
         Scrol("allInput", -c[parseInt(a)]);
         SetStyle2(a);
@@ -5066,18 +4995,18 @@ RunIme = function (e) {
             RunIme(a);
         }
     });
-    d.setKeyFunc(tvKey.KEY_YELLOW, function (g) {
+    d.setKeyFunc(tvKey.KEY_YELLOW, function(g) {
         widgetAPI.blockNavigation(event);
         var f = getId(e)["value"];
         f = (e == "0") ? API.XML_URL : (e == "1" && Main.pl_url != "") ? Main.pl_url : f;
         d.setString(f);
         return false;
     });
-    d.setKeyFunc(tvKey.KEY_RETURN, function (f) {
+    d.setKeyFunc(tvKey.KEY_RETURN, function(f) {
         Return(0);
         return false;
     });
-    d.setKeyFunc(tvKey.KEY_EXIT, function (f) {
+    d.setKeyFunc(tvKey.KEY_EXIT, function(f) {
         widgetAPI.sendReturnEvent();
     });
     d.setEnterFunc(onEnter);
@@ -5116,7 +5045,7 @@ var STimemode = {
     1: "авто-unix",
     2: "ручное из тв"
 };
-SetupFormular = function () {
+SetupFormular = function() {
     var n = 52;
     var l = 22;
     var k = 6;
@@ -5207,7 +5136,7 @@ SetupFormular = function () {
     RunIme("0");
     SetStyle2("0");
 };
-SetString = function (c, b, a) {
+SetString = function(c, b, a) {
     if (b == "") {
         b = " ";
     }
@@ -5227,17 +5156,17 @@ SetString = function (c, b, a) {
         }
     }
 };
-SetStyle1 = function (a) {
+SetStyle1 = function(a) {
     getId(a)["style"]["color"] = "black";
     getId(a)["style"]["background"] = "#999999";
     getId(a)["style"]["border"] = "2px solid #ffffff";
 };
-SetStyle2 = function (a) {
+SetStyle2 = function(a) {
     getId(a)["style"]["color"] = "blue";
     getId(a)["style"]["background"] = "#eeeeee";
     getId(a)["style"]["border"] = "2px solid #999999";
 };
-Return = function (a) {
+Return = function(a) {
     widgetAPI.blockNavigation(event);
     if (API.channels["length"] > 0 && API.XML_URL == Main.pre_pl_url && a == 0) {
         Main.Menu();
@@ -5245,7 +5174,7 @@ Return = function (a) {
         location.reload(true);
     }
 };
-onEnter = function () {
+onEnter = function() {
     try {
         var w = getId("27")["value"];
         if (w == "вкл") {
@@ -5427,42 +5356,41 @@ function getYoutubeUrl(n) {
         var d = "http://www.youtube.com/get_video_info?&video_id=" + n + e + "&ps=default&eurl=&gl=US&hl=en";
         API.AsReqMode = false;
         var f = API.Request(d);
-        alert("txt =" + f);
-        f = f.match(/url_encoded_fmt_stream_map=(.*)/);
+        f = f.match(/url_encoded_fmt_stream_map=(.*?)&/);
         alert("txt =" + f);
         if (f != null) {
             if (f[1]["indexOf"]("itag") >= 0) {
                 var a = f[1]["split"]("%2C");
                 for (var g = 0; g < a.length; g++) {
                     a[g] = decLongUrl(a[g]);
-                    alert("r[j] =" + a[g]);
+                    //alert("r[j] =" + a[g]);
                     var l = parser(a[g], "itag=", "&");
                     alert("m =" + l);
                     if (l != "") {
                         var k = "";
                         var b = [];
                         switch (l) {
-                        case "37":
-                            k = "HD 1080p.mp4";
-                            break;
-                        case "22":
-                            k = "HD 720p.mp4";
-                            break;
-                        case "35":
-                            k = "480p.flv";
-                            break;
-                        case "18":
-                            k = "360p.mp4";
-                            break;
-                        case "36":
-                            k = "240p.mp4";
-                            break;
+                            case "37":
+                                k = "HD 1080p.mp4";
+                                break;
+                            case "22":
+                                k = "HD 720p.mp4";
+                                break;
+                            case "35":
+                                k = "480p.flv";
+                                break;
+                            case "18":
+                                k = "360p.mp4";
+                                break;
+                            case "36":
+                                k = "240p.mp4";
+                                break;
                         }
                         if (k != "") {
-                            a[g] = a[g]["replace"]("itag=" + l + "&", "")["replace"]("&sig", "&signature");
+                            a[g] = a[g]["replace"]("itag=" + l + "&", "");
                             if (a[g]["indexOf"]("&url=") > 0) {
                                 var c = a[g]["split"]("&url=");
-                                a[g] = c[1] + "&" + c[0];
+								a[g] = c[1];
                             } else {
                                 a[g] = a[g]["replace"]("url=", "");
                             }
@@ -5479,7 +5407,7 @@ function getYoutubeUrl(n) {
                     }
                 }
                 if (Main.url_arr["length"] > 0 && o == "") {
-                    o = Main.url_arr[0][0];
+                    o = Main.url_arr[1][1];
                 }
             }
             break;
@@ -5509,22 +5437,22 @@ function getVkUrl(j) {
                 } else {
                     for (var e = parseInt(c[4]); e > -1; e--) {
                         switch (e) {
-                        case 3:
-                            b = "720.mp4";
-                            g = "720p.mp4";
-                            break;
-                        case 2:
-                            b = "480.mp4";
-                            g = "480p.mp4";
-                            break;
-                        case 1:
-                            b = "360.mp4";
-                            g = "360p.mp4";
-                            break;
-                        case 0:
-                            var b = "240.mp4";
-                            var g = "240p.mp4";
-                            break;
+                            case 3:
+                                b = "720.mp4";
+                                g = "720p.mp4";
+                                break;
+                            case 2:
+                                b = "480.mp4";
+                                g = "480p.mp4";
+                                break;
+                            case 1:
+                                b = "360.mp4";
+                                g = "360p.mp4";
+                                break;
+                            case 0:
+                                var b = "240.mp4";
+                                var g = "240p.mp4";
+                                break;
                         }
                         a = [c[0] + "u" + c[1] + "/videos/" + c[2] + "." + b, g];
                         Main.url_arr["push"](a);
@@ -5542,7 +5470,7 @@ function getVkUrl(j) {
     }
     return i
 }
-YandexGetUrl = function (a) {
+YandexGetUrl = function(a) {
     var e = "";
     if (Main.Ya_flag_step > 0 && Main.Ya_flag_step < 5) {
         var f = ["", "5", "4", "3", "7"];
@@ -5598,7 +5526,7 @@ function YandexParsing(b, c, f, e) {
     YaAbort();
     Main.Ya_ready_timeout = setTimeout("Err();", 3000);
     Main.YaHTTP = new XMLHttpRequest();
-    Main.YaHTTP["onreadystatechange"] = function () {
+    Main.YaHTTP["onreadystatechange"] = function() {
         if (Main.YaHTTP["readyState"] == 4 && Main.YaHTTP["status"] == 200) {
             clearTimeout(Main.Ya_ready_timeout);
             a = Main.YaHTTP["responseText"];
@@ -5786,7 +5714,7 @@ var Ya_name_index_obj = {};
 var Ya_icon_index_url_obj = {};
 var Ya_icon_name_url_obj = {};
 
-GetEpgInfo = function () {
+GetEpgInfo = function() {
     if (Main.ya_epg_info_arr["length"] > 0) {
         var a = Main.ya_epg_info_arr[0]["split"]("|");
         var e = a[0];
@@ -5813,7 +5741,7 @@ GetEpgInfo = function () {
         Display.showplayer();
     }
 };
-GetNextEpgInfo = function () {
+GetNextEpgInfo = function() {
     if (Main.ya_epg_info_arr["length"] > 0) {
         if (Main.epg_info_step == 1 && Main.temp_epg_info == "") {
             Main.temp_epg_info = getId("epg_info")["innerHTML"];
@@ -5908,9 +5836,9 @@ function Super_parser(e) {
         if (e.indexOf("vk.com") > 0 || e.indexOf("vk.com/video_ext.php?") > 0 || e.indexOf("/vkontakte.php?video") > 0 || e.indexOf("vkontakte.ru/video_ext.php") > 0 || e.indexOf("/vkontakte/vk_kinohranilishe.php?id=") > 0) {
             c = getVkUrl(e);
         } else {
-            if (e.indexOf("tube.com/watch?v=") > 0) {
-                e = e.replace("goshatube", "youtube");
+            if (e.indexOf("youtube.com/watch?v=") > 0) {
                 var i = e.substr(e.indexOf("=") + 1);
+				alert(i);
                 c = lrdPr(getYoutubeUrl(i));
             } else {
                 if (e.indexOf("http://www.youtube.com/embed") >= 0) {
