@@ -3754,10 +3754,16 @@ Player.error = function(a) {
                 Player.play(this["url"], 0);
             }
         } else {
-            if (this["eerr"] != "") {
-                Display.status(Player.eerr);
+            if (this["eerr"] == "8") {
+				try {
+                setTimeout('Player.play(this["url"], 0)',5000);
+				} finally {
+					setTimeout("Player.ReturnMenu()", 1000);
+				}
+            } else {
+				Display.status(Player.eerr);
                 setTimeout("Player.ReturnMenu()", 1000);
-            }
+			}
         }
     }
 };
