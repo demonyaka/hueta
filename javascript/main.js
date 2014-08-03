@@ -2968,7 +2968,6 @@ KeyHandler.MainMenuKeyDown = function() {
                 } else {
                     if (Player.state == Player.STOPPED) {
                         Main.PlayChannel();
-                        Player.next = true;
                     } else {
                         if (Player.total_time != 0) {
                             if (!Player.next && !Player.repeat) {
@@ -3894,7 +3893,6 @@ Player.stop = function() {
 Player.stopV = function() {
     Player.stop();
     this["repeat"] = false;
-    this["next"] = false;
     this["ch_t"] = 0;
     this["mode3D"] = 0;
     this["status3D"] = "";
