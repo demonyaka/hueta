@@ -5390,7 +5390,7 @@ function getYoutubeUrl(n) {
                             a[g] = a[g]["replace"]("itag=" + l + "&", "");
                             if (a[g]["indexOf"]("&url=") > 0) {
                                 var c = a[g]["split"]("&url=");
-								a[g] = c[1];
+                                a[g] = c[1];
                             } else {
                                 a[g] = a[g]["replace"]("url=", "");
                             }
@@ -5420,55 +5420,56 @@ function getVkUrl(j) {
     var i = "";
     var d = "";
     var a = [];
+    var qual240 = 0;
+    var qual360 = 0;
+    var qual480 = 0;
+    var qual720 = 0;
     j = j.replace("vkontakte.ru", "vk.com");
     d = API.Request(j);
-    var f = d.match(/var video_host = [\s\S]*(?=var video_title)/);
-    if (f != null) {
-        var c = f[0]["replace"](/[';]/g, "")["split"]("\x0A");
-        if (c.length == 6) {
-            for (e = 0; e < 5; e++) {
-                c[e] = dPr(c[e]["split"]("=")[1]);
+    if (d.indexOf('url240') + 1) qual240 = 1;
+    if (d.indexOf('url360') + 1) qual360 = 1;
+    if (d.indexOf('url480') + 1) qual480 = 1;
+    if (d.indexOf('url720') + 1) qual720 = 1;
+    count = qual240 + qual360 + qual480 + qual720;
+    var f = d.split('url240');
+    var q = f[1].match(/http:(.*?)?extra/);
+    if (q != null) {
+        var c = q[1]["replace"](/\\\\\\/g, '');
+        c = c.replace("?", '');
+        c = c.split("videos")
+        c[0] = c[0].replace("//", '');
+        c[1] = c[1].replace("240.mp4", '');
+        for (var e = 0; e < count; e++) {
+            switch (e) {
+                case 3:
+                    b = "720.mp4";
+                    g = "720p.mp4";
+                    break;
+                case 2:
+                    b = "480.mp4";
+                    g = "480p.mp4";
+                    break;
+                case 1:
+                    b = "360.mp4";
+                    g = "360p.mp4";
+                    break;
+                case 0:
+                    var b = "240.mp4";
+                    var g = "240p.mp4";
+                    break;
             }
-            if (c[4] == 0 && c[3] == 0 && c[1] == 0) {
-                i = "http://" + c[0] + "/assets/video/" + c[2] + parser(d, "vkid=", "&") + ".vk.flv";
-            } else {
-                if (c[4] == 0 && c[3] == 0) {
-                    i = c[0] + "u" + c[1] + "/videos/" + c[2] + ".flv";
-                } else {
-                    for (var e = parseInt(c[4]); e > -1; e--) {
-                        switch (e) {
-                            case 3:
-                                b = "720.mp4";
-                                g = "720p.mp4";
-                                break;
-                            case 2:
-                                b = "480.mp4";
-                                g = "480p.mp4";
-                                break;
-                            case 1:
-                                b = "360.mp4";
-                                g = "360p.mp4";
-                                break;
-                            case 0:
-                                var b = "240.mp4";
-                                var g = "240p.mp4";
-                                break;
-                        }
-                        a = [c[0] + "u" + c[1] + "/videos/" + c[2] + "." + b, g];
-                        Main.url_arr["push"](a);
-                        if (Main.ver > 2.53 && g.indexOf(API.Vquality) > -1) {
-                            i = a[0];
-                            Selectbox.url_selected = Main.url_arr["length"] - 1;
-                        }
-                    }
-                    if (Main.url_arr["length"] > 0 && i == "") {
-                        i = Main.url_arr[0][0];
-                    }
-                }
+            a = ["http://" + c[0] + "videos" + c[1] + b, g];
+            Main.url_arr["push"](a);
+            if (Main.ver > 2.53 && g.indexOf(API.Vquality) > -1) {
+                i = a[0];
+                Selectbox.url_selected = Main.url_arr["length"] - 1;
             }
         }
+        if (Main.url_arr["length"] > 0 && i == "") {
+            i = Main.url_arr[0][0];
+        }
     }
-    return i
+    return i;
 }
 YandexGetUrl = function(a) {
     var e = "";
@@ -5833,12 +5834,12 @@ function Super_parser(e) {
         var g = parser(e, "s_key=");
         c = decLongUrl(GetHash(Main.parser, e, g));
     } else {
-        if (e.indexOf("vk.com") > 0 || e.indexOf("vk.com/video_ext.php?") > 0 || e.indexOf("/vkontakte.php?video") > 0 || e.indexOf("vkontakte.ru/video_ext.php") > 0 || e.indexOf("/vkontakte/vk_kinohranilishe.php?id=") > 0) {
+        if (e.indexOf("vk.com") > 0 || e.indexOf("vk.com/video_") > 0) {
             c = getVkUrl(e);
         } else {
             if (e.indexOf("youtube.com/watch?v=") > 0) {
                 var i = e.substr(e.indexOf("=") + 1);
-				alert(i);
+                alert(i);
                 c = lrdPr(getYoutubeUrl(i));
             } else {
                 if (e.indexOf("http://www.youtube.com/embed") >= 0) {
