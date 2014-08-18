@@ -23,7 +23,7 @@
 </channel>
 <channel>
 	<title>Плейлисты</title>
-	<playlist_url>1help.xml</playlist_url>
+	<playlist_url>help/1help.xml</playlist_url>
 	<description><![CDATA[<table> <font color="#00ccff"> nStreamLmod </font> может работать с<font color="#00ccff"> ".xml" и "m3u"</font></table><table> плейлистами . </table><table> Для просмотра подробного описания нажмите </table><table> кнопку "<font color="#00ccff">ENTER</font>".</table>]]></description>	
 </channel>		
 <channel>
@@ -38,7 +38,7 @@
 </channel>
 <channel>
 	<title>Описание функций кнопок</title>
-	<playlist_url>2help.xml</playlist_url>
+	<playlist_url>help/2help.xml</playlist_url>
 	<description><![CDATA[<table>Существует три основных состояния плеера :</table><table> 1) "Меню плейлиста"</table><table> 2) "Поигрывание стримов"</table><table> 3) "Проигрывание медиафаилов"</table><table>Функции основных кнопок соответствуют </table><table> оригинальным, но на некоторых кнопках </table><table> в зависимости от состяния они могут меняться!</table><table> Для просмотра подробного  описания функций </table><table> каждого состояния нажмите "ENTER"!</table>]]></description>	
 </channel>			
 </items>

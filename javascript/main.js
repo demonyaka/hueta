@@ -690,7 +690,7 @@ GetYindex = function () {
     if (a == undefined) {
         a = "";
     }
-    return a
+    return a;
 };
 Main.UpdatePlayerStatusbar = function () {
     widgetAPI.putInnerHTML(getId("ch_number"), this["ch_num"]);
@@ -1677,7 +1677,7 @@ msecToStr = function (a, b) {
 var API = {
     XML_URL: "start.xml",
     star_url: "start.xml",
-    help_url: "help.xml",
+    help_url: "help/help.xml",
     GenUrl: "",
     GenT: "500",
     Gen: false,
