@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<items>
+<playlist_name>no_name</playlist_name> 
+<channel>
+	<title>Стартовый плейлист</title>
+	<playlist_url>stop</playlist_url>
+	<description><![CDATA[<img src="http://fiowidget.narod.ru/img/0start.jpg" height="400" width="420"/>]]></description>
+</channel>
+<channel>
+	<title>Упрощенный стартовый плейлист</title>
+	<playlist_url>stop</playlist_url>
+	<description><![CDATA[<img src="http://fiowidget.narod.ru/img/1start.jpg" height="400" width="420"/>]]></description>
+</channel>
+<channel>
+	<title>Расширенный ".xml" плейлист</title>
+	<playlist_url>stop</playlist_url>
+	<description><![CDATA[<img src="http://fiowidget.narod.ru/img/0xml.jpg" height="400" width="420"/>]]></description>
+</channel>
+<channel>
+	<title>Стандартный ".xml" плейлист</title>
+	<playlist_url>stop</playlist_url>
+	<description><![CDATA[<img src="http://fiowidget.narod.ru/img/1xml.jpg" height="400" width="420"/>]]></description>
+</channel>
+<channel>
+	<title>Упрощенный ".xml" плейлист</title>
+	<playlist_url>stop</playlist_url>
+	<description><![CDATA[<img src="http://fiowidget.narod.ru/img/2xml.jpg" height="400" width="420"/>]]></description>
+</channel>
+<channel>
+	<title>Стандартный ".m3u" плейлист</title>
+	<playlist_url>stop</playlist_url>
+	<description><![CDATA[<img src="http://fiowidget.narod.ru/img/m3u.jpg" height="400" width="420"/>]]></description>
+</channel>
+<channel>
+	<title>Описание структуры ".xml" плейлистов</title>
+	<playlist_url>stop</playlist_url>
+	<description><![CDATA[<table><table><td><</td><td>items</td><td>><</td><td>/items ></td><td>нач.-конец плейлиста</td></table><table><td><</td><td>playlist_name</td><td>><</td><td>/playlist_name ></td><td> имя п-листа</td></table><table><td><</td><td>category</td><td>><</td><td>/category ></td><td>нач.-конец категор.</td></table><table><td><</td><td>channel</td><td>><</td><td>/channel ></td><td>нач.- конец н канала</td></table><table><td><</td><td>category_id</td><td>><</td><td>/category_id ></td><td>№ категории</td></table><table><td><</td><td>category_title</td><td>><</td><td>/category_title ></td><td>название </td></table><table><td><</td><td>title</td><td>><</td><td>/title ></td><td>название канала, плейлиста</td></table><table><td><</td><td>stream_url</td><td>><</td><td>/stream_url ></td><td>адрес стрима</td></table><table><td><</td><td>playlist_url</td><td>><</td><td>/playlist_url ></td><td>адрес плейлиста</td></table><table><td><</td><td>description</td><td>><</td><td>/description ></td><td>доп. информ.</td></table><table><td><</td><td>logo_30x30</td><td>><</td><td>/logo_30x30 ></td><td>адрес иконки</td></table><table><td><</td><td>size</td><td>><</td><td>/size ></td><td>размер экрана (0 - 4)</td></table><table><td><</td><td>audiotrack_num</td><td>><</td><td>/audiotrack_num ></td></table><table><td>№ звуковой дорожки</td></table><table><td><</td><td>buffer</td><td>><</td><td>/buffer ></td><td>буфер ( 0.5 - 20 (Мb))</td></table><table><td><</td><td>ibuffer</td><td>><</td><td>/ibuffer ></td><td> часть ( 10 - 60 (%))</td></table><table><td>от общего буфера, после прочтения которой </td></table><table><td> начнется воспроизведение.</td></table><table><td><</td><td>timeshift</td><td>><</td><td>/timeshift ></td><td>меняет время</td></table><table><td>в программке Яндекс ( +/-12 ч.)</td></table></table>]]></description>
+</channel>			
+</items>

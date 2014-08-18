@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items>
+  <playlist_name>Добро пожаловать в nStreamEvo</playlist_name>
+  <all_channels>
+    <all_logo />
+    <all_size />
+    <all_audiotrack_num />
+    <all_buffer />
+    <all_timeshift />
+  </all_channels> 
+<channel>
+<title>Плейлисты от 4254</title>
+<description>ONLINER.BY</description>
+<playlist_url>https://dl.dropboxusercontent.com/u/103747272/start.xml</playlist_url>
+</channel>
+<channel>
+<title>Smart Portal</title>
+<description>Чтобы получить доступ к этому плейлисту, нужно выслать свой MAC-адрес на любой из этих email: foks5050@yandex.ru, lig2000@bk.ru</description>
+<playlist_url>http://samsung-smart.mooo.com/portal/start.xml</playlist_url>
+</channel>
+<channel>
+<title><![CDATA[Плейлисты от alexkdpu]]></title>
+<playlist_url><![CDATA[http://obovse.ru/alexkdpu.php]]></playlist_url>
+</channel>
+<channel>
+	<title><![CDATA[Плейлисты от sweta1979]]></title>
+	<playlist_url>http://iptv.root-host.pro/list/test.xml</playlist_url>
+	<description><![CDATA[<table><td style="vertical-align: top"><img src="logos/image.png" height="128" width="128"></img></td><td>Бесплатное IP-TV и видеотеки.<h2>=ALL-RUSS-IPTV=</h2></td></table><table style="width:100%; padding-top:4px;padding-bottom:4px;"><tr height="4px" bgcolor="#cccccc"><td></td></tr></table>]]></description>
+</channel>
+<channel>
+    <title><![CDATA[Плейлисты от Maverick'a]]></title>
+    <playlist_url><![CDATA[http://smarttv.fishki.tv/start.xml]]></playlist_url>
+</channel>
+<channel>
+    <title><![CDATA[Плейлисты от golik.ucoz.ru]]></title>
+    <playlist_url><![CDATA[http://golik.ucoz.ru/playlist/Valentin.xml]]></playlist_url>
+</channel>
+<channel>
+    <title><![CDATA[Плейлисты от valera & cvykas]]></title>
+    <playlist_url><![CDATA[http://enigma2.videonavigator.net.ua/portal.xml]]></playlist_url>
+</channel>
+<channel>
+	<title><![CDATA["ИСТОРИЯ"]]></title>
+	<playlist_url>OpenHistory</playlist_url>
+</channel>
+<channel>
+	<title><![CDATA["ИЗБРАННОЕ"]]></title>
+	<playlist_url>OpenFav</playlist_url>
+</channel>
+<channel>
+<title><![CDATA[USB ]]></title>
+<playlist_url>ScanUSB</playlist_url>
+</channel>
+</items>
