@@ -1185,6 +1185,19 @@ Main.stopFPlayer = function () {
     widgetAPI.putInnerHTML(getId("flashplayer"), "");
     Player.state = Player.STOPPED;
 };
+Main.readBase = function (d, e) {
+    var c = new FileSystem();
+    var b = c.openFile("base/" + e, "r");
+    if (b) {
+        while (1) {
+            var a = b.readLine();
+            if (a == null) {
+                break;
+            }
+            d.push(a);
+        }
+	}
+};
 Main.readFile = function (d, e) {
     var c = new FileSystem();
     var b = c.openCommonFile(curWidget.id + "/" + e, "r");
@@ -1783,7 +1796,7 @@ API.init = function () {
         Main.temp_fav_name = Main.fav_name;
         d = [];
         Main.ya_auto = false;
-        Main.readFile(d, API.CODE + "_ya_name_index_url.dat");
+        Main.readBase(d, API.CODE + "_ya_name_index_url.dat");
         if (d.length > 0) {
             Main.ya_auto = true;
             var l = '<font style="color:#00ccff;font-weight:bolder">';
@@ -1804,7 +1817,7 @@ API.init = function () {
 GetYaBaseInfo = function () {
     tempArr = [];
     var c = "";
-    Main.readFile(tempArr, API.CODE + "_ya_name_index_url.dat");
+    Main.readBase(tempArr, API.CODE + "_ya_name_index_url.dat");
     if (tempArr.length > 0) {
         var e = '<font style="color:#00ccff;font-weight:bolder">';
         for (var d = 0; d < tempArr.length; d++) {
@@ -2981,12 +2994,7 @@ KeyHandler.MainMenuKeyDown = function () {
                 if (API.XML_URL["indexOf"]("start.xml") == 0) {
                     if (Main.ya_auto && !Main.ya_base_info) {
                         GetYaBaseInfo();
-                    } //else {
-                       // if (!Main.ya_base_info) {
-                        //    Display.status("Создание базы Яндекс для программки")
-                        //}
-                        //setTimeout("GetYandexBase()", 500)
-                    //}
+                    }
                 }
             }
         }
@@ -5778,69 +5786,6 @@ var Ya_name_index_obj = {};
 var Ya_icon_index_url_obj = {};
 var Ya_icon_name_url_obj = {};
 
-function GetYandexBase() {
-    var b = [];
-    Main.readFile(b, API.CODE + "_ya_name_index_url.dat");
-    if (b.length > 0) {
-        Display.status("Удаление базы Яндекс для программки");
-        b = [];
-        Main.writeFile(b, API.CODE + "_ya_name_index_url.dat");
-        setTimeout("location.reload(true);", 3000);
-    } else {
-        var e = "";
-        API.AsReqMode = false;
-        e = API.Request("http://tv.yandex." + API.REG + "/" + API.CODE + "/channels");
-        API.AsReqMode = true;
-        var k = "соединения";
-        if (e != "") {
-            k = "структуры";
-            var l = '<font style="color:#00ccff;font-weight:bolder">';
-            var c = e.indexOf('<img class="b-icon" src="');
-            e = e.substr(c);
-            c = e.indexOf('<td class="l-suplayout__rotator">');
-            e = e.substr(0, c);
-            var d = e.match(/(http:?[^>]+orig)|(alt="?[^>]+")|(data-id="?[^>]+")/g);
-            b = [];
-            if (d != null) {
-                Main.ya_auto = false;
-                var j = d.length - 3;
-                var f = 0;
-                for (var g = 0; g < j; g = g + 3) {
-                    var n = "";
-                    var a = "";
-                    var i = "";
-                    if (d[g]["indexOf"]("http:") >= 0 && d[g + 1]["indexOf"]("alt=") >= 0 && d[g + 2]["indexOf"]("data-id=") >= 0) {
-                        n = d[g];
-                        i = d[g + 1]["replace"]("alt=", "")["replace"](/"/g, "");
-                        a = d[g + 2]["replace"]("data-id=", "")["replace"](/"/g, "");
-                    } else {
-                        if (d[g]["indexOf"]("alt=") >= 0 && d[g + 1]["indexOf"]("data-id=") >= 0) {
-                            n = "logos/image.png";
-                            i = d[g]["replace"]("alt=", "")["replace"](/"/g, "");
-                            a = d[g + 1]["replace"]("data-id=", "")["replace"](/"/g, "");
-                            g = g - 1;
-                            j = j - 1;
-                        }
-                    } if (a != "") {
-                        f++;
-                        b.push(i + "|" + a + "|" + n);
-                        Ya_name_index_obj[i.toLowerCase()] = a;
-                        Ya_icon_index_url_obj[a] = n;
-                        Ya_icon_name_url_obj[i.toLowerCase()] = n;
-                    }
-                }
-                if (b.length > 0) {
-                    Main.writeFile(b, API.CODE + "_ya_name_index_url.dat");
-                    Main.ya_auto = true;
-                }
-                GetYaBaseInfo();
-            }
-        }
-        if (!Main.ya_auto) {
-            Display.status("Ошибка " + k);
-        }
-    }
-}
 GetEpgInfo = function () {
     if (Main.ya_epg_info_arr["length"] > 0) {
         var a = Main.ya_epg_info_arr[0]["split"]("|");
