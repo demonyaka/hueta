@@ -1,6 +1,7 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <items>
 <playlist_name>no_name</playlist_name> 
+
 <channel>
 	<title>Основное назначение виджета</title>
 	<playlist_url>stop</playlist_url>
@@ -40,5 +41,6 @@
 	<title>Описание функций кнопок</title>
 	<playlist_url>help/2help.xml</playlist_url>
 	<description><![CDATA[<table>Существует три основных состояния плеера :</table><table> 1) "Меню плейлиста"</table><table> 2) "Поигрывание стримов"</table><table> 3) "Проигрывание медиафаилов"</table><table>Функции основных кнопок соответствуют </table><table> оригинальным, но на некоторых кнопках </table><table> в зависимости от состяния они могут меняться!</table><table> Для просмотра подробного  описания функций </table><table> каждого состояния нажмите "ENTER"!</table>]]></description>	
-</channel>			
+</channel>		
+		
 </items>

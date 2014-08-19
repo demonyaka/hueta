@@ -4,32 +4,32 @@
 <channel>
 	<title>Стартовый плейлист</title>
 	<playlist_url>stop</playlist_url>
-	<description><![CDATA[<img src="http://fiowidget.narod.ru/img/0start.jpg" height="400" width="420"/>]]></description>
+	<description><![CDATA[<img src="help/0start.jpg" height="400" width="420"/>]]></description>
 </channel>
 <channel>
 	<title>Упрощенный стартовый плейлист</title>
 	<playlist_url>stop</playlist_url>
-	<description><![CDATA[<img src="http://fiowidget.narod.ru/img/1start.jpg" height="400" width="420"/>]]></description>
+	<description><![CDATA[<img src="help/1start.jpg" height="400" width="420"/>]]></description>
 </channel>
 <channel>
 	<title>Расширенный ".xml" плейлист</title>
 	<playlist_url>stop</playlist_url>
-	<description><![CDATA[<img src="http://fiowidget.narod.ru/img/0xml.jpg" height="400" width="420"/>]]></description>
+	<description><![CDATA[<img src="help/0xml.jpg" height="400" width="420"/>]]></description>
 </channel>
 <channel>
 	<title>Стандартный ".xml" плейлист</title>
 	<playlist_url>stop</playlist_url>
-	<description><![CDATA[<img src="http://fiowidget.narod.ru/img/1xml.jpg" height="400" width="420"/>]]></description>
+	<description><![CDATA[<img src="help/1xml.jpg" height="400" width="420"/>]]></description>
 </channel>
 <channel>
 	<title>Упрощенный ".xml" плейлист</title>
 	<playlist_url>stop</playlist_url>
-	<description><![CDATA[<img src="http://fiowidget.narod.ru/img/2xml.jpg" height="400" width="420"/>]]></description>
+	<description><![CDATA[<img src="help/2xml.jpg" height="400" width="420"/>]]></description>
 </channel>
 <channel>
 	<title>Стандартный ".m3u" плейлист</title>
 	<playlist_url>stop</playlist_url>
-	<description><![CDATA[<img src="http://fiowidget.narod.ru/img/m3u.jpg" height="400" width="420"/>]]></description>
+	<description><![CDATA[<img src="help/m3u.jpg" height="400" width="420"/>]]></description>
 </channel>
 <channel>
 	<title>Описание структуры ".xml" плейлистов</title>
