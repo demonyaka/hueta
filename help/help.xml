@@ -5,27 +5,27 @@
 <channel>
 	<title>Основное назначение виджета</title>
 	<playlist_url>stop</playlist_url>
-	<description><![CDATA[<table><font color="#00ccff"> nStreamLmod</font> - это бесплатный виджет для</table><table> ТВ Samsung серии "<font color="#00ccff">C</font>" с функцией <font color="#00ccff">Internet@TV</font> </table><table>и серии "<font color="#00ccff">D</font>" и "<font color="#00ccff">E</font>" с функцией  <font color="#00ccff">SmartHub</font>.</table><table> Основное его назначение - это просмотр <font color="#00ccff">IPTV</font> </table><table> и <font color="#00ccff">WebTV</font> и проигрывание медиафайлов через </table><table>интернет соединение и с <font color="#00ccff">USB</font> накопителей.</table><table> Так же в виджете реализованна загрузка </table><table>телепрограммки с ресурса "<font color="#00ccff">m.tv.yandex.ru</font>".</table>]]></description>	
+	<description><![CDATA[<table><font color="#00ccff"> nStreamEvo</font> - это бесплатный виджет для</table><table> ТВ Samsung серии "<font color="#00ccff">C</font>" с функцией <font color="#00ccff">Internet@TV</font> </table><table>и серий "<font color="#00ccff">D</font>", "<font color="#00ccff">E</font>" и "<font color="#00ccff">F</font>" с функцией  <font color="#00ccff">SmartHub</font>.</table><table> Основное его назначение - это просмотр <font color="#00ccff">IPTV</font> </table><table> и <font color="#00ccff">WebTV</font> и проигрывание медиафайлов через </table><table>интернет соединение и с <font color="#00ccff">USB</font> накопителей.</table><table> Так же в виджете реализованна загрузка </table><table>телепрограммки с ресурса "<font color="#00ccff">m.tv.yandex.ru</font>".</table>]]></description>	
 </channel>
 <channel>
 	<title>Поддерживаемые типы стримов</title>
 	<playlist_url>stop</playlist_url>
-	<description><![CDATA[<table> <font color="#00ccff">nStreamLmod</font> поддерживает проигрывание  </table><table>следующих типов стримов: <font color="#00ccff">"rtmp"</font> ,</table><table><font color="#00ccff"> "udp", "mms", "rtsp", "hls", "http"</font></table>]]></description>	
+	<description><![CDATA[<table> <font color="#00ccff">nStreamEvo</font> поддерживает проигрывание  </table><table>следующих типов стримов: <font color="#00ccff">"rtmp"</font> ,</table><table><font color="#00ccff"> "udp", "mms", "rtsp", "hls", "http"</font></table>]]></description>	
 </channel>
 <channel>
 	<title>Поддерживаемые типы файлов</title>
 	<playlist_url>stop</playlist_url>
-	<description><![CDATA[<table><font color="#00ccff"> nStreamLmod </font> поддерживает проигрывание </table><table> всех типов медиафайлов, которые может </table><table> воспроизводить ваш ТВ согласно его </table><table> технической спецификации.</table>]]></description>	
+	<description><![CDATA[<table><font color="#00ccff">nStreamEvo</font> поддерживает проигрывание </table><table> всех типов медиафайлов, которые может </table><table> воспроизводить ваш ТВ согласно его </table><table> технической спецификации.</table>]]></description>	
 </channel>
 <channel>
 	<title>Основные принципы работы</title>
 	<playlist_url>stop</playlist_url>
-	<description><![CDATA[<table>Ссылки на стримы и медиафайлы виджет </table><table>получает из плейлистов находящихся</table><table>в самой программе или на флешке или на "<font color="#00ccff">http</font>" сервере.</table><table> Для того чтобы пользователи могли  </table><table>прописывать адреса на другие плейлисты, </table><table> придуман стартовый плейлист "<font color="#00ccff">start.xml</font>". </table><table> Перед началом работы пользователь должен </table><table>прописать в настройках виджета адрес своего </table><table>плейлиста или воспользоваться уже прописанным</table><table>для флешки в стартовом плейлисте, либо перед  </table><table>установкой виджета добавить в архив свой</table><table>плейлист и прописать в стартовом его адрес.</table>]]></description>	
+	<description><![CDATA[<table>Ссылки на стримы и медиафайлы виджет </table><table>получает из плейлистов находящихся</table><table>в самой программе или на флешке или на "<font color="#00ccff">http</font>" сервере.</table><table> Для того чтобы пользователи могли  </table><table>прописывать адреса на другие плейлисты, </table><table> придуман стартовый плейлист "<font color="#00ccff">start.xml</font>". </table><table> Перед началом работы пользователь должен </table><table>прописать в настройках виджета адрес своего </table><table>плейлиста или воспользоваться уже прописанным</table><table>для флешки в стартовом плейлисте, либо перед  </table><table>установкой виджета добавить в архив свой</table><table>плейлист и прописать в стартовом листе его адрес.</table>]]></description>	
 </channel>
 <channel>
 	<title>Плейлисты</title>
 	<playlist_url>help/1help.xml</playlist_url>
-	<description><![CDATA[<table> <font color="#00ccff"> nStreamLmod </font> может работать с<font color="#00ccff"> ".xml" и "m3u"</font></table><table> плейлистами . </table><table> Для просмотра подробного описания нажмите </table><table> кнопку "<font color="#00ccff">ENTER</font>".</table>]]></description>	
+	<description><![CDATA[<table> <font color="#00ccff"> nStreamEvo </font> может работать с<font color="#00ccff"> ".xml" и "m3u"</font></table><table> плейлистами . </table><table> Для просмотра подробного описания нажмите </table><table> кнопку "<font color="#00ccff">ENTER</font>".</table>]]></description>	
 </channel>		
 <channel>
 	<title>Иконки для каналов</title>
@@ -35,12 +35,12 @@
 <channel>
 	<title>Настройки программки Яндекс</title>
 	<playlist_url>stop</playlist_url>
-	<description><![CDATA[<table>Чтобы загружались программка Яндекс,</table><table>нужно в вашем "xml" плейлисте</table><table><td> между </td><td><</td><td>description</td><td>><</td><td>/description ></td></table><table>прописать индекс канала и в настройках </table><table>виджета установить код вашего региона.</table><table>Чтобы их добыть, нужно зайти на:</table><table><font color="#00ccff">" http://m.tv.yandex.ru "</font>, принудительно </td></table><table><td>выбрать регион и канал и получиеть ссылку вида:</td></table><table><td>"<font color="#00ccff">http://m.tv.yandex.ru/10174/?channel=270&</font></table><table><td><font color="#00ccff">when=2&day=15326</font>", где <font color="#00ccff">10174</font> - код рег.,</td></table><table><td> <font color="#00ccff">270</font>-индекс Яндекса для канала ТНТ. </td></table><table><td> Индекс канала для других рег. может меняться!</td></table>]]></description>
+	<description><![CDATA[<table>Чтобы загружались программка Яндекс,</table><table>нужно в вашем "xml" плейлисте</table><table><td> между </td><td><</td><td>description</td><td>><</td><td>/description ></td></table><table>прописать индекс канала и в настройках </table><table>виджета установить код вашего региона.</table><table>Чтобы их добыть, нужно зайти на:</table><table><font color="#00ccff">" http://m.tv.yandex.ru "</font>, принудительно </td></table><table><td>выбрать регион и канал и получиеть ссылку вида:</td></table><table><td>"<font color="#00ccff">http://m.tv.yandex.ru/10174/?channel=270&</font></table><table><td><font color="#00ccff">when=2&day=15326</font>", где <font color="#00ccff">10174</font> - код рег.,</td></table><table><td> <font color="#00ccff">270</font>-индекс Яндекса для канала ТНТ. </td></table><table><td> Индекс канала для других регионов может меняться!</td></table>]]></description>
 </channel>
 <channel>
 	<title>Описание функций кнопок</title>
 	<playlist_url>help/2help.xml</playlist_url>
-	<description><![CDATA[<table>Существует три основных состояния плеера :</table><table> 1) "Меню плейлиста"</table><table> 2) "Поигрывание стримов"</table><table> 3) "Проигрывание медиафаилов"</table><table>Функции основных кнопок соответствуют </table><table> оригинальным, но на некоторых кнопках </table><table> в зависимости от состяния они могут меняться!</table><table> Для просмотра подробного  описания функций </table><table> каждого состояния нажмите "ENTER"!</table>]]></description>	
+	<description><![CDATA[<table>Существует три основных состояния плеера :</table><table> 1) "Меню плейлиста"</table><table> 2) "Поигрывание стримов"</table><table> 3) "Проигрывание медиафаилов"</table><table>Функции основных кнопок соответствуют </table><table> оригинальным, но на некоторых кнопках </table><table> в зависимости от состяния они могут меняться!</table><table> Для просмотра подробного  описания функций </table><table> каждого состояния нажмите "<font color="#00ccff">ENTER</font>".</table>]]></description>	
 </channel>		
 		
 </items>
