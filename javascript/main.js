@@ -3755,15 +3755,15 @@ Player.error = function(a) {
             }
         } else {
             if (this["eerr"] == "8") {
-				try {
-                setTimeout('Player.play(this["url"], 0)',5000);
-				} finally {
-					setTimeout("Player.ReturnMenu()", 1000);
-				}
+                try {
+                    setTimeout('Player.play(this["url"], 0)', 5000);
+                } finally {
+                    setTimeout("Player.ReturnMenu()", 1000);
+                }
             } else {
-				Display.status(Player.eerr);
+                Display.status(Player.eerr);
                 setTimeout("Player.ReturnMenu()", 1000);
-			}
+            }
         }
     }
 };
@@ -5424,56 +5424,65 @@ function getVkUrl(j) {
     var i = "";
     var d = "";
     var a = [];
-    var qual240 = 0;
-    var qual360 = 0;
-    var qual480 = 0;
-    var qual720 = 0;
     j = j.replace("vkontakte.ru", "vk.com");
     d = API.Request(j);
-    if (d.indexOf('url240') + 1) qual240 = 1;
-    if (d.indexOf('url360') + 1) qual360 = 1;
-    if (d.indexOf('url480') + 1) qual480 = 1;
-    if (d.indexOf('url720') + 1) qual720 = 1;
-    count = qual240 + qual360 + qual480 + qual720;
-    var f = d.split('url240');
-    var q = f[1].match(/http:(.*?)?extra/);
-    if (q != null) {
-        var c = q[1]["replace"](/\\\\\\/g, '');
+    if (d.indexOf('www.youtube.com') + 1) {
+        var f = d.split('ajax.preload');
+        var q = f[1].match(/http:(.*?)?autoplay/);
+        var c = q[1]["replace"](/\\/g, '');
         c = c.replace("?", '');
-        c = c.split("videos")
-        c[0] = c[0].replace("//", '');
-        c[1] = c[1].replace("240.mp4", '');
-        for (var e = 0; e < count; e++) {
-            switch (e) {
-                case 3:
-                    b = "720.mp4";
-                    g = "720p.mp4";
-                    break;
-                case 2:
-                    b = "480.mp4";
-                    g = "480p.mp4";
-                    break;
-                case 1:
-                    b = "360.mp4";
-                    g = "360p.mp4";
-                    break;
-                case 0:
-                    var b = "240.mp4";
-                    var g = "240p.mp4";
-                    break;
+        c = c.replace("//www.youtube.com/embed/", '');
+        return getYoutubeUrl(c);
+    } else {
+        var qual240 = 0;
+        var qual360 = 0;
+        var qual480 = 0;
+        var qual720 = 0;
+        if (d.indexOf('url240') + 1) qual240 = 1;
+        if (d.indexOf('url360') + 1) qual360 = 1;
+        if (d.indexOf('url480') + 1) qual480 = 1;
+        if (d.indexOf('url720') + 1) qual720 = 1;
+        count = qual240 + qual360 + qual480 + qual720;
+        var f = d.split('url240');
+        var q = f[1].match(/http:(.*?)?extra/);
+        if (q != null) {
+            var c = q[1]["replace"](/\\\\\\/g, '');
+            c = c.replace("?", '');
+            c = c.split("videos")
+            c[0] = c[0].replace("//", '');
+            c[1] = c[1].replace("240.mp4", '');
+            for (var e = 0; e < count; e++) {
+                switch (e) {
+                    case 3:
+                        b = "720.mp4";
+                        g = "720p.mp4";
+                        break;
+                    case 2:
+                        b = "480.mp4";
+                        g = "480p.mp4";
+                        break;
+                    case 1:
+                        b = "360.mp4";
+                        g = "360p.mp4";
+                        break;
+                    case 0:
+                        var b = "240.mp4";
+                        var g = "240p.mp4";
+                        break;
+                }
+                a = ["http://" + c[0] + "videos" + c[1] + b, g];
+                Main.url_arr["push"](a);
+                if (Main.ver > 2.53 && g.indexOf(API.Vquality) > -1) {
+                    i = a[0];
+                    Selectbox.url_selected = Main.url_arr["length"] - 1;
+                }
             }
-            a = ["http://" + c[0] + "videos" + c[1] + b, g];
-            Main.url_arr["push"](a);
-            if (Main.ver > 2.53 && g.indexOf(API.Vquality) > -1) {
-                i = a[0];
-                Selectbox.url_selected = Main.url_arr["length"] - 1;
+            if (Main.url_arr["length"] > 0 && i == "") {
+                i = Main.url_arr[0][0];
             }
         }
-        if (Main.url_arr["length"] > 0 && i == "") {
-            i = Main.url_arr[0][0];
-        }
+        return i;
     }
-    return i;
 }
 YandexGetUrl = function(a) {
     var e = "";
