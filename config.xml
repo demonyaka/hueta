@@ -8,6 +8,7 @@
     <fullwidget>y</fullwidget>
     <category>video</category>
     <movie>n</movie>
+	<mouse>y</mouse>
     <srcctl>y</srcctl>
     <ticker>n</ticker>
     <childlock>n</childlock>

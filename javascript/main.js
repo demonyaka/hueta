@@ -146,7 +146,6 @@ Main.onLoad = function() {
         }
     } catch (b) {}
 };
-
 Main.Init = function() {
     Main.url_arr = [];
     if (API.star_url["indexOf"]("fav.dat") > 0) {
@@ -165,6 +164,14 @@ Main.Init = function() {
             API.Request(API.star_url);
         }
     }
+	$("html").click(function( event ) {
+		KeyHandler.setFocus(2);
+		event.stopImmediatePropagation();
+	});
+	$("body").click(function( event ) {
+	KeyHandler.setFocus(0);
+	event.stopImmediatePropagation();
+	});
     setTimeout("setGen()", 15000)
 };
 //key приходит кнопка
@@ -2215,7 +2222,7 @@ Selectbox.updateBox = function() {
                 d += "<li " + b + ">" + i + this["select_list"][c][1] + "</li>";
             }
         }
-        d += '<div style="height:25px;"><div id="navi_button"><img src="img/buttons/exit.png"></img></div><span id="navi_helpertext">Выход</span>';
+        d += '<div><div id="navi_button"><img src="img/buttons/exit.png"></img></div><span id="navi_helpertext">Выход</span>';
         d += '<div id="navi_button"><img src="img/buttons/move.png"></img></div><span id="navi_helpertext">Листать</span>';
         d += '<div id="navi_button"><img src="img/buttons/enter.png"></img></div><span id="navi_helpertext">Выбрать</span></div></div>';
         widgetAPI.putInnerHTML(getId("selectbox"), d);
@@ -2329,7 +2336,21 @@ Display.loadingshowTimer = function() {
 Display.showplayer = function() {
     if (KeyHandler.Focus != 0) {
         if (Player.state == Player.PLAYING_VOD || Player.state == Player.PAUSA_VOD) {
-            Main.ya_epg_info_arr = [];
+			$("html").unbind("click");
+            $("html").click(function( event ) {
+			if (KeyHandler.NumberEntered != "") {
+                clearTimeout(this.ChSelectorTimeout);
+                KeyHandler.KanalSelector();
+            } else {
+                if (Main.PlayerMode == "0") {
+                    Main.player["info"]("Флеш-Плеер");
+                }
+                Display.showplayer();
+            }
+			KeyHandler.setFocus(3);
+			event.stopImmediatePropagation();
+			});
+			Main.ya_epg_info_arr = [];
             Main.epg_t1 = 0;
             Main.epg_t2 = 0;
             getIdn("help_navi_l_player");
@@ -2373,6 +2394,12 @@ Display.showplayer = function() {
             }
         } else {
             if (Player.state == Player.PLAYING_LIVE) {
+				$("html").unbind("click");
+				$("html").click(function( event ) {
+				Display.showplayer();
+				KeyHandler.setFocus(2);
+				event.stopImmediatePropagation();
+				});
                 getIdn("help_navi_vod_player");
                 getIdn("p_info_line");
                 getIdn("p_epg_line");
@@ -2512,17 +2539,31 @@ function SmartExit() {
         Player.ReturnMenu();
     }
 }
+
 KeyHandler.setFocus = function(a) {
     KeyHandler.Focus = a;
     switch (a) {
         case 0:
+			$("body").unbind('click');
+			$("body").click(function( event ) {
+			getId("MainMenu_Anchor")["focus"]();
+            if (!Main.seriesC) {
+                pluginAPI.registKey(tvKey.KEY_TOOLS);
+            }
+			event.stopImmediatePropagation();
+			});
             getId("MainMenu_Anchor")["focus"]();
             if (!Main.seriesC) {
                 pluginAPI.registKey(tvKey.KEY_TOOLS);
             }
             break;
         case 1:
-            getId("LoadingPlayer_Anchor")["focus"]();
+			$("body").unbind('click');
+			$("body").click(function( event ) {
+			getId("LoadingPlayer_Anchor")["focus"]();;
+			event.stopImmediatePropagation();
+			});
+			getId("LoadingPlayer_Anchor")["focus"]();;
             break;
         case 2:
             getId("LivePlayer_Anchor")["focus"]();
@@ -2537,15 +2578,35 @@ KeyHandler.setFocus = function(a) {
             }
             break;
         case 4:
+			$("body").unbind('click');
+			$("body").click(function( event ) {
+			getId("Selectbox_Anchor")["focus"]();
+			event.stopImmediatePropagation();
+			});
             getId("Selectbox_Anchor")["focus"]();
             break;
         case 5:
+			$("body").unbind('click');
+			$("body").click(function( event ) {
+			getId("RedFav_Anchor")["focus"]();
+			event.stopImmediatePropagation();
+			});
             getId("RedFav_Anchor")["focus"]();
             break;
         case 6:
+			$("body").unbind('click');
+			$("body").click(function( event ) {
+			getId("Guide_Anchor")["focus"]();
+			event.stopImmediatePropagation();
+			});
             getId("Guide_Anchor")["focus"]();
             break;
         case 7:
+			$("body").unbind('click');
+			$("body").click(function( event ) {
+			getId("Setap_Anchor")["focus"]();
+			event.stopImmediatePropagation();
+			});
             getId("Setap_Anchor")["focus"]();
             break;
         default:
@@ -2719,6 +2780,251 @@ KeyHandler.GuideKeyDown = function() {
             break;
     }
 };
+MouseClick = function(a) {
+	switch (a) {
+		case 'main_enter':
+			Main.PlayChannel();
+			break;
+		case 'main_green':
+            if (!Main.FAV && !Main.block_fav && API.XML_URL["indexOf"]("Open") < 0) {
+                if (API.favorites["length"] > 1) {
+                    Main.showFavSelector();
+                } else {
+                    Main.saveFavorites();
+                }
+            } else {
+                Display.status("Недоступно!");
+            }
+			break;
+		case 'main_yellow':
+            if (!Main.block_fav && API.XML_URL["indexOf"]("Open") < 0) {
+                if (API.favorites["length"] < 2 && !Main.FAV) {
+                    Main.FAV = true;
+                    Main.opencommonFile(Main.fav_url);
+                } else {
+                    if (API.favorites["length"] > 1) {
+                        Main.FAV = true;
+                        Main.showFavSelector();
+                    }
+                }
+            } else {
+                Display.status("Недоступно!");
+            }
+            break;
+		case 'main_blue':
+			if (Main.FAV && !Main.block_fav) {
+                Main.RED = true;
+                Main.Menu();
+            } else {
+                if (Player.state == Player.STOPPED) {
+                    if (Main.ret) {
+                        this["bl"] = true;
+                    }
+                    Main.PlayPrevPlaylist();
+                }
+            }
+            break;
+		case 'main_red':
+            if (!Main.help_info && !Main.FAV && API.categories["length"] > 2) {
+                Main.showCategorySelector();
+            } else {
+                if (API.XML_URL["indexOf"]("history.dat") > 0) {
+                    Main.delHistory(API.XML_URL);
+                } else {
+                    Display.status("Недоступно!");
+                }
+            }
+            break;
+		case 'main_tools':
+            if (!Main.FirstStart && !Main.help_info) {
+                if (Player.state != Player.STOPPED) {
+                    Player.stopV();
+                    setTimeout("getIdn('main')", 700);
+                    Main.LoadTimer("SetupFormular();", 1500);
+                } else {
+                    getIdn("main");
+                    Main.LoadTimer("SetupFormular();", 600);
+                }
+            }
+            break;
+		case 'main_exit':
+            SmartExit();
+            break;
+		case 'setap_enter':
+            onEnter();
+            break;
+		case 'return':
+			widgetAPI.blockNavigation(event);
+            if (Player.state != Player.STOPPED && Main.XML_URL == API.XML_URL) {
+                this["guide_step"] = 0;
+                Main.SetSelectedPosition();
+                getIdn("main");
+                Display.hidestatus();
+                if (Player.state == Player.PLAYING_LIVE) {
+                    KeyHandler.setFocus(2);
+                } else {
+                    KeyHandler.setFocus(3);
+                }
+                Display.showplayer();
+            } else {
+                Main.PlayPrevPlaylist();
+            }
+		break;
+		case 'l_player_size':
+		widgetAPI.blockNavigation(event);
+            if (Main.PlayerMode == "1") {
+                if (Player.size >= 6) {
+                    Player.setSize(0, 1, 0);
+                } else {
+                    Player.setSize(Player.size + 1, 1, 0);
+                }
+                Main.SetZoom = false;
+            } else {
+                Display.status("недоступно!");
+            }
+        break;
+		case 'l_player_exit':
+            widgetAPI.blockNavigation(event);
+            if (Main.PlayerMode == "0") {
+                Main.stopFPlayer();
+                Main.Menu();
+            } else {
+                Player.ReturnMenu();
+            }
+            break;
+        case 'l_player_return':
+            widgetAPI.blockNavigation(event);
+            if (Main.PlayerMode == "0") {
+                Main.stopFPlayer();
+            } else {
+                Display.hideplayer();
+            }
+            Main.Menu();
+            break;
+		case 'vod_player_pause':
+			widgetAPI.blockNavigation(event);
+            if (Player.state == Player.PAUSA_VOD) {
+                Player.resumeVideo();
+            } else {
+                Player.pauseVideo();
+            }
+			break;
+		case 'vod_player_play':
+			widgetAPI.blockNavigation(event);
+            if (Player.state == Player.PAUSA_VOD) {
+                Player.resumeVideo();
+            } else {
+                Player.pauseVideo();
+            }
+			break;
+		case 'vod_player_ff':
+			widgetAPI.blockNavigation(event);
+            Player.MinutesJump(0.5);
+            break;
+		case 'vod_player_rw':
+			widgetAPI.blockNavigation(event);
+            Player.MinutesJump(-0.5);
+            break;
+		case 'vod_player_exit':
+			widgetAPI.blockNavigation(event);
+            Player.ReturnMenu();
+			break;
+		case 'vod_player_size':
+			widgetAPI.blockNavigation(event);
+            if (Main.PlayerMode == "1") {
+                if (Player.size >= 6) {
+                    Player.setSize(0, 1, 0);
+                } else {
+                    Player.setSize(Player.size + 1, 1, 0);
+                }
+                Main.SetZoom = false
+            } else {
+                Display.status("недоступно!");
+            }
+			break;
+		case 'vod_player_return':
+			widgetAPI.blockNavigation(event);
+            if (Player.total_time == 0) {
+                Player.stopV();
+            }
+            Main.Menu();
+			break;
+		case 'guide_ff':
+			widgetAPI.blockNavigation(event);
+            if (Main.yandextv_mode) {
+                T.delta++;
+                if (T.delta == 101) {
+                    T.delta = 0;
+                }
+                YandexGetUrl(GetYindex());
+            } else {
+                ListNextPage();
+            }
+			break;
+		case 'guide_rw':
+			widgetAPI.blockNavigation(event);
+            if (Main.yandextv_mode) {
+                T.delta--;
+                if (T.delta == 99) {
+                    T.delta = 0;
+                }
+                YandexGetUrl(GetYindex());
+            } else {
+                ListPrevPage();
+            }
+			break;
+		case 'guide_pause':
+			widgetAPI.blockNavigation(event);
+            if (Main.yandextv_mode) {
+                    Main.Ya_flag_step++;
+                    YandexGetUrl(GetYindex());
+                } else {
+                    if (API.XML_URL["indexOf"]("start.xml") == 0) {
+                        if (Main.ya_auto && !Main.ya_base_info) {
+                            GetYaBaseInfo();
+                        }
+                    }
+                }
+			break;
+		case 'guide_play':
+			widgetAPI.blockNavigation(event);
+            if (Main.yandextv_mode) {
+                    if (!Main.ya_all_day) {
+                        Main.ya_all_day = true;
+                    } else {
+                        Main.ya_all_day = false;
+                    }
+                    YandexGetUrl(GetYindex());
+            } 
+			break;
+		case 'guide_return':
+			widgetAPI.blockNavigation(event);
+            Main.PlayPrevPlaylist();
+            if (Player.state == Player.PLAYING_LIVE) {
+                this["guide_step"] = 1
+            }
+            break;
+		case 'redfav_red':
+            Main.delFavorites();
+            break;
+        case 'redfav_green':
+            Main.moveFavorites(1);
+            break;
+        case 'redfav_yellow':
+            Main.moveFavorites(-1);
+            break;
+        case 'redfav_blue':
+            if (API.favorites["length"] > 1) {
+                Main.showFavSelector()
+            }
+        break;
+		case 'redfav_return':
+            widgetAPI.blockNavigation(event);
+            Main.RED = false;
+            Main.Menu();
+            break;
+	}
+}
 KeyHandler.MainMenuKeyDown = function() {
     var b = event.keyCode;
     KeyHandler.Keys10(b);
@@ -4554,6 +4860,7 @@ SearchFormular = function() {
             Main.prev_pl_array["pop"]();
         }
         Main.Menu();
+		a._blur();
         return false;
     });
     a.setKeyFunc(tvKey.KEY_EXIT, function(i) {
@@ -4562,9 +4869,14 @@ SearchFormular = function() {
             Main.prev_pl_array["pop"]();
         }
         Main.Menu();
+		a._blur();
         return false;
     });
-    a.setEnterFunc(Search_ok);
+	a.setKeyFunc(tvKey.KEY_ENTER, function(i) {
+    Search_ok();
+	a._blur();
+	});
+	a._focus();
     getId(g)["focus"]();
 };
 Search_ok = function(b) {
@@ -4628,12 +4940,13 @@ function RunImeS(e, c) {
         d.setKeypadPos(110, 75);
     }
     getId(e)["focus"]();
+	d._focus();
     d.setKeyFunc(tvKey.KEY_UP, function(f) {
         if (e != "0") {
             SetStyle1(e);
             Scrol("allInput", c[parseInt(b)]);
             SetStyle2(b);
-            getId(b)["focus"]();
+			RunImeS(b, c);
         }
     });
     d.setKeyFunc(tvKey.KEY_DOWN, function(f) {
@@ -4647,15 +4960,20 @@ function RunImeS(e, c) {
     d.setKeyFunc(tvKey.KEY_RETURN, function(f) {
         widgetAPI.blockNavigation(event);
         Main.Menu();
+		d._blur();
         return false;
     });
     d.setKeyFunc(tvKey.KEY_EXIT, function(f) {
         widgetAPI.blockNavigation(event);
         Main.Menu();
+		d._blur();
         return false;
     });
-    d.setEnterFunc(SaveValue)
-}
+	d.setKeyFunc(tvKey.KEY_ENTER, function(f) {
+    SaveValue();
+	d._blur();
+	});
+};
 ChannelSetupFormular = function() {
     var i = 52;
     var g = 6;
@@ -4979,6 +5297,7 @@ RunIme = function(e) {
         d.setKeypadPos(110, 75);
         d.setQWERTYPos(0, 75);
     }
+	d._focus();
     getId(e)["focus"]();
     d.setKeyFunc(tvKey.KEY_UP, function(f) {
         if (e != "0") {
@@ -4986,6 +5305,7 @@ RunIme = function(e) {
             Scrol("allInput", c[parseInt(e)]);
             SetStyle2(b);
             getId(b)["focus"]();
+			RunIme(b);
         }
     });
     d.setKeyFunc(tvKey.KEY_DOWN, function(f) {
@@ -4993,6 +5313,7 @@ RunIme = function(e) {
         Scrol("allInput", -c[parseInt(a)]);
         SetStyle2(a);
         if (e == "8") {
+			d._blur();
             Main.setap_id = a;
             KeyHandler.setFocus(7);
         } else {
@@ -5007,13 +5328,20 @@ RunIme = function(e) {
         return false;
     });
     d.setKeyFunc(tvKey.KEY_RETURN, function(f) {
-        Return(0);
+		d._blur();
+		Return(0);
         return false;
     });
     d.setKeyFunc(tvKey.KEY_EXIT, function(f) {
-        widgetAPI.sendReturnEvent();
+        d._blur();
+		Return(0);
+        return false
     });
-    d.setEnterFunc(onEnter);
+	d.setKeyFunc(tvKey.KEY_ENTER, function(f) {
+        d._blur();
+		onEnter();
+    });
+    
 };
 var SSize = {
     0: "16X9",
