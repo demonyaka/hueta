@@ -390,7 +390,7 @@ Main.UpdateHelpBar = function() {
                     title = "ИСТОРИЯ";
                     getIdb("5.1_help");
                 } else {
-                    title = "nStreamEvo";
+                    title = "nStreamEvo v1.1.3";
                 }
             }
         }
@@ -6048,7 +6048,11 @@ function YandexParsing(b, c, f, e) {
             }
         }
     };
-    Main.YaHTTP["open"]("GET", b + e, true);
+	if (Main.seriesE) {
+		Main.YaHTTP["open"]("GET", 'http://nstreamevoo.atservers.net/evo/yandex.php?url=' + b + e, true);
+	} else {
+		Main.YaHTTP["open"]("GET", b + e, true);
+	}
     Main.YaHTTP["setRequestHeader"]("User-Agent", "Opera/9.80 (Windows NT 5.1; U; ru) Presto/2.9.168 Version/11.51");
     Main.YaHTTP["send"](null);
 }
