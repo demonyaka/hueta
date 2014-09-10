@@ -374,32 +374,28 @@
     background-image: url("../img/statusbar_bg1.png");
     z-index : 200;
 }
-#selectbox {
-position:absolute;
-top:60px;
-left:550px;
-width:auto;
-height:auto;
-color:#ccc;
-z-index:300;
-display:none;
+#selectbox
+{
+position: absolute;
+top: 60px;
+left: 550px;
+width: 300px;
+height: auto;
+padding:10px;
+color:#FFFFFF;
+border: 1px solid #CCCCCC;
+border-radius: 10px 10px;
+background-image: url("../img/bg4.png");
+z-Index:300;
 }
-
-#selectbox li {
-border:1px solid#999999;
-color:#999;
-overflow:hidden;
-white-space:nowrap;
-list-style-type:none;
-margin-top:4px;
-margin-left:4px;
-padding-top:4px;
-padding-left:4px;
-width:286px;
-height:24px;
-font-size:17px;
-border-radius:4px 4px;
-float:left;
+#selectbox li
+{
+border: 1px solid grey;
+color: grey;
+list-style-type: none;
+margin:4px;
+padding:4px;
+border-radius:5px 5px;
 }
 
 #loading
