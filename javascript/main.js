@@ -1963,157 +1963,161 @@ API.getChannel_list = function(y) {
         var S = "";
         var R = "";
         var Q = "";
-        if (API.XML_URL["toLowerCase"]()["indexOf"](".m3u") >= 0) {
-            var N = {};
-            var L = 1;
-            var J = v.split("\x0A");
-            for (var d = 0; d < J.length; d++) {
-                if ((J[d]["indexOf"]("#EXTINF:") >= 0 && (J[d + 1]["indexOf"]("://") > 0 || J[d + 2]["indexOf"]("://") > 0 || J[d + 1]["indexOf"]("/dtv") > -1 || J[d + 2]["indexOf"]("/dtv") > -1)) || J[d]["indexOf"]("#EXTM3U") >= 0) {
-                    var H = "";
-                    var f = "";
-                    var n = "";
-                    var p = "";
-                    var P = "";
-                    var l = "";
-                    var k = "";
-                    var j = "";
-                    var o = "";
-                    var i = "";
-                    var g = "";
-                    J[d] = J[d]["replace"](/'/g, '"');
-                    g = parser(J[d], "cache=", " ")["replace"](/"/g, "");
-                    g = (g >= 0.5 && g <= 20) ? g : (g >= 50 && g <= 2000) ? g / 100 : "";
-                    f = lrdPr(parser(J[d], 'tvg-name="', '"')["replace"](/"/g, ""))["replace"](/_/g, " ");
-                    if (f != "" && f.indexOf("/m.tv.yandex.") < 0 && f.indexOf("channel=") < 0 && isNaN(parseInt(f))) {
-                        var O = Ya_name_index_obj[f.toLowerCase()];
-                        f = (O != undefined) ? O : "";
-                    }
-                    n = parser(J[d], "tvg-shift=", " ")["replace"](/["\+]/g, "");
-                    p = lrdPr(parser(J[d], 'tvg-logo="', '"')["replace"](/"/g, ""))["replace"](/_/g, " ");
-                    P = parser(J[d], "aspect-ratio=", " ")["replace"](/"/g, "");
-                    P = (P.indexOf("16:9") >= 0 || P.toLowerCase()["indexOf"]("16x9") >= 0 || P.indexOf("0") == 0) ? "0" : (P.indexOf("14:9") >= 0 || P.toLowerCase()["indexOf"]("14x9") >= 0 || P.indexOf("1") == 0) ? "1" : (P.toLowerCase()["indexOf"]("4:3z2") >= 0 || P.toLowerCase()["indexOf"]("4x3z2") >= 0 || P.indexOf("2") == 0) ? "2" : (P.toLowerCase()["indexOf"]("4:3z1") >= 0 || P.toLowerCase()["indexOf"]("4x3z1") >= 0 || P.indexOf("3") == 0) ? "3" : (P.indexOf("4:3") >= 0 || P.toLowerCase()["indexOf"]("4x3") >= 0 || P.indexOf("4") == 0) ? "4" : (P.toLowerCase()["indexOf"]("x-zoom") >= 0 || P.indexOf("5") == 0) ? "5" : "";
-                    (P.toLowerCase()["indexOf"]("auto") >= 0 || P.indexOf("6") == 0) ? "6" : "";
-                    j = parser(J[d], "audio-track=", " ")["replace"](/"/g, "");
-                    j = (j != "") ? (parseInt(j) + 1).toString() : "";
-                    if (d == 0) {
-                        c = (p != "") ? p : "";
-                        b = (P != "") ? P : "";
-                        a = (j != "") ? j : "";
-                        S = (g != "") ? g : "";
-                        u = (n != "") ? n : "";
-                    } else {
-                        k = lrdPr(parser(J[d], 'group-title="', '"')["replace"](/"/g, ""));
-                        o = lrdPr(parser(J[d], ","));
-                        var t = (J[d + 1]["indexOf"]("://") > 0 || J[d + 1]["indexOf"]("/dtv") > -1) ? J[d + 1] : J[d + 2];
-                        t = lrdPr(t);
-                        p = (p != "") ? p : c;
-                        if (p != "" && p.indexOf("://") < 0 && p.indexOf(".png") < 0) {
-                            var r = Ya_icon_name_url_obj[p.toLowerCase()];
-                            p = (r != undefined) ? r : "";
+        if (API.XML_URL["toLowerCase"]()["indexOf"](".m3u8") < 0) {
+            if (API.XML_URL["toLowerCase"]()["indexOf"](".m3u") >= 0) {
+                var N = {};
+                var L = 1;
+                var J = v.split("\x0A");
+                for (var d = 0; d < J.length; d++) {
+                    if ((J[d]["indexOf"]("#EXTINF:") >= 0 && (J[d + 1]["indexOf"]("://") > 0 || J[d + 2]["indexOf"]("://") > 0 || J[d + 1]["indexOf"]("/dtv") > -1 || J[d + 2]["indexOf"]("/dtv") > -1)) || J[d]["indexOf"]("#EXTM3U") >= 0) {
+                        var H = "";
+                        var f = "";
+                        var n = "";
+                        var p = "";
+                        var P = "";
+                        var l = "";
+                        var k = "";
+                        var j = "";
+                        var o = "";
+                        var i = "";
+                        var g = "";
+                        J[d] = J[d]["replace"](/'/g, '"');
+                        g = parser(J[d], "cache=", " ")["replace"](/"/g, "");
+                        g = (g >= 0.5 && g <= 20) ? g : (g >= 50 && g <= 2000) ? g / 100 : "";
+                        f = lrdPr(parser(J[d], 'tvg-name="', '"')["replace"](/"/g, ""))["replace"](/_/g, " ");
+                        if (f != "" && f.indexOf("/m.tv.yandex.") < 0 && f.indexOf("channel=") < 0 && isNaN(parseInt(f))) {
+                            var O = Ya_name_index_obj[f.toLowerCase()];
+                            f = (O != undefined) ? O : "";
                         }
-                        if (t.indexOf(".m3u") > -1 || t.indexOf(".xml") > -1) {
-                            p = (p == "") ? "open.png" : p;
+                        n = parser(J[d], "tvg-shift=", " ")["replace"](/["\+]/g, "");
+                        p = lrdPr(parser(J[d], 'tvg-logo="', '"')["replace"](/"/g, ""))["replace"](/_/g, " ");
+                        P = parser(J[d], "aspect-ratio=", " ")["replace"](/"/g, "");
+                        P = (P.indexOf("16:9") >= 0 || P.toLowerCase()["indexOf"]("16x9") >= 0 || P.indexOf("0") == 0) ? "0" : (P.indexOf("14:9") >= 0 || P.toLowerCase()["indexOf"]("14x9") >= 0 || P.indexOf("1") == 0) ? "1" : (P.toLowerCase()["indexOf"]("4:3z2") >= 0 || P.toLowerCase()["indexOf"]("4x3z2") >= 0 || P.indexOf("2") == 0) ? "2" : (P.toLowerCase()["indexOf"]("4:3z1") >= 0 || P.toLowerCase()["indexOf"]("4x3z1") >= 0 || P.indexOf("3") == 0) ? "3" : (P.indexOf("4:3") >= 0 || P.toLowerCase()["indexOf"]("4x3") >= 0 || P.indexOf("4") == 0) ? "4" : (P.toLowerCase()["indexOf"]("x-zoom") >= 0 || P.indexOf("5") == 0) ? "5" : "";
+                        (P.toLowerCase()["indexOf"]("auto") >= 0 || P.indexOf("6") == 0) ? "6" : "";
+                        j = parser(J[d], "audio-track=", " ")["replace"](/"/g, "");
+                        j = (j != "") ? (parseInt(j) + 1).toString() : "";
+                        if (d == 0) {
+                            c = (p != "") ? p : "";
+                            b = (P != "") ? P : "";
+                            a = (j != "") ? j : "";
+                            S = (g != "") ? g : "";
+                            u = (n != "") ? n : "";
+                        } else {
+                            k = lrdPr(parser(J[d], 'group-title="', '"')["replace"](/"/g, ""));
+                            o = lrdPr(parser(J[d], ","));
+                            var t = (J[d + 1]["indexOf"]("://") > 0 || J[d + 1]["indexOf"]("/dtv") > -1) ? J[d + 1] : J[d + 2];
+                            t = lrdPr(t);
+                            p = (p != "") ? p : c;
+                            if (p != "" && p.indexOf("://") < 0 && p.indexOf(".png") < 0) {
+                                var r = Ya_icon_name_url_obj[p.toLowerCase()];
+                                p = (r != undefined) ? r : "";
+                            }
+                            if (t.indexOf(".m3u8") < 0) {
+                                if (t.indexOf(".m3u") > -1 || t.indexOf(".xml") > -1) {
+                                    p = (p == "") ? "open.png" : p;
+                                    if (k != "") {
+                                        f = "Категория : " + k
+                                    }
+                                    i = t;
+                                    t = "";
+                                }
+                            }
+                            if (t != "") {
+                                P = (P != "") ? P : b;
+                                j = (j != "") ? j : a;
+                                n = (n != "") ? n : u;
+                                g = (g != "") ? g : S;
+                            }
                             if (k != "") {
-                                f = "Категория : " + k
+                                l = N[k];
+                                if (l == undefined) {
+                                    N[k] = L;
+                                    l = L;
+                                    var M = [L, k];
+                                    API.categories["push"](M);
+                                    L++;
+                                }
                             }
-                            i = t;
-                            t = "";
+                            var q = [o, t, p, f, l, i, P, j, g, "", n, "", "", ""];
+                            API.channels["push"](q);
+                            d++;
                         }
-                        if (t != "") {
-                            P = (P != "") ? P : b;
-                            j = (j != "") ? j : a;
-                            n = (n != "") ? n : u;
-                            g = (g != "") ? g : S;
-                        }
-                        if (k != "") {
-                            l = N[k];
-                            if (l == undefined) {
-                                N[k] = L;
-                                l = L;
-                                var M = [L, k];
-                                API.categories["push"](M);
-                                L++;
-                            }
-                        }
-                        var q = [o, t, p, f, l, i, P, j, g, "", n, "", "", ""];
-                        API.channels["push"](q);
-                        d++;
                     }
                 }
-            }
-        } else {
-            if (v) {
-                try {
-                    API.playlist_name = x(v, "playlist_name");
-                    API.playlist_name = (API.playlist_name == "") ? Main.playlist_name : (API.playlist_name == "no_name") ? "" : API.playlist_name;
-                    API.next_page_url = x(v, "next_page_url");
-                    API.prev_page_url = x(v, "prev_page_url");
-                    API.search_on = x(v, "search_on");
-                    API.next_page_text = w(v, "next_page_url", "text");
-                    API.prev_page_text = w(v, "prev_page_url", "text");
-                    var K = v.getElementsByTagName("all_channels");
-                    if (K.length > 0) {
-                        c = x(K[0], "all_logo");
-                        b = x(K[0], "all_size", 1);
-                        a = x(K[0], "all_audiotrack_num", 1);
-                        S = x(K[0], "all_buffer", 1);
-                        u = x(K[0], "all_timeshift", 1);
-                        R = x(K[0], "all_region", 1);
-                        Q = x(K[0], "all_parser");
-                    }
-                    var I = v.getElementsByTagName("channel");
-                    for (var D = 0; D < I.length; D++) {
-                        o = x(I[D], "title");
-                        t = x(I[D], "stream_url");
-                        p = x(I[D], "logo_30x30");
-                        var G = x(I[D], "logo");
-                        f = x(I[D], "description");
-                        var E = x(I[D], "parser");
-                        E = (E != "") ? E : Q;
-                        l = x(I[D], "category_id");
-                        p = (p != "") ? p : (G != "") ? G : (c != "") ? c : "";
-                        i = "";
-                        var C = "";
-                        P = "";
-                        j = "";
-                        g = "";
-                        var B = "";
-                        n = "";
-                        var A = "";
-                        if (t != "") {
-                            P = x(I[D], "size", 1);
-                            P = (P != "") ? P : b;
-                            j = x(I[D], "audiotrack_num", 1);
-                            j = (j != "") ? j : a;
-                            g = x(I[D], "buffer", 1);
-                            g = (g != "") ? g : S;
-                            B = x(I[D], "ibuffer", 1);
-                            n = x(I[D], "timeshift", 1);
-                            n = (n != "") ? n : u;
-                            A = x(I[D], "region", 1);
-                            A = (A != "") ? A : R
-                        } else {
-                            i = x(I[D], "playlist_url");
-                            C = x(I[D], "search_on");
-                        }
-                        q = [o, t, p, f, l, i, P, j, g, B, n, A, E, C];
-                        API.channels["push"](q);
-                    }
+            } else {
+                if (v) {
                     try {
-                        var z = v.getElementsByTagName("category");
-                        for (var s = 0; s < z.length; s++) {
-                            var L = x(z[s], "category_id");
-                            var k = x(z[s], "category_title");
-                            if (L != "" && k != "") {
-                                var M = [L, k];
-                                API.categories["push"](M);
+                        API.playlist_name = x(v, "playlist_name");
+                        API.playlist_name = (API.playlist_name == "") ? Main.playlist_name : (API.playlist_name == "no_name") ? "" : API.playlist_name;
+                        API.next_page_url = x(v, "next_page_url");
+                        API.prev_page_url = x(v, "prev_page_url");
+                        API.search_on = x(v, "search_on");
+                        API.next_page_text = w(v, "next_page_url", "text");
+                        API.prev_page_text = w(v, "prev_page_url", "text");
+                        var K = v.getElementsByTagName("all_channels");
+                        if (K.length > 0) {
+                            c = x(K[0], "all_logo");
+                            b = x(K[0], "all_size", 1);
+                            a = x(K[0], "all_audiotrack_num", 1);
+                            S = x(K[0], "all_buffer", 1);
+                            u = x(K[0], "all_timeshift", 1);
+                            R = x(K[0], "all_region", 1);
+                            Q = x(K[0], "all_parser");
+                        }
+                        var I = v.getElementsByTagName("channel");
+                        for (var D = 0; D < I.length; D++) {
+                            o = x(I[D], "title");
+                            t = x(I[D], "stream_url");
+                            p = x(I[D], "logo_30x30");
+                            var G = x(I[D], "logo");
+                            f = x(I[D], "description");
+                            var E = x(I[D], "parser");
+                            E = (E != "") ? E : Q;
+                            l = x(I[D], "category_id");
+                            p = (p != "") ? p : (G != "") ? G : (c != "") ? c : "";
+                            i = "";
+                            var C = "";
+                            P = "";
+                            j = "";
+                            g = "";
+                            var B = "";
+                            n = "";
+                            var A = "";
+                            if (t != "") {
+                                P = x(I[D], "size", 1);
+                                P = (P != "") ? P : b;
+                                j = x(I[D], "audiotrack_num", 1);
+                                j = (j != "") ? j : a;
+                                g = x(I[D], "buffer", 1);
+                                g = (g != "") ? g : S;
+                                B = x(I[D], "ibuffer", 1);
+                                n = x(I[D], "timeshift", 1);
+                                n = (n != "") ? n : u;
+                                A = x(I[D], "region", 1);
+                                A = (A != "") ? A : R
+                            } else {
+                                i = x(I[D], "playlist_url");
+                                C = x(I[D], "search_on");
                             }
+                            q = [o, t, p, f, l, i, P, j, g, B, n, A, E, C];
+                            API.channels["push"](q);
+                        }
+                        try {
+                            var z = v.getElementsByTagName("category");
+                            for (var s = 0; s < z.length; s++) {
+                                var L = x(z[s], "category_id");
+                                var k = x(z[s], "category_title");
+                                if (L != "" && k != "") {
+                                    var M = [L, k];
+                                    API.categories["push"](M);
+                                }
+                            }
+                        } catch (F) {
+                            API.categories = [];
                         }
                     } catch (F) {
-                        API.categories = [];
+                        API.channels = [];
                     }
-                } catch (F) {
-                    API.channels = [];
                 }
             }
         }
@@ -5721,10 +5725,10 @@ function YandexParsing(b, c, f, e) {
         }
     };
     if (Main.seriesE) {
-	Main.YaHTTP["open"]("GET", 'http://nstreamevoo.atservers.net/evo/yandex.php?url=' + b + e, true);
-	} else {
-	Main.YaHTTP["open"]("GET", b + e, true);
-	}
+        Main.YaHTTP["open"]("GET", 'http://nstreamevoo.atservers.net/evo/yandex.php?url=' + b + e, true);
+    } else {
+        Main.YaHTTP["open"]("GET", b + e, true);
+    }
     Main.YaHTTP["setRequestHeader"]("User-Agent", "Opera/9.80 (Windows NT 5.1; U; ru) Presto/2.9.168 Version/11.51");
     Main.YaHTTP["send"](null);
 }
