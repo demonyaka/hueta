@@ -7,6 +7,17 @@
 <playlist_url>http://nstreamevoo.atservers.net/4254/start.xml</playlist_url>
 </channel>
 <channel>
+<title>EVO Portal</title>
+<description><![CDATA[ <font size="5" color="33FF00">Просмотр доступен только пользователям группы EVO.</font>
+	<br> <font size="5"> Подробная информация тут: http://nstreamevoo.atservers.net</font>]]></description>
+<playlist_url>http://nstreamevoo.atservers.net/evo/portal/start.xml</playlist_url>
+</channel>
+<channel> 
+    <title>Smart portal</title> 
+    <playlist_url>http://samsung-smart.mooo.com/portal/start.xml</playlist_url>  
+<description><![CDATA[<font size="5">Если ваш телевизор или плеер не подключены через мак адрес плейлст у вас работать не будет!!,<br> дальнейшя информация у нас в группе <br> <font color="#fe2712">Виджет "Smart portal' для Samsung<font color="#fe2712"><br> <font color="#fe2712">https://vk.com/smartvportal</font></p> </body>]]></description>
+</channel>
+<channel>
 <title><![CDATA["ИСТОРИЯ"]]></title>
 <playlist_url>OpenHistory</playlist_url>
 </channel>

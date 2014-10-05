@@ -99,7 +99,7 @@ var Main = {
     St_size: null,
     IntervalUpdateTime: null,
     SlideShowInterval: null,
-    version: "1.0.0",
+    version: "1.0.4",
     ver: "2014"
 };
 
@@ -112,8 +112,8 @@ Main.onLoad = function() {
         this["audio_output_device"] = this["Audio"].GetOutputDevice();
         var a = getId("pluginTV");
         this["hardware_type"] = a.GetProductType();
-        this["hardware"] = a.GetProductCode(1);
-        if (this["hardware"] == "LN40B650_KOR") {
+        this["hardware"] = a.GetProductCode(1).substr(2, 7);
+        if (this["hardware"] == "40B650_") {
             Main.Emu = true;
         } else {
             if (this["hardware"]["indexOf"]("C") > 1) {
@@ -122,12 +122,13 @@ Main.onLoad = function() {
                 if (this["hardware"]["indexOf"]("D") > 1) {
                     Main.seriesD = true;
                 } else {
-                    if (this["hardware"]["indexOf"]("E") > 1 || (this["hardware"]["indexOf"]("C") < 0 && this["hardware"]["indexOf"]("D") < 0)) {
+                    if (this["hardware"]["indexOf"]("E") > 1 || this["hardware"]["indexOf"]("EH") > 1 || this["hardware"]["indexOf"]("ES") > 1) {
                         Main.seriesE = true;
                     }
                 }
             }
-        } if (API.init() && Player.init()) {
+        }
+        if (API.init() && Player.init()) {
             window.onShow = Main.onShowEventTVKey;
             widgetAPI.sendReadyEvent();
             Main.init_id_url = Math.round((Math.random() * 2.99) + 0.51) - 1;
@@ -383,11 +384,12 @@ Main.UpdateHelpBar = function() {
                     title = "ИСТОРИЯ";
                     getIdb("5.1_help");
                 } else {
-                    title = "nStreamEvo v.1.0.3";
+                    title = "nStreamEvo v." + Main.version;
                 }
             }
         }
-    } if (Player.state != Player.STOPPED) {
+    }
+    if (Player.state != Player.STOPPED) {
         getIdb("1_help");
         if (Player.state == Player.PLAYING_VOD && !this["RED"]) {
             getIdb("8_help");
@@ -424,7 +426,8 @@ Main.UpdateHelpBar = function() {
                 getIdb("9_help");
             }
         }
-    } if (Main.seriesE) {
+    }
+    if (Main.seriesE) {
         getId("widget_date")["style"]["left"] = "540px";
         getId("widget_time")["style"]["left"] = "850px";
     }
@@ -660,13 +663,15 @@ Main.showinfoList = function(b) {
                 if (API.prev_page_url != "") {
                     a += "<td><img src='img/buttons/rew.png'></img></td><td>Назад</td>";
                 }
-            } if (API.next_page_text != "" && (API.next_page_url != "" || (this["url"] == "" && API.next_page_text["indexOf"]("В портал") == -1))) {
+            }
+            if (API.next_page_text != "" && (API.next_page_url != "" || (this["url"] == "" && API.next_page_text["indexOf"]("В портал") == -1))) {
                 a += "<td><img src='img/buttons/ff.png'></img></td><td>" + API.next_page_text + "</td>";
             } else {
                 if (API.next_page_url != "") {
                     a += "<td><img src='img/buttons/ff.png'></img></td><td>Вперёд</td>";
                 }
-            } if (API.next_page_url != "" || API.prev_page_url != "") {
+            }
+            if (API.next_page_url != "" || API.prev_page_url != "") {
                 a += "<td><img src='img/buttons/blue.png'></img></td><td>В начало</td>";
             }
             if (a != "") {
@@ -1001,7 +1006,7 @@ Main.playlist = function() {
                                     Main.FAV = true;
                                     Main.opencommonFile(Main.pl_url);
                                 } else {
-                                    if (this["xxx"] || Main.name["indexOf"]("-=ПОИСК=-") == 0 || this["pl_url"]["indexOf"]("youtube.php") >= 0 || this["search_on"] != "") {
+                                    if (this["xxx"] || Main.name["indexOf"]("-=ПОИСК=-") == 0 || this["search_on"] != "") {
                                         if (!this["xxx"]) {
                                             Main.search = true;
                                         }
@@ -1049,7 +1054,8 @@ Main.PlayNoFlashStream = function() {
         Main.Foto = true;
     } else {
         StopSlideShow()
-    } if (API.Ibuffer > 0 && API.Buffer == 0) {
+    }
+    if (API.Ibuffer > 0 && API.Buffer == 0) {
         Main.buffer = "";
     } else {
         if (Main.Foto) {
@@ -1087,7 +1093,8 @@ Main.PlayNoFlashStream = function() {
             }
             API.AsReqMode = true;
         }
-    } if (dPr(a) != "") {
+    }
+    if (dPr(a) != "") {
         if (a.indexOf(".m3u8") > 0) {
             a = a + "|COMPONENT=HLS";
         }
@@ -1253,7 +1260,8 @@ Main.opencommonFile = function(c) {
                     if (Main.FAV) {
                         Main.FAV = false;
                     }
-                } if (API.XML_URL["indexOf"]("OpenFav") >= 0) {
+                }
+                if (API.XML_URL["indexOf"]("OpenFav") >= 0) {
                     this["prev_pl_array"]["pop"]();
                     this["playlist_prev"] = true;
                 }
@@ -1420,13 +1428,15 @@ function ReadUsbDirN() {
                         l += ' "' + k + e + '</font>"';
                     } else {
                         l += ' " Без расширения "';
-                    } if (n[o]["size"]) {
+                    }
+                    if (n[o]["size"]) {
                         l += "<br> Размер : " + k + ReSize(n[o]["size"]) + "</font>";
                     }
                     var v = Main.pl_url["replace"]("$USB_DIR", "/dtv/usb");
                 } else {
                     l += "<br> Тип : " + c + " Папка </font>";
-                } if (n[o]["mtime"]) {
+                }
+                if (n[o]["mtime"]) {
                     l += "<br> Дата создания : " + k + n[o]["mtime"] + "</font>";
                 }
                 if (!n[o]["isDir"] && Playlist.exec(g) != null) {
@@ -1567,7 +1577,8 @@ function SetTimeDate() {
                 getDT(g);
             }
         }
-    } if (Main.ya_epg_info_arr["length"] > 0 && Main.epg_t1 <= Main.epg_t2) {
+    }
+    if (Main.ya_epg_info_arr["length"] > 0 && Main.epg_t1 <= Main.epg_t2) {
         var j = parseInt((T.h * 3600 + T.m * 60 + T.s) * 1000);
         if (Main.epg_t1 < 24 * 3600000 && Main.epg_t1 > j) {
             j += 24 * 3600000;
@@ -1807,7 +1818,7 @@ API.Request = function(b) {
                 a = "&";
             }
             if (API.Mac == "1") {
-                b += a + "box_mac=" + Main.MAC;
+                b += a + "box_mac=" + Main.MAC.toLowerCase();
             }
             b = Super_Send(b);
             alert("xml_url 1 =" + b);
@@ -2274,7 +2285,8 @@ Selectbox.SelectFav = function() {
         Main.opencommonFile(Main.fav_url);
     } else {
         Main.saveFavorites();
-    } if (Main.RED) {
+    }
+    if (Main.RED) {
         Main.SetFavSelectedPosition();
         Main.delFavorites();
         KeyHandler.setFocus(5)
@@ -2315,13 +2327,13 @@ Display.loadinghide = function() {
 };
 Display.loadingstep = function() {
     if (this["index"] < 10) {
-        getId("imgAnim")["src"] = "img/loading/loading_0" + this["index"] + ".png";
+        getId("imgAnim")["src"] = "$MANAGER_WIDGET/Common/img/loading_0" + this["index"] + ".png";
     } else {
-        getId("imgAnim")["src"] = "img/loading/loading_" + this["index"] + ".png";
+        getId("imgAnim")["src"] = "$MANAGER_WIDGET/Common/img/loading_" + this["index"] + ".png";
     }
     this["index"] ++;
-    if (this["index"] > 10) {
-        this["index"] = 1;
+    if (this["index"] > 11) {
+        this["index"] = 0;
     }
     if (this["run"]) {
         setTimeout("Display.loadingstep();", 200);
@@ -2367,7 +2379,8 @@ Display.showplayer = function() {
                     getId("help_navi_vod_player")["style"]["left"] = "30px"
                 } else {
                     getId("help_navi_vod_player")["style"]["left"] = "40px"
-                } if (Player.repeat) {
+                }
+                if (Player.repeat) {
                     Display.status("Режим повторного воспроизведения.");
                 } else {
                     if (Player.next) {
@@ -2421,11 +2434,13 @@ Display.showplayer = function() {
                     }
                 }
             }
-        } if (Main.PlayerMode == "1") {
+        }
+        if (Main.PlayerMode == "1") {
             getIdb("resolution");
         } else {
             getIdn("resolution");
-        } if (API.Pstyle == "1") {
+        }
+        if (API.Pstyle == "1") {
             getIdb("p_second_line");
         } else {
             getIdn("p_second_line");
@@ -4036,7 +4051,8 @@ Player.GetVideoSize = function() {
             Player.size = (Main.ssize != "") ? parseInt(Main.ssize) : (API.Size != "") ? parseInt(API.Size) : parseInt(this["size"]);
         } else {
             Player.size = 0;
-        } if (this["url"]["indexOf"](".mp3") < 0) {
+        }
+        if (this["url"]["indexOf"](".mp3") < 0) {
             setTimeout("Player.setSize(Player.size,1,1);", 100);
         }
     }
@@ -4143,7 +4159,8 @@ Player.setSize = function(c, b, a) {
                     } else {
                         g = d * (2 - Player.Pw / 100);
                         j = d * (Player.Pw / 200 - 0.5)
-                    } if (Player.Ph <= 100) {
+                    }
+                    if (Player.Ph <= 100) {
                         k = 5.4 * Player.Ph;
                         n = (540 - k) / 2;
                     } else {
@@ -4212,7 +4229,8 @@ Player.setSize = function(c, b, a) {
             if ((b > 0 || (this["size"] == 6 && b == 0 && a == 0)) && !Main.Foto) {
                 Display.status(e);
             }
-        } if (this["Sef"]) {
+        }
+        if (this["Sef"]) {
             this["SefPlugin"].Execute("SetDisplayArea", p, n, l, k);
             this["SefPlugin"].Execute("SetCropArea", j, i, g, o);
         } else {
@@ -4592,7 +4610,8 @@ Search_ok = function(b) {
                     API.XML_URL = Main.pl_url;
                     Main.loading_pl = true;
                     setTimeout("API.Request(API.XML_URL)", 500);
-                } if (Main.search && !Main.xxx) {
+                }
+                if (Main.search && !Main.xxx) {
                     API.search_string = a;
                     Display.status('<b style="color:#00ccff">Подождите! Идёт поиск</b>', 0);
                 } else {
@@ -4712,7 +4731,8 @@ ChannelSetupFormular = function() {
         }
         SetString(k + 2, d[k], 1);
         a[k + 2] = 72;
-    } if (Main.url != "") {
+    }
+    if (Main.url != "") {
         if (k == 0) {
             SetString("3", Main.logo, 1);
         } else {
@@ -4751,7 +4771,8 @@ SaveValue = function() {
         } else {
             s = lrdPr(getId("1")["value"]);
             t = "";
-        } if (Ach(3)["length"] < 1000) {
+        }
+        if (Ach(3)["length"] < 1000) {
             var r = parseInt(Ach(3)["length"] / 100);
             var b = "";
             for (var k = 0; k < r + 1; k++) {
@@ -5274,7 +5295,8 @@ function setGen() {
             API.GenUrl = a[0];
             API.GenT = a[1];
         }
-    } if (dPr(API.GenUrl) != "" && dPr(API.GenT) != "") {
+    }
+    if (dPr(API.GenUrl) != "" && dPr(API.GenT) != "") {
         AGen();
     }
 }
@@ -5495,7 +5517,8 @@ YandexGetUrl = function(a) {
         e = "&flag=" + f[Main.Ya_flag_step];
     } else {
         Main.Ya_flag_step = 0
-    } if (a.indexOf("/m.tv.yandex.") > 0 && a.indexOf("/program/") > 0) {
+    }
+    if (a.indexOf("/m.tv.yandex.") > 0 && a.indexOf("/program/") > 0) {
         var b = a;
     } else {
         if (a.indexOf("/m.tv.yandex.") > 0 && a.indexOf("channel=") > 0) {
@@ -5667,7 +5690,8 @@ function YandexParsing(b, c, f, e) {
                                     q = B + w + "</font>";
                                 }
                             }
-                        } if (q != "") {
+                        }
+                        if (q != "") {
                             if (KeyHandler.Focus == 0) {
                                 if (k == 2 && T.delta == 0 && !Main.ya_all_day && P != "") {
                                     var J = '<font style="position:absolute;left:9px;padding-top:1px;font-size:22px;color:#00ccff;text-align:center;">' + M + "</font>";
@@ -5724,8 +5748,8 @@ function YandexParsing(b, c, f, e) {
             }
         }
     };
-    if (Main.seriesE) {
-        Main.YaHTTP["open"]("GET", 'http://nstreamevoo.atservers.net/evo/yandex.php?url=' + b + e, true);
+    if (Main.seriesC || Main.seriesD || Main.seriesE) {
+        Main.YaHTTP["open"]("GET", 'http://nstreamevoo.atservers.net/evo/yandex.php?url=' + encodeURIComponent(b + e), true);
     } else {
         Main.YaHTTP["open"]("GET", b + e, true);
     }
@@ -5752,7 +5776,8 @@ GetEpgInfo = function() {
         } else {
             Main.epg_t2 = Main.epg_t1;
             c = "Неизвестно";
-        } if (Main.epg_t1 > Main.epg_t2) {
+        }
+        if (Main.epg_t1 > Main.epg_t2) {
             Main.epg_t2 += 24 * 60 * 60 * 1000;
         }
         var b = "";
@@ -6011,4 +6036,4 @@ function Super_parser(e) {
         }
     }
     return c;
-};
+}
