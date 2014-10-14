@@ -112,8 +112,8 @@ Main.onLoad = function() {
         this["audio_output_device"] = this["Audio"].GetOutputDevice();
         var a = getId("pluginTV");
         this["hardware_type"] = a.GetProductType();
-        this["hardware"] = a.GetProductCode(1).substr(2, 7);
-        if (this["hardware"] == "40B650_") {
+        this["hardware"] = a.GetProductCode(1);
+        if (this["hardware"] == "LN40B650_KOR") {
             Main.Emu = true;
         } else {
             if (this["hardware"]["indexOf"]("C") > 1) {
@@ -122,7 +122,7 @@ Main.onLoad = function() {
                 if (this["hardware"]["indexOf"]("D") > 1) {
                     Main.seriesD = true;
                 } else {
-                    if (this["hardware"]["indexOf"]("E") > 1 || this["hardware"]["indexOf"]("EH") > 1 || this["hardware"]["indexOf"]("ES") > 1) {
+                    if (this["hardware"]["indexOf"]("E") > 1 || (this["hardware"]["indexOf"]("C") < 0 && this["hardware"]["indexOf"]("D") < 0)) {
                         Main.seriesE = true;
                     }
                 }
@@ -166,7 +166,6 @@ Main.Init = function() {
             API.Request(API.star_url);
         }
     }
-    setTimeout("setGen()", 15000)
 };
 //key приходит кнопка
 SetVolume = function(key) {
@@ -1865,21 +1864,6 @@ API.Request = function(b) {
     } catch (c) {}
 };
 
-function AGen() {
-    if (!Main.FirstStart && KeyHandler.Focus != 1 && !Player.jump && API.AsReqMode) {
-        var a = null;
-        a = new XMLHttpRequest();
-        a.onreadystatechange = function() {
-            if (a.readyState == 4 && a.status == 200) {
-                API.Gen = true;
-            }
-        };
-        a.open("GET", API.GenUrl, true);
-        a.setRequestHeader("User-Agent", "Opera/9.80 (Windows NT 5.1; U; ru) Presto/2.9.168 Version/11.51");
-        a.send();
-        setTimeout("if(API.Gen){if(API.GenT>=1000)API.GenT=API.GenT/2;API.Gen=false;}else if(API.GenT<512000)API.GenT=API.GenT*2; AGen();", parseInt(API.GenT));
-    }
-}
 API.recieveData = function(a) {
     clearTimeout(API.stReq_timeout);
     if (API.XHRObj["status"] == 200) {
@@ -3822,7 +3806,7 @@ Player.OnBufferingComplete = function() {
             } catch (a) {
                 this["total_time"] = 0;
             }
-            if (this["total_time"] > 0 && this["url"]["indexOf"]("mms://") != 0 && this["url"]["indexOf"](".m3u8") == -1 || this["url"]["indexOf"](".mp3") > 0) {
+            if ((this["total_time"] > 0 && this["url"]["indexOf"]("mms://") != 0 && this["url"]["indexOf"](".m3u8") == -1) || this["url"]["indexOf"](".mp4.m3u8") > 0 || this["url"]["indexOf"](".mp3") > 0) {
                 this["state"] = this["PLAYING_VOD"];
                 KeyHandler.setFocus(3);
                 this["h_url"] = "vod_history.dat";
@@ -4647,8 +4631,8 @@ function RunImeS(e, c) {
     if (Main.seriesC || Main.seriesD) {
         d.setKeypadPos(110, 75);
     } else {
-        d.setQWERTYPos(0, 75);
         d.setKeypadPos(110, 75);
+		d.setQWERTYPos(0, 75);
     }
     getId(e)["focus"]();
     d.setKeyFunc(tvKey.KEY_UP, function(f) {
@@ -5123,7 +5107,7 @@ SetupFormular = function() {
     if (Main.pl_url != "") {
         i += '<form><img src="img/buttons/yellow_m.png"></img><span> - заполнить адресом плейлиста в фокусе</span></form>';
     }
-    i += '<form><span id="text_form3"> Логин для закр. плейлиста :</span><input id="2" type="text" size="' + l + '" maxlength="40"></input></form><form><span id="text_form3">Пароль для закр. плейлиста :</span><input id="3" type="text" size="' + l + '" maxlength="40"></input></form><form><span id="text_form3">UDP прокси ( IP : порт ) :</span><input id="4" type="text" size="' + l + '" maxlength="40"></input></form><form><span id="text_form0">Код доступа к "XXX" ( 0 - 9999 ) : </span><input id="5" type="text" size="' + k + '" maxlength="4"></input></form><form><span id="text_form0">Код названия избранного  ( 0 - 9999 ) :</span><input id="6" type="text" size="' + k + '" maxlength="4"></input></form><form><span>Названия избранных папок, любые, по порядку</span></form><form><span>( назваеие 1 | назваеие 2 | назваеие 3 . . . ) : </span></form><form><input id="7" type="text" size="' + n + '" maxlength="200"></input></form><form><span id="text_form0"> Код региона Яндекс ( "213"- Москва ) : </span><input id="8" type="text" size="' + k + '" maxlength="7"></input></form><form><span id="text_form1">Программка с сайта "m.tv.yandex.</span><img src="img/buttons/lr_m.png"></img><div id="9"></div></form><form><span id="text_form1">Сдвиг времени в программке (+/-12 ч.)</span><img src="img/buttons/lr_m.png"></img><div id="10"></div></form><form><span id="text_form2">Время в виджете : </span><img src="img/buttons/lr_m.png"></img><div id="11"></div></form><form><span id="text_form1">Часовой пояс для "авто." ( +/-12 ч.)</span><img src="img/buttons/lr_m.png"></img><div id="12"></div></form><form><span id="text_form2">Стартовый размер видео : </span><img src="img/buttons/lr_m.png"></img><div id="13"></div></form><form><span id="text_form1">Высота для "X-ZOOM" 50 - 150 ( % )</span><img src="img/buttons/lr_m.png"></img><div id="14"></div></form><form><span id="text_form1">Ширина для "X-ZOOM" 50 - 150 ( % ) </span><img src="img/buttons/lr_m.png"></img><div id="15"></div></form><form><span id="text_form2">ABTO для w/h<1.35 </span><img src="img/buttons/lr_m.png"></img><div id="16"></div></form><form><span id="text_form2">ABTO для 1.34 < w/h <1.79 </span><img src="img/buttons/lr_m.png"></img><div id="17"></div></form><form><span id="text_form2">ABTO для  w/h > 1.78 </span><img src="img/buttons/lr_m.png"></img><div id="18"></div></form><form><span id="text_form2">Форма иконок :</span><img src="img/buttons/lr_m.png"></img><div id="19"></div></form><form><span id="text_form1">Загрузка внешних иконок :</span><img src="img/buttons/lr_m.png"></img><div id="20"></div></form><form><span>Общий размер буфера плеера 0.5 - 20 ( Мб.).</span></form><form><span id="text_form1">"0"- авто. или значение из плейлиста :</span><img src="img/buttons/lr_m.png"></img><div id="21"></div></form><form><span>Начинать воспроизведение после прочтения </span></form><form><span> от 10 до 50 ( % ) от общего размера буфера.</span></form><form><span id="text_form1">"0"- авто. или значение из плейлиста :</span><img src="img/buttons/lr_m.png"></img><div id="22"></div></form><form><span id="text_form1">Нижняя панель подсказок плеера </span><img src="img/buttons/lr_m.png"></img><div id="23"></div></form><form><span id="text_form1">Посылка МАС адреса </span><img src="img/buttons/lr_m.png"></img><div id="24"></div></form><form><span id="text_form1">Маскировка ТВ под браузер </span><img src="img/buttons/lr_m.png"></img><div id="25"></div></form><form><span id="text_form1">Ограничить качество видео </span><img src="img/buttons/lr_m.png"></img><div id="26"></div></form><form><span id="text_form1">Сброс настроек поумолчанию </span><img src="img/buttons/lr_m.png"></img><div id="27"></div></form><form></form><form></form><form></form><form></form><form></form><form></form><form></form><form></form></div>';
+    i += '<form><span id="text_form3"> Логин для закр. плейлиста :</span><input id="2" type="text" size="' + l + '" maxlength="40"></input></form><form><span id="text_form3">Пароль для закр. плейлиста :</span><input id="3" type="text" size="' + l + '" maxlength="40"></input></form><form><span id="text_form3">UDP прокси ( IP : порт ) :</span><input id="4" type="text" size="' + l + '" maxlength="40"></input></form><form><span id="text_form0">Код доступа к "XXX" ( 0 - 9999 ) : </span><input id="5" type="text" size="' + k + '" maxlength="4"></input></form><form><span id="text_form0">Код названия избранного  ( 0 - 9999 ) :</span><input id="6" type="text" size="' + k + '" maxlength="4"></input></form><form><span>Названия избранных папок, любые, по порядку</span></form><form><span>( название 1 | название 2 | название 3 . . . ) : </span></form><form><input id="7" type="text" size="' + n + '" maxlength="200"></input></form><form><span id="text_form0"> Код региона Яндекс ( "213"- Москва ) : </span><input id="8" type="text" size="' + k + '" maxlength="7"></input></form><form><span id="text_form1">Программка с сайта "m.tv.yandex.</span><img src="img/buttons/lr_m.png"></img><div id="9"></div></form><form><span id="text_form1">Сдвиг времени в программке (+/-12 ч.)</span><img src="img/buttons/lr_m.png"></img><div id="10"></div></form><form><span id="text_form2">Время в виджете : </span><img src="img/buttons/lr_m.png"></img><div id="11"></div></form><form><span id="text_form1">Часовой пояс для "авто." ( +/-12 ч.)</span><img src="img/buttons/lr_m.png"></img><div id="12"></div></form><form><span id="text_form2">Стартовый размер видео : </span><img src="img/buttons/lr_m.png"></img><div id="13"></div></form><form><span id="text_form1">Высота для "X-ZOOM" 50 - 150 ( % )</span><img src="img/buttons/lr_m.png"></img><div id="14"></div></form><form><span id="text_form1">Ширина для "X-ZOOM" 50 - 150 ( % ) </span><img src="img/buttons/lr_m.png"></img><div id="15"></div></form><form><span id="text_form2">ABTO для w/h<1.35 </span><img src="img/buttons/lr_m.png"></img><div id="16"></div></form><form><span id="text_form2">ABTO для 1.34 < w/h <1.79 </span><img src="img/buttons/lr_m.png"></img><div id="17"></div></form><form><span id="text_form2">ABTO для  w/h > 1.78 </span><img src="img/buttons/lr_m.png"></img><div id="18"></div></form><form><span id="text_form2">Форма иконок :</span><img src="img/buttons/lr_m.png"></img><div id="19"></div></form><form><span id="text_form1">Загрузка внешних иконок :</span><img src="img/buttons/lr_m.png"></img><div id="20"></div></form><form><span>Общий размер буфера плеера 0.5 - 20 ( Мб.).</span></form><form><span id="text_form1">"0"- авто. или значение из плейлиста :</span><img src="img/buttons/lr_m.png"></img><div id="21"></div></form><form><span>Начинать воспроизведение после прочтения </span></form><form><span> от 10 до 50 ( % ) от общего размера буфера.</span></form><form><span id="text_form1">"0"- авто. или значение из плейлиста :</span><img src="img/buttons/lr_m.png"></img><div id="22"></div></form><form><span id="text_form1">Нижняя панель подсказок плеера </span><img src="img/buttons/lr_m.png"></img><div id="23"></div></form><form><span id="text_form1">Посылка МАС адреса </span><img src="img/buttons/lr_m.png"></img><div id="24"></div></form><form><span id="text_form1">Маскировка ТВ под браузер </span><img src="img/buttons/lr_m.png"></img><div id="25"></div></form><form><span id="text_form1">Ограничить качество видео </span><img src="img/buttons/lr_m.png"></img><div id="26"></div></form><form><span id="text_form1">Сброс настроек по умолчанию </span><img src="img/buttons/lr_m.png"></img><div id="27"></div></form><form></form><form></form><form></form><form></form><form></form><form></form><form></form><form></form></div>';
     widgetAPI.putInnerHTML(getId("infoList"), i);
     SetString("0", API.star_url, 1);
     SetString("1", API.Surl, 1);
@@ -5284,23 +5268,6 @@ onEnter = function() {
     } catch (H) {}
 };
 
-function setGen() {
-    var a = [];
-    if (Main.write) {
-        a = [API.GenUrl, API.GenT];
-        Main.writeFile(a, "01" + API.fn);
-    } else {
-        Main.readFile(a, "01" + API.fn);
-        if (a.length > 0) {
-            API.GenUrl = a[0];
-            API.GenT = a[1];
-        }
-    }
-    if (dPr(API.GenUrl) != "" && dPr(API.GenT) != "") {
-        AGen();
-    }
-}
-
 function getIdb(a) {
     try {
         return getId(a)["style"]["display"] = "block";
@@ -5381,39 +5348,40 @@ function getYoutubeUrl(n) {
     var j = ["&el=embedded", "&el=detailpage", "&el=vevo", ""];
     var f = "";
     var o = "";
+    var flag = false;
     for (var i = 0; i < j.length; i++) {
         var e = j[i];
         var d = "http://www.youtube.com/get_video_info?&video_id=" + n + e + "&ps=default&eurl=&gl=US&hl=en";
         API.AsReqMode = false;
         var f = API.Request(d);
         f = f.match(/url_encoded_fmt_stream_map=(.*?)&/);
-        alert("txt =" + f);
         if (f != null) {
             if (f[1]["indexOf"]("itag") >= 0) {
                 var a = f[1]["split"]("%2C");
+                if (decLongUrl(a[0]).indexOf('itag=43') > -1) {
+                    a.splice(0, 1);
+                }
+                if (decLongUrl(a[1]).indexOf('itag=43') > -1) {
+                    a.splice(1, 1);
+                }
                 for (var g = 0; g < a.length; g++) {
                     a[g] = decLongUrl(a[g]);
-                    //alert("r[j] =" + a[g]);
                     var l = parser(a[g], "itag=", "&");
-                    alert("m =" + l);
                     if (l != "") {
                         var k = "";
                         var b = [];
                         switch (l) {
-                            case "37":
-                                k = "HD 1080p.mp4";
-                                break;
                             case "22":
-                                k = "HD 720p.mp4";
-                                break;
-                            case "35":
-                                k = "480p.flv";
+                                k = "720p";
                                 break;
                             case "18":
-                                k = "360p.mp4";
+                                k = "480p";
+                                break;
+                            case "5":
+                                k = "360p";
                                 break;
                             case "36":
-                                k = "240p.mp4";
+                                k = "240p";
                                 break;
                         }
                         if (k != "") {
@@ -5427,11 +5395,18 @@ function getYoutubeUrl(n) {
                             b = [a[g], k];
                             Main.url_arr["push"](b);
                             if (Main.ver > 2.53 && k.indexOf(API.Vquality) > -1) {
+                                flag = true;
                                 o = a[g];
                                 Selectbox.url_selected = Main.url_arr["length"] - 1;
                             }
+                            if (flag == false) {
+                                if (k.indexOf(API.Vquality) < 0) {
+                                    o = a[g];
+                                    flag = true;
+                                }
+                            }
                         }
-                        if (k == "240p.mp4") {
+                        if (k == "240p") {
                             break;
                         }
                     }
@@ -5450,6 +5425,7 @@ function getVkUrl(j) {
     var i = "";
     var d = "";
     var a = [];
+    var flag = false;
     j = j.replace("vkontakte.ru", "vk.com");
     d = API.Request(j);
     if (d.indexOf('www.youtube.com') + 1) {
@@ -5471,6 +5447,7 @@ function getVkUrl(j) {
         count = qual240 + qual360 + qual480 + qual720;
         var f = d.split('url240');
         var q = f[1].match(/http:(.*?)?extra/);
+        alert(qual240 + ' ' + qual360 + ' ' + qual480 + ' ' + qual720);
         if (q != null) {
             var c = q[1]["replace"](/\\\\\\/g, '');
             c = c.replace("?", '');
@@ -5479,28 +5456,35 @@ function getVkUrl(j) {
             c[1] = c[1].replace("240.mp4", '');
             for (var e = 0; e < count; e++) {
                 switch (e) {
-                    case 3:
-                        b = "720.mp4";
-                        g = "720p.mp4";
-                        break;
-                    case 2:
-                        b = "480.mp4";
-                        g = "480p.mp4";
+                    case 0:
+                        var b = "240.mp4";
+                        var g = "240p";
                         break;
                     case 1:
                         b = "360.mp4";
-                        g = "360p.mp4";
+                        g = "360p";
                         break;
-                    case 0:
-                        var b = "240.mp4";
-                        var g = "240p.mp4";
+                    case 2:
+                        b = "480.mp4";
+                        g = "480p";
+                        break;
+                    case 3:
+                        b = "720.mp4";
+                        g = "720p";
                         break;
                 }
                 a = ["http://" + c[0] + "videos" + c[1] + b, g];
                 Main.url_arr["push"](a);
                 if (Main.ver > 2.53 && g.indexOf(API.Vquality) > -1) {
-                    i = a[0];
+                    flag = true;
+                    i = "http://" + c[0] + "videos" + c[1] + b;
                     Selectbox.url_selected = Main.url_arr["length"] - 1;
+                }
+                if (flag == false) {
+                    if (g.indexOf(API.Vquality) < 0) {
+                        i = "http://" + c[0] + "videos" + c[1] + b;
+                        flag = true;
+                    }
                 }
             }
             if (Main.url_arr["length"] > 0 && i == "") {
@@ -5509,6 +5493,58 @@ function getVkUrl(j) {
         }
         return i;
     }
+}
+
+function getRuTubeUrl(j) {
+    var i = "";
+    var d = "";
+    var a = [];
+    var flag = false;
+    d = API.Request('http://rutube.ru/api/oembed/?url=' + j + '&format=xml');
+    j = d.match(/embed\/(.*?)"/);
+    d = API.Request('http://rutube.ru/play/embed/' + j[1]);
+    d = d.split('"m3u8":');
+    j = d[1].match(/"(.*?)"},/);
+    d = API.Request(j[1]);
+    f = d.match(/http:\/\/(.*?)\n/g);
+    f.reverse();
+    for (var e = 0; e < f.length; e++) {
+        switch (e) {
+            case 0:
+                v = f[0];
+                g = "720p";
+                break;
+            case 1:
+                v = f[1];
+                g = "480p";
+                break;
+            case 2:
+                v = f[2];
+                g = "360p";
+                break;
+            case 3:
+                v = f[3];
+                g = "240p";
+                break;
+        }
+        a = [v + '|COMPONENT=HLS', g];
+        Main.url_arr["push"](a);
+        if (Main.ver > 2.53 && g.indexOf(API.Vquality) > -1) {
+            flag = true;
+            i = v + '|COMPONENT=HLS';
+            Selectbox.url_selected = Main.url_arr["length"] - 1;
+        }
+        if (flag == false) {
+            if (g.indexOf(API.Vquality) < 0) {
+                i = v + '|COMPONENT=HLS';
+                flag = true;
+            }
+        }
+    }
+    if (Main.url_arr["length"] > 0 && i == "") {
+        i = Main.url_arr[0][0];
+    }
+    return i;
 }
 YandexGetUrl = function(a) {
     var e = "";
@@ -5885,12 +5921,10 @@ function Super_parser(e) {
         } else {
             if (e.indexOf("youtube.com/watch?v=") > 0) {
                 var i = e.substr(e.indexOf("=") + 1);
-                alert(i);
                 c = lrdPr(getYoutubeUrl(i));
             } else {
-                if (e.indexOf("http://www.youtube.com/embed") >= 0) {
-                    var d = e.substr(e.indexOf("embed/") + 6);
-                    c = getYoutubeUrl1(d);
+                if (e.indexOf("rutube.ru/video/") > 0) {
+                    c = getRuTubeUrl(e);
                 } else {
                     if (e.indexOf("//kino-v-online.ru/kino/md5") > 0 || e.indexOf("//kino-v-online.ru/serial/md5") > 0) {
                         var b = API.Request("http://kino-v-online.ru/2796-materik-online-film.html");
