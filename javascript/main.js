@@ -99,7 +99,7 @@ var Main = {
     St_size: null,
     IntervalUpdateTime: null,
     SlideShowInterval: null,
-    version: "1.0.4",
+    version: "1.0.5",
     ver: "2014"
 };
 
@@ -564,7 +564,7 @@ Main.UpdateChannelBar = function() {
     getId("title" + this["pre_selected_channel"])["style"]["color"] = "#FFFFFF";
     getId("number" + this["selected_channel"])["style"]["backgroundImage"] = "url(img/number_bar.png)";
     getId("chan" + this["selected_channel"])["style"]["backgroundImage"] = "url(img/chan_bar.png)";
-    getId("title" + this["selected_channel"])["style"]["color"] = "#ffff99";
+    getId("title" + this["selected_channel"])["style"]["color"] = "#FA8258";
     this["pre_selected_channel"] = this["selected_channel"];
 };
 Main.updateChannel = function() {
@@ -654,7 +654,7 @@ Main.showinfoList = function(b) {
             var a = "";
             var c = "";
             if (API.playlist_name != "") {
-                c = '<table width="100%"><tr><td style="text-align:center;font-size:0px;color:#00ccff">' + API.playlist_name + '</td></tr></table><table width="100%"><tr height="0px" bgcolor=""><td></td></tr></table>';
+				c = '<table width="100%"><tr><td style="text-align:center;font-size:20px;color:#00ccff">' + API.playlist_name + '</td></tr></table><table width="100%"><tr height="4px" bgcolor="#cccccc"><td></td></tr></table>';
             }
             if (API.prev_page_text != "" && (API.prev_page_url != "" || (this["url"] == "" && API.prev_page_text["indexOf"]("В портал") == -1))) {
                 a += "<td><img src='img/buttons/rew.png'></img></td><td>" + API.prev_page_text + "</td>";
@@ -782,7 +782,7 @@ Main.PlayPrevPlaylist = function() {
             Main.DEL = false;
             Main.playlist();
         } else {
-            Display.status("Стартовый плейлист!", 1000);
+            Display.status("Стартовый плейлист!", 500);
         }
     }
 };
@@ -931,7 +931,7 @@ Main.PlayChannel = function() {
                 } else {
                     Display.status("Нет адреса!");
                 }
-                setTimeout("Main.Menu();", 2000);
+                setTimeout("Main.Menu();", 500);
             }
         }
     } catch (a) {}
@@ -1299,7 +1299,7 @@ Main.ReadPlArr = function(b, a, d, c) {
     }
     API.XML_URL = b;
     API.countPages();
-    setTimeout("Main.Menu()", 50);
+    setTimeout("Main.Menu()", 500);
 };
 
 function ScanUsbPort() {
@@ -1328,7 +1328,7 @@ function ScanUsbPort() {
         Main.ReadPlArr(Main.pl_url, r);
         API.playlist_name = "USB Накопители";
     } else {
-        Display.status("Подключенных USB устройств не найдено!");
+        Display.status("Подключенных USB устройств не найдено!", 500);
     }
 }
 
@@ -1356,10 +1356,10 @@ function SearchPlToUSB() {
             }
         }
         if (e == "") {
-            Display.status("Плейлист не найден!");
+            Display.status("Плейлист не найден!", 500);
         }
     } else {
-        Display.status("Подключенных USB устройств не найдено!");
+        Display.status("Подключенных USB устройств не найдено!", 500);
     }
     return e;
 }
@@ -1475,7 +1475,7 @@ function ReadUsbDirN() {
         API.next_page_url = x;
         API.prev_page_url = t;
     } else {
-        Display.status("Пустая папка!", 2000);
+        Display.status("Пустая папка!", 500);
     }
 }
 
@@ -1531,7 +1531,7 @@ function SyncInetTime() {
                     if (T.Sync_step == 3) {
                         T.Sync_step = 0;
                         setTimeout("SyncInetTime()", 30 * 60000);
-                        Display.status("Нет связи с сервером синхронизация времени!", 5000);
+                        Display.status("Нет связи с серв. синхр. времени!", 5000);
                     }
                 }
             }
@@ -1753,8 +1753,8 @@ API.init = function() {
                 var g = d[j];
                 g = g.split("|");
                 Ya_name_index_obj[g[0]["toLowerCase"]()] = g[1];
-                Ya_icon_index_url_obj[g[1]] = g[2];
-                Ya_icon_name_url_obj[g[0]["toLowerCase"]()] = g[2];
+                Ya_icon_index_url_obj[g[1]] = 'http://avatars.yandex.net/' + g[2];
+                Ya_icon_name_url_obj[g[0]["toLowerCase"]()] = 'http://avatars.yandex.net/' + g[2];
             }
         }
         setTimeout("StartTime()", 50);
@@ -1789,7 +1789,7 @@ API.loadComplete = function() {
         if (Main.prev_pl_array["length"] == 0 && API.XML_URL == "start.xml") {
             setTimeout("getIdb('main');SetupFormular()", 2000);
         } else {
-            setTimeout("Main.PlayPrevPlaylist();", 2000);
+            setTimeout("Main.PlayPrevPlaylist();", 500);
         }
     } else {
         Display.hidestatus();
@@ -1887,7 +1887,7 @@ API.recieveData = function(a) {
                 setTimeout("getIdb('main');SetupFormular()", 3000);
             }
         } else {
-            setTimeout("API.stopRequest()", 3000);
+            setTimeout("API.stopRequest()", 500);
         }
     }
 };
@@ -2207,7 +2207,7 @@ Selectbox.updateBox = function() {
             var c = 10 * this["selected_page"] + a;
             var b = "";
             if (a == this["selected"]) {
-                b = 'style="color:#ffffff; border: 1px solid #ffffff" ';
+                b = 'style="color:#FACC2E; border: 1px solid #FA8258" ';
             }
             var i = (this["selected_page"] > 0) ? this["selected_page"].toString() + (1 + a) + ") " : (1 + a) + ") ";
             if (this["select_list"][c][1]) {
@@ -2311,13 +2311,13 @@ Display.loadinghide = function() {
 };
 Display.loadingstep = function() {
     if (this["index"] < 10) {
-        getId("imgAnim")["src"] = "$MANAGER_WIDGET/Common/img/loading_0" + this["index"] + ".png";
+        getId("imgAnim")["src"] = "img/loading/loading_0" + this["index"] + ".png";
     } else {
-        getId("imgAnim")["src"] = "$MANAGER_WIDGET/Common/img/loading_" + this["index"] + ".png";
+        getId("imgAnim")["src"] = "img/loading/loading_" + this["index"] + ".png";
     }
     this["index"] ++;
-    if (this["index"] > 11) {
-        this["index"] = 0;
+    if (this["index"] > 12) {
+        this["index"] = 1;
     }
     if (this["run"]) {
         setTimeout("Display.loadingstep();", 200);
@@ -2509,7 +2509,7 @@ function SmartExit() {
             widgetAPI.sendReturnEvent();
         }
         KeyHandler.send_Return = true;
-        Display.status('<b style="color:yellow">Для выхода нажмите ещё раз EXIT!</b>', 5000);
+        Display.status('<b style="color:yellow">Для выхода нажмите ещё раз EXIT!</b>', 3000);
         setTimeout("KeyHandler.send_Return=false;", 5000);
     } else {
         Player.ReturnMenu();
@@ -2779,7 +2779,7 @@ KeyHandler.MainMenuKeyDown = function() {
                 }
             } else {
                 Display.status("Недоступно!");
-                setTimeout("Display.status('Большой плейлист!')", 2000);
+                setTimeout("Display.status('Большой плейлист!')", 500);
             }
             break;
         case tvKey.KEY_TOOLS:
@@ -3761,7 +3761,7 @@ Player.error = function(a) {
                 try {
                     setTimeout('Player.play(this["url"], 0)', 5000);
                 } finally {
-                    setTimeout("Player.ReturnMenu()", 1000);
+                    setTimeout("Player.ReturnMenu()", 500);
                 }
             } else {
                 Display.status(Player.eerr);
@@ -5609,7 +5609,7 @@ function YandexParsing(b, c, f, e) {
             a = Main.YaHTTP["responseText"];
             a = a.replace(/amp;/g, "");
             if (!Main.guide) {
-                var t = ["", "Фильмы", "Сериалы", "Детям", "Детям"];
+                var t = ["", "Фильмы", "Сериалы", "Детям", "Спорт"];
                 Main.Ya_flag_name = '<font style="color:#ff3300;padding-left:15px;font-size:17px;">' + t[Main.Ya_flag_step] + "</font>";
                 var r = '</div><div class="b-select">';
                 var p = a.indexOf(r);
