@@ -2994,7 +2994,7 @@ KeyHandler.MainMenuKeyDown = function() {
                 }
             }
             break;
-		case 73:
+		case tvKey.KEY_REC:
 			widgetAPI.blockNavigation(event);
 			if(Main.sort == false) {
 				API.channels.sort();
