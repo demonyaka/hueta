@@ -100,7 +100,8 @@ var Main = {
     IntervalUpdateTime: null,
     SlideShowInterval: null,
     version: "1.0.5",
-    ver: "2014"
+    ver: "2014",
+	sort: false
 };
 
 Main.onLoad = function() {
@@ -2993,6 +2994,20 @@ KeyHandler.MainMenuKeyDown = function() {
                 }
             }
             break;
+		case 73:
+			widgetAPI.blockNavigation(event);
+			if(Main.sort == false) {
+				API.channels.sort();
+				Main.updatePage();
+				Main.sort = true;
+			} else if (Main.sort == true){
+				API.channels.reverse();
+				Main.updatePage();
+				Main.sort = false;
+			} else {
+				Main.sort = false;
+			}
+			break;
         case tvKey.KEY_STOP:
             widgetAPI.blockNavigation(event);
             if (Main.FAV) {
