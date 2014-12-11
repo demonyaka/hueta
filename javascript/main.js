@@ -106,24 +106,24 @@ var Main = {
 
 Main.onLoad = function() {
     try {
-        this["Network"] = getId("pluginNetwork");
-        this["MAC"] = this["Network"].GetMAC();
-        this["St"] = getId("pluginStorage");
-        this["Audio"] = getId("pluginAudio");
-        this["audio_output_device"] = this["Audio"].GetOutputDevice();
-        var a = getId("pluginTV");
-        this["hardware_type"] = a.GetProductType();
-        this["hardware"] = a.GetProductCode(1);
-        if (this["hardware"] == "LN40B650_KOR") {
+        this.Network = getId("pluginNetwork");
+        this.MAC = this.Network.GetMAC();
+        this.St = getId("pluginStorage");
+        this.Audio = getId("pluginAudio");
+        this.audio_output_device = this.Audio.GetOutputDevice();
+        var pluginTV = getId("pluginTV");
+        this.hardware_type = pluginTV.GetProductType();
+        this.hardware = pluginTV.GetProductCode(1);
+        if (this.hardware == "LN40B650_KOR") {
             Main.Emu = true;
         } else {
-            if (this["hardware"]["indexOf"]("C") > 1) {
+            if (this.hardware.indexOf("C") > 1) {
                 Main.seriesC = true;
             } else {
-                if (this["hardware"]["indexOf"]("D") > 1) {
+                if (this.hardware.indexOf("D") > 1) {
                     Main.seriesD = true;
                 } else {
-                    if (this["hardware"]["indexOf"]("E") > 1 || (this["hardware"]["indexOf"]("C") < 0 && this["hardware"]["indexOf"]("D") < 0)) {
+                    if (this.hardware.indexOf("E") > 1 || (this.hardware.indexOf("C") < 0 && this.hardware.indexOf("D") < 0)) {
                         Main.seriesE = true;
                     }
                 }
@@ -151,12 +151,12 @@ Main.onLoad = function() {
 
 Main.Init = function() {
     Main.url_arr = [];
-    if (API.star_url["indexOf"]("fav.dat") > 0) {
+    if (API.star_url.indexOf("fav.dat") > 0) {
         Main.FAV = true;
         Main.opencommonFile(API.star_url);
     } else {
-        if (API.star_url["indexOf"]("OpenFav") == 0) {
-            if (API.fav_start_channels["length"] > 1) {
+        if (API.star_url.indexOf("OpenFav") == 0) {
+            if (API.fav_start_channels.length > 1) {
                 Main.ReadPlArr("OpenFav", API.fav_start_channels);
             } else {
                 Main.FAV = true;
@@ -225,22 +225,22 @@ Main.registVOLTVKey = function() {
     pluginAPI.registKey(tvKey.KEY_MUTE);
 };
 Main.ResetSelectedPosition = function() {
-    this["selected_channel"] = 0;
-    this["selected_page"] = 0;
-    this["chan_array_index"] = 0;
-    if (!this["guide"] && !Main.help_info) {
-        this["prev_ch_array"] = [];
+    this.selected_channel = 0;
+    this.selected_page = 0;
+    this.chan_array_index = 0;
+    if (!this.guide && !Main.help_info) {
+        this.prev_ch_array = [];
     }
 };
 Main.SaveSelectedPosition = function() {
-    this["play_selected_channel"] = this["selected_channel"];
-    this["play_selected_page"] = this["selected_page"];
-    this["play_chan_array_index"] = this["chan_array_index"];
+    this.play_selected_channel = this.selected_channel;
+    this.play_selected_page = this.selected_page;
+    this.play_chan_array_index = this.chan_array_index;
 };
 Main.SetSelectedPosition = function() {
-    this["selected_channel"] = this["play_selected_channel"];
-    this["selected_page"] = this["play_selected_page"];
-    this["chan_array_index"] = this["play_chan_array_index"];
+    this.selected_channel = this.play_selected_channel;
+    this.selected_page = this.play_selected_page;
+    this.chan_array_index = this.play_chan_array_index;
 };
 Main.SetFavSelectedPosition = function() {
     Main.fav_num = Main.temp_fav_num;
@@ -251,21 +251,21 @@ Main.showCategorySelector = function() {
     getIdn("rightHalf");
     KeyHandler.setFocus(4);
     Selectbox.setBox("КАТЕГОРИИ", API.categories);
-    getId("selectbox")["style"]["top"] = "60px";
-    getId("selectbox")["style"]["left"] = "550px";
+    getId("selectbox").style.top = "60px";
+    getId("selectbox").style.left = "550px";
 };
 Main.showFavSelector = function() {
     getIdn("rightHalf");
     KeyHandler.setFocus(4);
     Selectbox.setBox("Выбор избранного", API.favorites);
-    getId("selectbox")["style"]["top"] = "60px";
-    getId("selectbox")["style"]["left"] = "550px";
+    getId("selectbox").style.top = "60px";
+    getId("selectbox").style.left = "550px";
 };
 Main.showSiseSelector = function() {
     KeyHandler.setFocus(4);
     Selectbox.setBox("Выбор качества", Main.url_arr);
-    getId("selectbox")["style"]["top"] = "120px";
-    getId("selectbox")["style"]["left"] = "330px";
+    getId("selectbox").style.top = "120px";
+    getId("selectbox").style.left = "330px";
 };
 Main.Menu = function() {
     if (Main.FirstStart) {
@@ -274,7 +274,7 @@ Main.Menu = function() {
         }
     }
     setTimeout("Main.FirstStart=false;", 3000);
-    clearTimeout(this["load_timer"]);
+    clearTimeout(this.load_timer);
     if (!Main.search && !Main.xxx) {
         Display.hidestatus();
     }
@@ -282,15 +282,15 @@ Main.Menu = function() {
     Display.hideplayer();
     Display.loadinghide();
     API.AsReqMode = true;
-    this["FAV"] = false;
-    this["xxx"] = false;
-    this["help_info"] = false;
-    this["block_info"] = false;
-    this["loading_pl"] = false;
-    this["block_fav"] = false;
-    this["SetZoom"] = false;
-    this["playlist_prev"] = true;
-    this["pre_pl_url"] = API.XML_URL;
+    this.FAV = false;
+    this.xxx = false;
+    this.help_info = false;
+    this.block_info = false;
+    this.loading_pl = false;
+    this.block_fav = false;
+    this.SetZoom = false;
+    this.playlist_prev = true;
+    this.pre_pl_url = API.XML_URL;
     getIdn("selectbox");
     getIdn("help_set_par");
     getIdb("rightHalf");
@@ -299,7 +299,7 @@ Main.Menu = function() {
     getIdn("ya_info");
     getIdn("ya_help");
     Main.UpdateHelpBar();
-    if (this["RED"]) {
+    if (this.RED) {
         KeyHandler.setFocus(5);
     } else {
         if (Main.guide) {
@@ -335,12 +335,12 @@ Main.UpdateHelpBar = function() {
     getIdn("10.1_help");
     getIdn("11_help");
     getIdn("12_help");
-    if (API.XML_URL["indexOf"]("fav.dat") > 0 && !Main.guide) {
+    if (API.XML_URL.indexOf("fav.dat") > 0 && !Main.guide) {
         Main.FAV = true;
         Main.fav_url = API.XML_URL;
-        if (!this["RED"]) {
+        if (!this.RED) {
             var title = "Избранное №" + Main.fav_num + ' - "' + Main.fav_name + '"';
-            if (API.favorites["length"] > 1) {
+            if (API.favorites.length > 1) {
                 getIdb("3.3_help");
             }
             getIdb("3.4_help");
@@ -348,14 +348,14 @@ Main.UpdateHelpBar = function() {
             title = "Редактирование. Избранное №" + Main.fav_num + ' - "' + Main.fav_name + '"';
             getIdn("2_help");
             getIdb("3.2_help");
-            if (API.favorites["length"] > 1) {
+            if (API.favorites.length > 1) {
                 getIdb("3.21_help");
             }
             getIdn("5_help");
             getIdn("6_help");
         }
     } else {
-        if (API.XML_URL["indexOf"]("/fiowidget.") > 0 && API.XML_URL["indexOf"]("help") > 0) {
+        if (API.XML_URL.indexOf("/fiowidget.") > 0 && API.XML_URL.indexOf("help") > 0) {
             Main.help_info = true;
             title = "СПРАВКА";
             getIdn("2_help");
@@ -363,24 +363,24 @@ Main.UpdateHelpBar = function() {
             getIdb("4.1_help");
         } else {
             if (Main.guide) {
-                title = "Подробное описание передач v." + this["version"];
-                this["yandextv_mode"] = true;
+                title = "Подробное описание передач v." + this.version;
+                this.yandextv_mode = true;
                 getIdn("2_help");
                 getIdn("5_help");
                 getIdn("6_help");
                 getIdb("4.1_help");
                 getIdb("10.1_help");
                 if (!Main.ya_all_day) {
-                    this["selected_channel"] = 1;
+                    this.selected_channel = 1;
                 }
             } else {
-                if (API.XML_URL["indexOf"]("Open") < 0) {
+                if (API.XML_URL.indexOf("Open") < 0) {
                     getIdb("3.1_help");
                 }
-                if (API.categories["length"] > 2) {
+                if (API.categories.length > 2) {
                     getIdb("3_help");
                 }
-                if (API.XML_URL["indexOf"]("history.dat") > 0) {
+                if (API.XML_URL.indexOf("history.dat") > 0) {
                     title = "ИСТОРИЯ";
                     getIdb("5.1_help");
                 } else {
@@ -391,31 +391,31 @@ Main.UpdateHelpBar = function() {
     }
     if (Player.state != Player.STOPPED) {
         getIdb("1_help");
-        if (Player.state == Player.PLAYING_VOD && !this["RED"]) {
+        if (Player.state == Player.PLAYING_VOD && !this.RED) {
             getIdb("8_help");
         }
-        getId("background")["style"]["backgroundImage"] = "url(img/bg.png)"
+        getId("background").style.backgroundImage = "url(img/bg.png)"
     } else {
         KeyHandler.guide_step = 0;
         getIdb("0_help");
-        getId("background")["style"]["backgroundImage"] = "url(img/us_bg.png)";
-        if (this["prev_pl_array"]["length"] > 0) {
-            if (API.categories["length"] < 3 && !Main.FAV && !Main.guide && API.XML_URL["indexOf"]("history.dat") < 0) {
+        getId("background").style.backgroundImage = "url(img/us_bg.png)";
+        if (this.prev_pl_array.length > 0) {
+            if (API.categories.length < 3 && !Main.FAV && !Main.guide && API.XML_URL.indexOf("history.dat") < 0) {
                 getIdb("9_help");
             }
-            if (API.XML_URL["indexOf"]("start.xml") == 0) {
+            if (API.XML_URL.indexOf("start.xml") == 0) {
                 Display.status(API.XML_URL);
                 if (Main.Kill != "") {
                     API.Xcode = Main.Kill;
                 }
             }
         } else {
-            if (API.XML_URL["indexOf"]("start.xml") != 0) {
+            if (API.XML_URL.indexOf("start.xml") != 0) {
                 getIdn("6_help");
-                if (!this["RED"]) {
+                if (!this.RED) {
                     getIdb("7_help");
                 }
-                if (API.categories["length"] < 3 && !Main.FAV && !Main.guide) {
+                if (API.categories.length < 3 && !Main.FAV && !Main.guide) {
                     getIdb("9_help");
                 }
             } else {
@@ -428,11 +428,11 @@ Main.UpdateHelpBar = function() {
         }
     }
     if (Main.seriesE) {
-        getId("widget_date")["style"]["left"] = "540px";
-        getId("widget_time")["style"]["left"] = "850px";
+        getId("widget_date").style.left = "540px";
+        getId("widget_time").style.left = "850px";
     }
     getIdb("background");
-    if (API.XML_URL["indexOf"]("OpenFav") == 0 || Main.help_info) {
+    if (API.XML_URL.indexOf("OpenFav") == 0 || Main.help_info) {
         Main.block_fav = true;
     }
     widgetAPI.putInnerHTML(getId("version"), title)
@@ -452,47 +452,47 @@ LogoStyle = function(el, src, flag) {
                 left = "80px";
                 width = "66px";
                 if (src != "") {
-                    getId("p_bg_num_logo")["style"]["backgroundImage"] = "url(img/bgn02.png)";
+                    getId("p_bg_num_logo").style.backgroundImage = "url(img/bgn02.png)";
                 } else {
-                    getId("p_bg_num_logo")["style"]["backgroundImage"] = "url(img/bgn03.png)";
+                    getId("p_bg_num_logo").style.backgroundImage = "url(img/bgn03.png)";
                 }
             } else {
                 left = "90px";
                 width = "46px";
                 if (src != "") {
-                    getId("p_bg_num_logo")["style"]["backgroundImage"] = "url(img/bgn01.png)";
+                    getId("p_bg_num_logo").style.backgroundImage = "url(img/bgn01.png)";
                 } else {
-                    getId("p_bg_num_logo")["style"]["backgroundImage"] = "url(img/bgn03.png)";
+                    getId("p_bg_num_logo").style.backgroundImage = "url(img/bgn03.png)";
                 }
             }
         }
     }
-    getId(el)["src"] = src;
-    getId(el)["style"]["left"] = left;
-    getId(el)["style"]["width"] = width;
+    getId(el).src = src;
+    getId(el).style.left = left;
+    getId(el).style.width = width;
 };
 Main.updatePage = function() {
     try {
-        clearTimeout(this["load_timer"]);
-        this["Update_Page"] = false;
-        this["ret"] = false;
+        clearTimeout(this.load_timer);
+        this.Update_Page = false;
+        this.ret = false;
         var channelCount = 10;
-        this["selected_page"] = (this["selected_page"] > API.chan_pages - 1) ? 0 : (this["selected_page"] < 0) ? API.chan_pages - 1 : this["selected_page"];
+        this.selected_page = (this.selected_page > API.chan_pages - 1) ? 0 : (this.selected_page < 0) ? API.chan_pages - 1 : this.selected_page;
         for (var i = 0; i < 10; i++) {
             getIdb("ch" + i);
         }
-        if (this["selected_page"] == API.chan_pages - 1) {
+        if (this.selected_page == API.chan_pages - 1) {
             channelCount = API.last_page_channels_counter;
             for (var i = channelCount; i < 10; i++) {
                 getIdn("ch" + i);
             }
-            if (this["selected_channel"] > API.last_page_channels_counter - 1) {
-                this["selected_channel"] = API.last_page_channels_counter - 1;
+            if (this.selected_channel > API.last_page_channels_counter - 1) {
+                this.selected_channel = API.last_page_channels_counter - 1;
             }
         }
         Main.UpdateChannelBar();
         for (var i = 0; i < channelCount; i++) {
-            var id = 10 * this["selected_page"] + i;
+            var id = 10 * this.selected_page + i;
             if (Main.guide) {
                 widgetAPI.putInnerHTML(getId("number" + i), API.channels[id][10]);
             } else {
@@ -500,19 +500,19 @@ Main.updatePage = function() {
             }
             var src = (dPr(API.channels[id][2]) != "") ? getLogo1(dPr(API.channels[id][5]), dPr(API.channels[id][2])) : getLogo2(lrdPr(API.channels[id][0]), API.channels[id][3], dPr(API.channels[id][5]));
             LogoStyle("img" + i, src, 1);
-            var message = (API.channels[id][0]["toLowerCase"]()["indexOf"]("установите оригинальную версию") >= 0) ? "Доступ заблокирован!" : API.channels[id][0];
+            var message = (API.channels[id][0].toLowerCase().indexOf("установите оригинальную версию") >= 0) ? "Доступ заблокирован!" : API.channels[id][0];
             widgetAPI.putInnerHTML(getId("title" + i), message);
         }
-        if ((API.prev_page_url == "") || (API.prev_page_text["indexOf"]("На  стр.") == 0 && API.next_page_text["indexOf"]("На 2 стр.") == 0)) {
-            this["nuber_p"] = 1;
+        if ((API.prev_page_url == "") || (API.prev_page_text.indexOf("На  стр.") == 0 && API.next_page_text.indexOf("На 2 стр.") == 0)) {
+            this.nuber_p = 1;
         }
-        if (((API.prev_page_url != "" || API.next_page_url != "") && API.prev_page_text["indexOf"]("В Портал") == -1) && this["nuber_p"] > 0) {
-            this["ret"] = true;
+        if (((API.prev_page_url != "" || API.next_page_url != "") && API.prev_page_text.indexOf("В Портал") == -1) && this.nuber_p > 0) {
+            this.ret = true;
             var message = "";
-            if (API.channels["length"] > 10) {
-                message = '<b style="font-size:16px;"> (  Hа этой странице <font color=#00ccff>' + API.channels["length"] + "</font> позиций  )</b>";
+            if (API.channels.length > 10) {
+                message = '<b style="font-size:16px;"> (  Hа этой странице <font color=#00ccff>' + API.channels.length + "</font> позиций  )</b>";
             }
-            widgetAPI.putInnerHTML(getId("version"), "<font color=#00ccff>" + this["nuber_p"] + "</font>-я страница " + message);
+            widgetAPI.putInnerHTML(getId("version"), "<font color=#00ccff>" + this.nuber_p + "</font>-я страница " + message);
         }
         if (KeyHandler.Focus == 0 || KeyHandler.Focus == 5 || KeyHandler.Focus == 6) {
             Main.LoadTimer("Main.updateChannel();", 100);
@@ -533,24 +533,25 @@ getLogo1 = function(url, src) {
     src = path + src;
     return src;
 };
-getLogo2 = function(b, a, d) {
-    b = lrdPr(b);
+// title - имя листа, desc - описание листа, url - урл листа
+getLogo2 = function(title, desc, url) {
+    title = lrdPr(title);
     var src = "";
-    if (API.XML_URL["indexOf"]("help") > 0) {
+    if (API.XML_URL.indexOf("help") > 0) {
         src = "logos/help.png";
     } else {
-        if (d != "") {
+        if (url != "") {
             src = "logos/open.png";
         } else {
             if (API.Forma == 0 || API.Forma == 1) {
-                if (Main.ya_auto && !isNaN(a) && a > 0 && a < 2000) {
-                    src = Ya_icon_index_url_obj[a];
+                if (Main.ya_auto && !isNaN(desc) && desc > 0 && desc < 2000) {
+                    src = Ya_icon_index_url_obj[desc];
                 }
-                if (Main.ya_auto && lrdPr(b) != "" && (src == undefined || isNaN(a) || a < 1 || a > 1999)) {
-                    src = Ya_icon_name_url_obj[lrdPr(b)["toLowerCase"]()["replace"](/\_/g, " ")];
+                if (Main.ya_auto && lrdPr(title) != "" && (src == undefined || isNaN(desc) || desc < 1 || desc > 1999)) {
+                    src = Ya_icon_name_url_obj[lrdPr(title).toLowerCase().replace(/\_/g, " ")];
                 }
                 if (src == undefined || !Main.ya_auto) {
-                    src = (lrdPr(b) != "" && dPr(a) != "") ? "logos/" + lrdPr(b) + ".png" : "logos/image.png";
+                    src = (lrdPr(title) != "" && dPr(desc) != "") ? "logos/" + lrdPr(title) + ".png" : "logos/image.png";
                 }
             } else {
                 src = "logos/image.png";
@@ -560,16 +561,16 @@ getLogo2 = function(b, a, d) {
     return src;
 };
 Main.UpdateChannelBar = function() {
-    getId("number" + this["pre_selected_channel"])["style"]["backgroundImage"] = "";
-    getId("chan" + this["pre_selected_channel"])["style"]["backgroundImage"] = "";
-    getId("title" + this["pre_selected_channel"])["style"]["color"] = "#FFFFFF";
-    getId("number" + this["selected_channel"])["style"]["backgroundImage"] = "url(img/number_bar.png)";
-    getId("chan" + this["selected_channel"])["style"]["backgroundImage"] = "url(img/chan_bar.png)";
-    getId("title" + this["selected_channel"])["style"]["color"] = "#FA8258";
-    this["pre_selected_channel"] = this["selected_channel"];
+    getId("number" + this.pre_selected_channel).style.backgroundImage = "";
+    getId("chan" + this.pre_selected_channel).style.backgroundImage = "";
+    getId("title" + this.pre_selected_channel).style.color = "#FFFFFF";
+    getId("number" + this.selected_channel).style.backgroundImage = "url(img/number_bar.png)";
+    getId("chan" + this.selected_channel).style.backgroundImage = "url(img/chan_bar.png)";
+    getId("title" + this.selected_channel).style.color = "#FA8258";
+    this.pre_selected_channel = this.selected_channel;
 };
 Main.updateChannel = function() {
-    clearTimeout(this["load_timer"]);
+    clearTimeout(this.load_timer);
     if (KeyHandler.Focus == 0 || KeyHandler.Focus == 5 || KeyHandler.Focus == 6) {
         YaAbort();
         getIdn("infoList");
@@ -578,7 +579,7 @@ Main.updateChannel = function() {
         Main.UpdateChannelBar();
     }
     Main.Update_Page = true;
-    if (KeyHandler.Focus == 0 && !this["block_info"]) {
+    if (KeyHandler.Focus == 0 && !this.block_info) {
         Main.LoadTimer("Main.UpdateChannelInfo()", 200);
     } else {
         Main.UpdateChannelInfo();
@@ -587,62 +588,62 @@ Main.updateChannel = function() {
 Main.UpdateChannelInfo = function() {
     Main.scrolling = 0;
     Main.ya_base_info = false;
-    this["chan_array_index"] = 10 * this["selected_page"] + this["selected_channel"];
-    this["ch_num"] = this["chan_array_index"] + 1;
-    this["name"] = Ach(0);
+    this.chan_array_index = 10 * this.selected_page + this.selected_channel;
+    this.ch_num = this.chan_array_index + 1;
+    this.name = Ach(0);
     if (!Main.s_url) {
-        this["url"] = Ach(1);
-        this["pl_url"] = Ach(5);
+        this.url = Ach(1);
+        this.pl_url = Ach(5);
     }
-    this["logo"] = Ach(2);
+    this.logo = Ach(2);
     if (Player.state == Player.STOPPED) {
-        this["ssize"] = Ach(6);
-        this["a_num"] = Ach(7);
+        this.ssize = Ach(6);
+        this.a_num = Ach(7);
     }
-    this["buffer"] = Ach(8);
-    this["ibuffer"] = Ach(9);
-    this["timeshift"] = Ach(10);
-    this["region"] = Ach(11);
-    this["parser"] = decLongUrl(Ach(12));
-    this["search_on"] = Ach(13);
+    this.buffer = Ach(8);
+    this.ibuffer = Ach(9);
+    this.timeshift = Ach(10);
+    this.region = Ach(11);
+    this.parser = decLongUrl(Ach(12));
+    this.search_on = Ach(13);
     if (!Main.block_info && KeyHandler.Focus != 5 && KeyHandler.Focus != 1) {
-        var a = "";
-        if (this["url"] != "") {
-            a = GetYindex();
+        var yandexUrl = "";
+        if (this.url != "") {
+            yandexUrl = GetYindex();
         }
-        if (a != "") {
+        if (yandexUrl != "") {
             Main.yandextv_mode = true;
             Main.ya_all_day = false;
             T.delta = 0;
             Main.Ya_flag_step = 0;
             if (!Main.FirstStart) {
-                YandexGetUrl(a);
+                YandexGetUrl(yandexUrl);
             } else {
                 Main.LoadTimer("YandexGetUrl(GetYindex());", 1000);
             }
         } else {
-            this["yandextv_mode"] = false;
+            this.yandextv_mode = false;
             Main.showinfoList(Ach(3));
         }
     }
-    this["block_info"] = false;
+    this.block_info = false;
 };
 GetYindex = function() {
-    var a = (Ach(3) != "" && Ach(3)["indexOf"]("/m.tv.yandex.") > 0) ? Ach(3) : (!isNaN(Ach(3)) && Ach(3) > 0 && Ach(3) < 2000) ? Ach(3) : (Main.ya_auto && Main.name != "") ? Ya_name_index_obj[Main.name["toLowerCase"]()["replace"](/\_/g, " ")] : "";
-    if (a == undefined) {
-        a = "";
+    var url = (Ach(3) != "" && Ach(3).indexOf("/m.tv.yandex.") > 0) ? Ach(3) : (!isNaN(Ach(3)) && Ach(3) > 0 && Ach(3) < 2000) ? Ach(3) : (Main.ya_auto && Main.name != "") ? Ya_name_index_obj[Main.name.toLowerCase().replace(/\_/g, " ")] : "";
+	if (url == undefined) {
+        url = "";
     }
-    return a;
+    return url;
 };
 Main.UpdatePlayerStatusbar = function() {
-    widgetAPI.putInnerHTML(getId("ch_number"), this["ch_num"]);
+    widgetAPI.putInnerHTML(getId("ch_number"), this.ch_num);
     widgetAPI.putInnerHTML(getId("ch_name"), Main.name);
     var src = (Main.logo != "") ? getLogo1(Main.pl_url, Main.logo) : getLogo2(Main.name, Ach(3), Main.pl_url);
     LogoStyle("ch_img", src, 0);
 };
 Main.LoadTimer = function(b, a) {
-    clearTimeout(this["load_timer"]);
-    this["load_timer"] = setTimeout(b, a);
+    clearTimeout(this.load_timer);
+    this.load_timer = setTimeout(b, a);
 };
 Main.showinfoList = function(b) {
     if (KeyHandler.Focus == 0 || KeyHandler.Focus == 6) {
@@ -650,21 +651,21 @@ Main.showinfoList = function(b) {
         getIdn("ya_date");
         getIdn("ya_info");
         widgetAPI.putInnerHTML(getId("infoList"), "");
-        if (!this["yandextv_mode"] || Main.guide) {
+        if (!this.yandextv_mode || Main.guide) {
             getIdn("ya_help");
             var a = "";
             var c = "";
             if (API.playlist_name != "") {
 				c = '<table width="100%"><tr><td style="text-align:center;font-size:20px;color:#00ccff">' + API.playlist_name + '</td></tr></table><table width="100%"><tr height="4px" bgcolor="#cccccc"><td></td></tr></table>';
             }
-            if (API.prev_page_text != "" && (API.prev_page_url != "" || (this["url"] == "" && API.prev_page_text["indexOf"]("В портал") == -1))) {
+            if (API.prev_page_text != "" && (API.prev_page_url != "" || (this.url == "" && API.prev_page_text.indexOf("В портал") == -1))) {
                 a += "<td><img src='img/buttons/rew.png'></img></td><td>" + API.prev_page_text + "</td>";
             } else {
                 if (API.prev_page_url != "") {
                     a += "<td><img src='img/buttons/rew.png'></img></td><td>Назад</td>";
                 }
             }
-            if (API.next_page_text != "" && (API.next_page_url != "" || (this["url"] == "" && API.next_page_text["indexOf"]("В портал") == -1))) {
+            if (API.next_page_text != "" && (API.next_page_url != "" || (this.url == "" && API.next_page_text.indexOf("В портал") == -1))) {
                 a += "<td><img src='img/buttons/ff.png'></img></td><td>" + API.next_page_text + "</td>";
             } else {
                 if (API.next_page_url != "") {
@@ -684,9 +685,9 @@ Main.showinfoList = function(b) {
             a = '<div id="allInfo">' + c + a + b + "<div>";
             widgetAPI.putInnerHTML(getId("infoList"), a);
             if (API.playlist_name != "") {
-                getId("allInfo")["style"]["top"] = "5px";
+                getId("allInfo").style.top = "5px";
             } else {
-                getId("allInfo")["style"]["top"] = "10px";
+                getId("allInfo").style.top = "10px";
             }
             getIdb("infoList")
         } else {
@@ -695,7 +696,7 @@ Main.showinfoList = function(b) {
             widgetAPI.putInnerHTML(getId("ya_date"), Main.lost_date + Main.Ya_flag_name);
             widgetAPI.putInnerHTML(getId("ya_info"), "");
             widgetAPI.putInnerHTML(getId("ya_info"), a);
-            getId("allInfo")["style"]["top"] = "0px";
+            getId("allInfo").style.top = "0px";
             getIdb("ya_date");
             getIdb("ya_info");
             getIdb("ya_help");
@@ -703,12 +704,12 @@ Main.showinfoList = function(b) {
     }
 };
 Main.PlayPrevChannel = function() {
-    var a = this["prev_ch_array"]["length"] - 1;
+    var a = this.prev_ch_array.length - 1;
     if (a > 0) {
-        var b = this["prev_ch_array"][a - 1];
-        this["selected_channel"] = b[0];
-        this["selected_page"] = b[1];
-        this["chan_array_index"] = b[2];
+        var b = this.prev_ch_array[a - 1];
+        this.selected_channel = b[0];
+        this.selected_page = b[1];
+        this.chan_array_index = b[2];
         Main.yandextv_mode = true;
         Main.UpdateChannelInfo();
         Main.PlayChannel();
@@ -718,68 +719,68 @@ Main.PlayPrevChannel = function() {
     }
 };
 Main.SavePrevChannel = function() {
-    if (this["play_prev"]) {
-        var a = [this["selected_channel"], this["selected_page"], this["chan_array_index"]];
-        this["prev_ch_array"]["push"](a);
+    if (this.play_prev) {
+        var a = [this.selected_channel, this.selected_page, this.chan_array_index];
+        this.prev_ch_array.push(a);
     }
 };
 Main.PlayPrevPlaylist = function() {
-    if (KeyHandler.bl && this["prev_pl_array"]["length"] > this["nuber_p"]) {
-        if (this["url"] != "" && (API.next_page_url == "" || API.prev_page_url == "")) {
-            this["nuber_p"] ++;
+    if (KeyHandler.bl && this.prev_pl_array.length > this.nuber_p) {
+        if (this.url != "" && (API.next_page_url == "" || API.prev_page_url == "")) {
+            this.nuber_p ++;
         }
-        for (var f = 0; f < this["nuber_p"] - 1; f++) {
-            this["prev_pl_array"]["pop"]();
+        for (var f = 0; f < this.nuber_p - 1; f++) {
+            this.prev_pl_array.pop();
         }
-        this["nuber_p"] = 1;
+        this.nuber_p = 1;
     }
-    var a = this["prev_pl_array"]["length"] - 1;
+    var a = this.prev_pl_array.length - 1;
     if (a > -1) {
-        var e = this["prev_pl_array"][a];
-        this["pl_url"] = e[0];
-        this["selected_channel"] = e[1];
-        this["selected_page"] = e[2];
-        this["chan_array_index"] = e[3];
-        this["nuber_p"] = e[4];
-        this["fav_name"] = e[5];
-        this["fav_num"] = e[6];
+        var e = this.prev_pl_array[a];
+        this.pl_url = e[0];
+        this.selected_channel = e[1];
+        this.selected_page = e[2];
+        this.chan_array_index = e[3];
+        this.nuber_p = e[4];
+        this.fav_name = e[5];
+        this.fav_num = e[6];
         var d = [];
         var c = [];
         var b = [];
         d = e[7];
         b = e[8];
         c = e[9];
-        this["prev_pl_array"]["pop"]();
-        this["playlist_prev"] = false;
+        this.prev_pl_array.pop();
+        this.playlist_prev = false;
         Main.DEL = true;
         KeyHandler.bl = false;
         Main.guide = false;
         Main.RED = false;
         API.search_on = "";
-        if (this["pl_url"]["indexOf"]("help.xml") == -1) {
-            this["help_info"] = false;
+        if (this.pl_url.indexOf("help.xml") == -1) {
+            this.help_info = false;
         }
-        if (this["pl_url"]["indexOf"](".dat") > 0) {
-            Main.opencommonFile(this["pl_url"]);
+        if (this.pl_url.indexOf(".dat") > 0) {
+            Main.opencommonFile(this.pl_url);
         } else {
             if (d.length > 0) {
-                Main.ReadPlArr(this["pl_url"], d, b, c);
+                Main.ReadPlArr(this.pl_url, d, b, c);
                 API.playlist_name = e[10];
                 API.prev_page_url = e[11];
                 API.prev_page_text = e[12];
                 API.next_page_url = e[13];
                 API.next_page_text = e[14];
             } else {
-                if (Main.name["indexOf"]("-=ПОИСК=-") == 0) {
+                if (Main.name.indexOf("-=ПОИСК=-") == 0) {
                     Main.name = "";
                 }
-                this["search_on"] = "";
+                this.search_on = "";
                 Main.playlist();
             }
         }
     } else {
-        if (API.XML_URL["indexOf"]("start.xml") != 0) {
-            this["start"] = true;
+        if (API.XML_URL.indexOf("start.xml") != 0) {
+            this.start = true;
             Main.DEL = false;
             Main.playlist();
         } else {
@@ -788,26 +789,26 @@ Main.PlayPrevPlaylist = function() {
     }
 };
 Main.SavePrevPlaylist = function() {
-    if (this["playlist_prev"]) {
+    if (this.playlist_prev) {
         var c = [];
         var b = [];
-        if (API.channels["length"] < 500 && API.XML_URL["indexOf"](".dat") < 0) {
+        if (API.channels.length < 500 && API.XML_URL.indexOf(".dat") < 0) {
             c = API.channels;
-            if (API.categories["length"] > 2 && API.all_channels["length"] > API.channels["length"]) {
+            if (API.categories.length > 2 && API.all_channels.length > API.channels.length) {
                 b = API.all_channels;
             }
         }
-        var a = [API.XML_URL, this["selected_channel"], this["selected_page"], this["chan_array_index"], this["nuber_p"], this["temp_fav_name"], this["temp_fav_num"], c, b, API.categories, API.playlist_name, API.prev_page_url, API.prev_page_text, API.next_page_url, API.next_page_text];
-        this["prev_pl_array"]["push"](a);
-        this["playlist_prev"] = false;
+        var a = [API.XML_URL, this.selected_channel, this.selected_page, this.chan_array_index, this.nuber_p, this.temp_fav_name, this.temp_fav_num, c, b, API.categories, API.playlist_name, API.prev_page_url, API.prev_page_text, API.next_page_url, API.next_page_text];
+        this.prev_pl_array.push(a);
+        this.playlist_prev = false;
     }
 };
 Main.selectNextChannel = function() {
     if (Main.Update_Page) {
-        this["selected_channel"] ++;
-        if (this["selected_channel"] >= 10 || (this["selected_page"] == API.chan_pages - 1 && this["selected_channel"] == API.last_page_channels_counter)) {
-            this["selected_channel"] = 0;
-            this["selected_page"] ++;
+        this.selected_channel ++;
+        if (this.selected_channel >= 10 || (this.selected_page == API.chan_pages - 1 && this.selected_channel == API.last_page_channels_counter)) {
+            this.selected_channel = 0;
+            this.selected_page ++;
             Main.updatePage();
         } else {
             Main.updateChannel();
@@ -816,15 +817,15 @@ Main.selectNextChannel = function() {
 };
 Main.selectPrevChannel = function() {
     if (Main.Update_Page) {
-        this["selected_channel"] --;
-        if (this["selected_page"] == 0 && this["selected_channel"] < 0) {
-            this["selected_channel"] = API.last_page_channels_counter - 1;
-            this["selected_page"] = API.chan_pages - 1;
+        this.selected_channel --;
+        if (this.selected_page == 0 && this.selected_channel < 0) {
+            this.selected_channel = API.last_page_channels_counter - 1;
+            this.selected_page = API.chan_pages - 1;
             Main.updatePage();
         } else {
-            if (this["selected_channel"] < 0) {
-                this["selected_channel"] = 9;
-                this["selected_page"] --;
+            if (this.selected_channel < 0) {
+                this.selected_channel = 9;
+                this.selected_page --;
                 Main.updatePage();
             } else {
                 Main.updateChannel();
@@ -846,11 +847,11 @@ function ListNextPage() {
     }
 }
 Main.selectNextPage = function() {
-    if (API.next_page_url != "" && this["selected_page"] == API.chan_pages - 1) {
+    if (API.next_page_url != "" && this.selected_page == API.chan_pages - 1) {
         ListNextPage();
     } else {
         if (Main.Update_Page) {
-            this["selected_page"] ++;
+            this.selected_page ++;
             Main.updatePage();
         }
     }
@@ -859,7 +860,7 @@ Main.selectNextPage = function() {
 function ListPrevPage() {
     if (API.prev_page_url != "") {
         Main.playlist_prev = false;
-        Main.prev_pl_array["pop"]();
+        Main.prev_pl_array.pop();
         Main.pl_url = API.prev_page_url;
         if (Main.nuber_p > 1) {
             Main.nuber_p--;
@@ -872,33 +873,33 @@ function ListPrevPage() {
     }
 }
 Main.selectPrevPage = function() {
-    if (API.prev_page_url != "" && this["selected_page"] == 0) {
+    if (API.prev_page_url != "" && this.selected_page == 0) {
         ListPrevPage();
     } else {
         if (Main.Update_Page) {
-            this["selected_page"] --;
+            this.selected_page --;
             Main.updatePage();
         }
     }
 };
 
 function Super_Block() {
-    if (Main.pl_url["indexOf"]("nstreamvod.profiservice.ws") >= 0 || Main.pl_url["indexOf"]("arshavir.info/portal") >= 0) {
+    if (Main.pl_url.indexOf("nstreamvod.profiservice.ws") >= 0 || Main.pl_url.indexOf("arshavir.info/portal") >= 0) {
         Main.pl_url = "";
         Main.url = "http://www.youtube.com/watch?v=nxcSnalYUy8";
     }
-    if (Main.name["toLowerCase"]()["indexOf"]("установите оригинальную версию") >= 0) {
+    if (Main.name.toLowerCase().indexOf("установите оригинальную версию") >= 0) {
         API.playlist_name = "Доступ заблокирован!";
     }
 }
 Main.PlayChannel = function() {
     try {
-        clearTimeout(this["load_timer"]);
+        clearTimeout(this.load_timer);
         Super_Block();
-        if (this["pl_url"] != "" && this["pl_url"]["indexOf"]("stop") != 0) {
+        if (this.pl_url != "" && this.pl_url.indexOf("stop") != 0) {
             Main.playlist();
         } else {
-            if (this["url"] != "" && this["url"]["indexOf"]("stop") != 0) {
+            if (this.url != "" && this.url.indexOf("stop") != 0) {
                 if (Player.state != Player.STOPPED) {
                     if (Main.PlayerMode == "0") {
                         Main.stopFPlayer();
@@ -907,7 +908,7 @@ Main.PlayChannel = function() {
                     }
                 }
                 Main.UpdatePlayerStatusbar();
-                Display.status1(this["ch_num"]);
+                Display.status1(this.ch_num);
                 Main.url_arr = [];
                 Main.url_selected = 0;
                 Main.Foto = false;
@@ -918,7 +919,7 @@ Main.PlayChannel = function() {
                 Main.XML_URL = API.XML_URL;
                 widgetAPI.putInnerHTML(getId("resolution"), "");
                 getIdn("main");
-                if (this["url"]["indexOf"]("rtmp://") >= 0) {
+                if (this.url.indexOf("rtmp://") >= 0) {
                     Main.PlayerMode = "0";
                     Main.PlayFlashStream();
                 } else {
@@ -927,7 +928,7 @@ Main.PlayChannel = function() {
                 }
                 pluginAPI.setOffScreenSaver();
             } else {
-                if (this["url"]["indexOf"]("stop") == 0 || this["pl_url"]["indexOf"]("stop") == 0) {
+                if (this.url.indexOf("stop") == 0 || this.pl_url.indexOf("stop") == 0) {
                     alert("stop!");
                 } else {
                     Display.status("Нет адреса!");
@@ -939,41 +940,41 @@ Main.PlayChannel = function() {
 };
 Main.playlist = function() {
     try {
-        this["pl_url"] = decLongUrl(this["pl_url"]);
-        this["pre_pl_url"] = API.XML_URL;
-        this["playlist_name"] = Main.name;
+        this.pl_url = decLongUrl(this.pl_url);
+        this.pre_pl_url = API.XML_URL;
+        this.playlist_name = Main.name;
         if (Main.start) {
-            this["pl_url"] = "start.xml";
+            this.pl_url = "start.xml";
         }
-        if (API.Xcode != 0 && !Main.guide && !Main.start && !Main.help_info && this["url"] == "") {
+        if (API.Xcode != 0 && !Main.guide && !Main.start && !Main.help_info && this.url == "") {
             var c = /[-="',&\/\?\s\_]xxx|porno|sex|erotica|секс|порно|эротика|aнал/i;
-            if (c.exec(" " + Main.name) != null || c.exec(" " + API.playlist_name) != null || c.exec(" " + this["pl_url"]) != null) {
-                this["xxx"] = true;
+            if (c.exec(" " + Main.name) != null || c.exec(" " + API.playlist_name) != null || c.exec(" " + this.pl_url) != null) {
+                this.xxx = true;
             }
         }
-        if (!this["DEL"] && !Main.guide && this["playlist_prev"] && Main.pl_url["indexOf"]("history.dat") < 0) {
-            if (API.XML_URL["indexOf"]("fav.dat") > 0) {
+        if (!this.DEL && !Main.guide && this.playlist_prev && Main.pl_url.indexOf("history.dat") < 0) {
+            if (API.XML_URL.indexOf("fav.dat") > 0) {
                 Main.temp_fav_num = Main.fav_num;
                 Main.temp_fav_name = Main.fav_name;
             }
             Main.SavePrevPlaylist();
-            if (Main.pl_url["indexOf"]("Open") != 0 && Main.pl_url["indexOf"]("history.dat") < 0 && API.XML_URL != "start.xml") {
+            if (Main.pl_url.indexOf("Open") != 0 && Main.pl_url.indexOf("history.dat") < 0 && API.XML_URL != "start.xml") {
                 Main.saveHistory("pl_history.dat");
             }
         }
-        this["start"] = false;
-        this["search"] = false;
-        if (Main.pl_url["indexOf"]("usb/") == 0) {
+        this.start = false;
+        this.search = false;
+        if (Main.pl_url.indexOf("usb/") == 0) {
             var b = SearchPlToUSB();
             if (b != "") {
                 API.XML_URL = b;
                 API.Request(b);
             }
         } else {
-            if (Main.pl_url["indexOf"]("ScanUSB") == 0) {
+            if (Main.pl_url.indexOf("ScanUSB") == 0) {
                 ScanUsbPort();
             } else {
-                if (Main.pl_url["indexOf"]("$USB_DIR") == 0) {
+                if (Main.pl_url.indexOf("$USB_DIR") == 0) {
                     ReadUsbDirN();
                 } else {
                     if (Main.pl_url == "OpenHistory") {
@@ -984,42 +985,42 @@ Main.playlist = function() {
                         ];
                         Main.ReadPlArr("OpenHistory", a);
                     } else {
-                        if (Main.pl_url["indexOf"]("history.dat") >= 0) {
+                        if (Main.pl_url.indexOf("history.dat") >= 0) {
                             if (API.Xcode != 0) {
-                                this["xxx"] = true;
+                                this.xxx = true;
                                 setTimeout("SearchFormular()", 500);
                             } else {
                                 Main.opencommonFile(Main.pl_url);
                             }
                         } else {
-                            if (Main.pl_url["indexOf"]("OpenFav") == 0) {
-                                if (API.fav_start_channels["length"] > 1) {
+                            if (Main.pl_url.indexOf("OpenFav") == 0) {
+                                if (API.fav_start_channels.length > 1) {
                                     Main.ReadPlArr("OpenFav", API.fav_start_channels)
                                 } else {
                                     Main.FAV = true;
                                     Main.opencommonFile(Main.fav_url);
                                 }
                             } else {
-                                if (Main.pl_url["indexOf"]("fav.dat") > 0) {
+                                if (Main.pl_url.indexOf("fav.dat") > 0) {
                                     Main.fav_num = Main.ch_num;
                                     Main.fav_name = Main.name;
                                     Main.FAV = true;
                                     Main.opencommonFile(Main.pl_url);
                                 } else {
-                                    if (this["xxx"] || Main.name["indexOf"]("-=ПОИСК=-") == 0 || this["search_on"] != "") {
-                                        if (!this["xxx"]) {
+                                    if (this.xxx || Main.name.indexOf("-=ПОИСК=-") == 0 || this.search_on != "") {
+                                        if (!this.xxx) {
                                             Main.search = true;
                                         }
                                         setTimeout("SearchFormular()", 500);
                                     } else {
-                                        API.XML_URL = this["pl_url"];
-                                        this["loading_pl"] = true;
+                                        API.XML_URL = this.pl_url;
+                                        this.loading_pl = true;
                                         Display.status("Загрузка ", 0);
-                                        if (Main.parser != "" && Main.parser["indexOf"]("://") > 0 && Main.pl_url["indexOf"]("md5hash") >= 0) {
+                                        if (Main.parser != "" && Main.parser.indexOf("://") > 0 && Main.pl_url.indexOf("md5hash") >= 0) {
                                             API.AsReqMode = false;
-                                            this["pl_url"] = decLongUrl(GetHash(Main.parser, this["pl_url"], ""));
+                                            this.pl_url = decLongUrl(GetHash(Main.parser, this.pl_url, ""));
                                             API.AsReqMode = true;
-                                            if (this["pl_url"]["indexOf"]("md5hash") >= 0) {
+                                            if (this.pl_url.indexOf("md5hash") >= 0) {
                                                 setTimeout("API.Request(Main.pl_url);", 3000);
                                             } else {
                                                 API.Request(Main.pl_url);
@@ -1050,7 +1051,7 @@ StopSlideShow = function() {
 };
 Main.PlayNoFlashStream = function() {
     Foto = /\.(gif|jpg|jpeg|bmp|tiff|raw )$/i;
-    if (Foto.exec(this["url"]) != null) {
+    if (Foto.exec(this.url) != null) {
         Main.Foto = true;
     } else {
         StopSlideShow()
@@ -1077,10 +1078,10 @@ Main.PlayNoFlashStream = function() {
         }
     }
     getIdb("screen_size");
-    var a = this["url"];
+    var a = this.url;
     a = a.replace("rtp://", "udp://");
     if (a.indexOf("udp://") >= 0) {
-        if (dPr(API.Proxy) != "" && API.Proxy["indexOf"](":") > 0) {
+        if (dPr(API.Proxy) != "" && API.Proxy.indexOf(":") > 0) {
             a = "http://" + API.Proxy + "/udp/" + a.substr(7);
         }
     } else {
@@ -1089,7 +1090,7 @@ Main.PlayNoFlashStream = function() {
             try {
                 a = Super_parser(a)
             } catch (b) {
-                a = this["url"];
+                a = this.url;
             }
             API.AsReqMode = true;
         }
@@ -1102,7 +1103,7 @@ Main.PlayNoFlashStream = function() {
     } else {
         Player.stopV();
         Display.status("Пустая ссылка!");
-        this["prev_ch_array"]["pop"]();
+        this.prev_ch_array.pop();
         setTimeout("Main.Menu();", 2000);
     }
 };
@@ -1114,7 +1115,7 @@ Main.PlayFlashStream = function() {
     getIdn("screen_size");
     getIdb("flashplayer");
     widgetAPI.putInnerHTML(getId("flashplayer"), "");
-    var a = (this["url"]["indexOf"](".flv") >= 0) ? ("flv=" + this["url"]) : ("file=" + this["url"]);
+    var a = (this.url.indexOf(".flv") >= 0) ? ("flv=" + this.url) : ("file=" + this.url);
     var b = '<object type="application/x-shockwave-flash" id="rmtpplayerHD" width="960" height="540">';
     b += '<param name="movie" value="nflashplayer.swf" />';
     b += '<param name="FlashVars" value="' + a + '" /></object>';
@@ -1175,14 +1176,14 @@ Main.writeFile = function(d, e) {
     }
 };
 Main.saveHistory = function(d) {
-    var c = [dSp(dI(Main.name) + "|" + dI(this["url"]) + "|" + dI(this["logo"]) + "|" + dI(Ach(3)) + "||" + dI(this["pl_url"]) + "|" + this["ssize"] + "|" + this["a_num"] + "|" + this["buffer"] + "|" + this["ibuffer"] + "|" + this["timeshift"] + "|" + this["region"] + "|" + dI(this["parser"]) + "|" + dI(this["search_on"]))];
+    var c = [dSp(dI(Main.name) + "|" + dI(this.url) + "|" + dI(this.logo) + "|" + dI(Ach(3)) + "||" + dI(this.pl_url) + "|" + this.ssize + "|" + this.a_num + "|" + this.buffer + "|" + this.ibuffer + "|" + this.timeshift + "|" + this.region + "|" + dI(this.parser) + "|" + dI(this.search_on))];
     Main.readFile(c, d);
     if (c.length > 10) {
         c.pop();
     }
-    var a = (this["url"] != "") ? dI(this["url"]) : dI(this["pl_url"]);
+    var a = (this.url != "") ? dI(this.url) : dI(this.pl_url);
     for (var b = 1; b < c.length; b++) {
-        if (c[b]["indexOf"](a) > 0) {
+        if (c[b].indexOf(a) > 0) {
             c.splice(b, 1);
             break;
         }
@@ -1195,44 +1196,44 @@ Main.delHistory = function(a) {
     Main.PlayPrevPlaylist();
 };
 Main.saveFavorites = function() {
-    var a = [dSp(dI(Main.name) + "|" + dI(this["url"]) + "|" + dI(this["logo"]) + "|" + dI(Ach(3)) + "||" + dI(this["pl_url"]) + "|" + this["ssize"] + "|" + this["a_num"] + "|" + this["buffer"] + "|" + this["ibuffer"] + "|" + this["timeshift"] + "|" + this["region"] + "|" + dI(this["parser"]) + "|" + dI(this["search_on"]))];
+    var a = [dSp(dI(Main.name) + "|" + dI(this.url) + "|" + dI(this.logo) + "|" + dI(Ach(3)) + "||" + dI(this.pl_url) + "|" + this.ssize + "|" + this.a_num + "|" + this.buffer + "|" + this.ibuffer + "|" + this.timeshift + "|" + this.region + "|" + dI(this.parser) + "|" + dI(this.search_on))];
     Main.readFile(a, Main.fav_url);
     Main.writeFile(a, Main.fav_url);
     Display.status('<b style="color:green">Добавленно в избранное №' + Main.fav_num + ' - "' + Main.fav_name + '"</b>', 1500);
 };
 Main.delFavorites = function() {
-    var a = this["ch_num"] - 1;
+    var a = this.ch_num - 1;
     var b = [];
     Main.readFile(b, Main.fav_url);
     b.splice(a, 1);
     Main.writeFile(b, Main.fav_url);
-    this["DEL"] = true;
+    this.DEL = true;
     if (b.length == 0) {
         Display.status('<b style="color:yellow">В избранном №' + Main.fav_num + ' - "' + Main.fav_name + '" -  ПУСТО !</b>');
         Main.FAV = false;
         Main.RED = false;
-        if (Main.prev_pl_array["length"] == 0 && API.XML_URL["indexOf"]("start.xml") < 0) {
+        if (Main.prev_pl_array.length == 0 && API.XML_URL.indexOf("start.xml") < 0) {
             API.XML_URL = "start.xml";
             setTimeout("API.Request(API.XML_URL)", 3000);
         } else {
             setTimeout("Main.PlayPrevPlaylist();", 3000);
         }
     } else {
-        this["playlist_prev"] = false;
+        this.playlist_prev = false;
         Main.opencommonFile(Main.fav_url);
     }
 };
 Main.moveFavorites = function(c) {
-    var a = this["ch_num"] - 1;
+    var a = this.ch_num - 1;
     var d = [];
     Main.readFile(d, Main.fav_url);
     if (d.length > 1) {
         c = (a == 0 && c == 1) ? -d.length : (a == d.length - 1 && c == -1) ? d.length - 1 : c;
-        this["DEL"] = true;
+        this.DEL = true;
         var b = d.splice(a, 1);
         d.splice(a - c, 0, b.toString());
         Main.writeFile(d, Main.fav_url);
-        this["playlist_prev"] = false;
+        this.playlist_prev = false;
         Main.opencommonFile(Main.fav_url);
         if (c == -1 || c == d.length - 1) {
             Main.selectNextChannel();
@@ -1246,14 +1247,14 @@ Main.opencommonFile = function(c) {
     Main.readFile(f, c);
     if (f.length == 0) {
         if (c.indexOf("fav.dat") > 0) {
-            if (Main.prev_pl_array["length"] == 0 && API.XML_URL["indexOf"]("start.xml") < 0) {
+            if (Main.prev_pl_array.length == 0 && API.XML_URL.indexOf("start.xml") < 0) {
                 Display.status('<b style="color:yellow">В вашем стартоавом избранном  -  ПУСТО !</b>');
                 setTimeout("Display.status('Измените его адрес в настройках виджета')", 3500);
                 API.XML_URL = "start.xml";
                 setTimeout("API.Request(API.XML_URL)", 7000)
             } else {
                 Display.status('<b style="color:yellow">В избранном №' + Main.fav_num + " - " + Main.fav_name + " -  ПУСТО !</b>", 1500);
-                if (API.XML_URL["indexOf"]("fav.dat") > 0) {
+                if (API.XML_URL.indexOf("fav.dat") > 0) {
                     Main.SetFavSelectedPosition();
                     Main.readFile(f, API.XML_URL);
                 } else {
@@ -1261,9 +1262,9 @@ Main.opencommonFile = function(c) {
                         Main.FAV = false;
                     }
                 }
-                if (API.XML_URL["indexOf"]("OpenFav") >= 0) {
-                    this["prev_pl_array"]["pop"]();
-                    this["playlist_prev"] = true;
+                if (API.XML_URL.indexOf("OpenFav") >= 0) {
+                    this.prev_pl_array.pop();
+                    this.playlist_prev = true;
                 }
                 Selectbox.selected = Selectbox.pre_selected;
                 Selectbox.selected_page = Selectbox.pre_selected_page;
@@ -1347,8 +1348,8 @@ function SearchPlToUSB() {
                 var c = l.readDir(a);
                 if (c) {
                     for (var b = 0; b < c.length; b++) {
-                        if (c[b]["name"] && Main.pl_url["substr"](4) == c[b]["name"]) {
-                            e = "/dtv/usb/" + d + "/" + Main.pl_url["substr"](4);
+                        if (c[b]["name"] && Main.pl_url.substr(4) == c[b]["name"]) {
+                            e = "/dtv/usb/" + d + "/" + Main.pl_url.substr(4);
                             j = i;
                             break;
                         }
@@ -1387,7 +1388,7 @@ function ReadUsbDirN() {
         i = [F, E, D, G, "", I, "", "", "", "", "", "", "", ""];
         H.push(i);
     };
-    var z = Main.pl_url["indexOf"]("&page=");
+    var z = Main.pl_url.indexOf("&page=");
     if (z != -1) {
         Main.step_read_dir = parseInt(Main.pl_url["substring"](z + 6), 10);
         Main.pl_url = Main.pl_url["substring"](0, z);
@@ -1424,7 +1425,7 @@ function ReadUsbDirN() {
                     l += "<br> Тип : " + j + "Файл </font>";
                     var e = n[o]["name"]["match"](/\.(\w+)$/i);
                     if (e != null) {
-                        e = e[1]["toLowerCase"]();
+                        e = e[1].toLowerCase();
                         l += ' "' + k + e + '</font>"';
                     } else {
                         l += ' " Без расширения "';
@@ -1432,7 +1433,7 @@ function ReadUsbDirN() {
                     if (n[o]["size"]) {
                         l += "<br> Размер : " + k + ReSize(n[o]["size"]) + "</font>";
                     }
-                    var v = Main.pl_url["replace"]("$USB_DIR", "/dtv/usb");
+                    var v = Main.pl_url.replace("$USB_DIR", "/dtv/usb");
                 } else {
                     l += "<br> Тип : " + c + " Папка </font>";
                 }
@@ -1578,7 +1579,7 @@ function SetTimeDate() {
             }
         }
     }
-    if (Main.ya_epg_info_arr["length"] > 0 && Main.epg_t1 <= Main.epg_t2) {
+    if (Main.ya_epg_info_arr.length > 0 && Main.epg_t1 <= Main.epg_t2) {
         var j = parseInt((T.h * 3600 + T.m * 60 + T.s) * 1000);
         if (Main.epg_t1 < 24 * 3600000 && Main.epg_t1 > j) {
             j += 24 * 3600000;
@@ -1608,14 +1609,14 @@ function SetTimeDate() {
         }
     }
     var g = to(T.h, T.m, T.s, 0);
-    getId("widget_time")["innerHTML"] = g;
-    getId("time")["innerHTML"] = g;
+    getId("widget_time").innerHTML = g;
+    getId("time").innerHTML = g;
     var e = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
     var d = ["Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"];
     var c = e[T.day];
     var b = d[T.month];
     var a = c + " " + T.date + " " + b;
-    getId("widget_date")["innerHTML"] = a;
+    getId("widget_date").innerHTML = a;
 }
 
 function TimeInfo(e, d) {
@@ -1623,10 +1624,10 @@ function TimeInfo(e, d) {
         var c = (e > 0) ? parseInt((100 * e) / d) : 0;
         var b = Math.floor(c * 5.45);
         var a = "";
-        getId("progressBar")["style"]["width"] = b + "px";
+        getId("progressBar").style.width = b + "px";
         a = (c > 9 ? c : ("0" + c)) + "%  / " + msecToStr(e);
         a += " / " + msecToStr(d);
-        getId("timeInfo")["innerHTML"] = a;
+        getId("timeInfo").innerHTML = a;
     }
 }
 msecToStr = function(a, b) {
@@ -1706,9 +1707,9 @@ API.init = function() {
             API.Favname = (dPr(d[7]) != "") ? d[7] : API.Favname;
             API.CODE = (d[8] < 100000 && d[8] > 0) ? d[8] : "213";
             API.REG = d[9];
-            API.Timeshift = d[10]["replace"]("+", "");
+            API.Timeshift = d[10].replace("+", "");
             API.Timemode = d[11];
-            API.Timefix = d[12]["replace"]("+", "");
+            API.Timefix = d[12].replace("+", "");
             API.Size = d[13];
             API.Ph = d[14];
             API.Pw = d[15];
@@ -1725,7 +1726,7 @@ API.init = function() {
         }
         API.favorites = [];
         API.fav_start_channels = [];
-        var c = API.Favname["split"]("|");
+        var c = API.Favname.split("|");
         var i = (c.length > 10) ? 10 : c.length;
         for (var j = 0; j < i; j++) {
             var b = (j > 0) ? j : "";
@@ -1753,9 +1754,9 @@ API.init = function() {
             for (var j = 0; j < d.length; j++) {
                 var g = d[j];
                 g = g.split("|");
-                Ya_name_index_obj[g[0]["toLowerCase"]()] = g[1];
+                Ya_name_index_obj[g[0].toLowerCase()] = g[1];
                 Ya_icon_index_url_obj[g[1]] = 'http://avatars.yandex.net/' + g[2];
-                Ya_icon_name_url_obj[g[0]["toLowerCase"]()] = 'http://avatars.yandex.net/' + g[2];
+                Ya_icon_name_url_obj[g[0].toLowerCase()] = 'http://avatars.yandex.net/' + g[2];
             }
         }
         setTimeout("StartTime()", 50);
@@ -1785,9 +1786,9 @@ GetYaBaseInfo = function() {
     Main.showinfoList(c);
 };
 API.loadComplete = function() {
-    if (API.channels["length"] == 0) {
+    if (API.channels.length == 0) {
         Display.status('<b style="color:yellow">ОШИБКА В СТРУКТУРЕ ПЛЕЙЛИСТА!</b>');
-        if (Main.prev_pl_array["length"] == 0 && API.XML_URL == "start.xml") {
+        if (Main.prev_pl_array.length == 0 && API.XML_URL == "start.xml") {
             setTimeout("getIdb('main');SetupFormular()", 2000);
         } else {
             setTimeout("Main.PlayPrevPlaylist();", 500);
@@ -1831,32 +1832,33 @@ API.Request = function(b) {
         if (API.AsReqMode) {
             KeyHandler.setFocus(1);
             API.stReq_timeout = setTimeout("API.stopRequest()", API.stReq_time);
-            API.XHRObj["onreadystatechange"] = function() {
-                if (API.XHRObj["readyState"] == 4) {
+            API.XHRObj.onreadystatechange = function() {
+                if (API.XHRObj.readyState == 4) {
                     API.recieveData(b);
                 }
             };
-            if (Main.seriesE && API.XHRObj["overrideMimeType"]) {
-                API.XHRObj["overrideMimeType"]("text/xml");
+            if (Main.seriesE && API.XHRObj.overrideMimeType) {
+                API.XHRObj.overrideMimeType("text/xml");
             }
         }
         API.XHRObj["open"]("GET", b, API.AsReqMode);
         if (!API.AsReqMode || API.Header == "1") {
-            API.XHRObj["setRequestHeader"]("Accept-Encoding", "identity");
-            API.XHRObj["setRequestHeader"]("Accept-Language", "en-us,en;q=0.5");
-            API.XHRObj["setRequestHeader"]("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-            API.XHRObj["setRequestHeader"]("User-Agent", "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.6) Gecko/20100627 Firefox/3.6.6");
-            API.XHRObj["setRequestHeader"]("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
-            API.XHRObj["setRequestHeader"]("Connection", "close");
+            API.XHRObj.setRequestHeader("Accept-Encoding", "identity");
+            API.XHRObj.setRequestHeader("Accept-Language", "en-us,en;q=0.5");
+            API.XHRObj.setRequestHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+            API.XHRObj.setRequestHeader("User-Agent", "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.6) Gecko/20100627 Firefox/3.6.6");
+            API.XHRObj.setRequestHeader("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
+            API.XHRObj.setRequestHeader("Connection", "close");
         }
         API.XHRObj["send"](null);
         if (!API.AsReqMode) {
-            if ((API.XHRObj["status"] == 302 || API.XHRObj["status"] == 303) && API.XHRObj["getResponseHeader"]("Location") != null) {
-                b = API.XHRObj["getResponseHeader"]("Location");
+            if ((API.XHRObj.status == 302 || API.XHRObj.status == 303) && API.XHRObj.getResponseHeader("Location") != null) {
+                b = API.XHRObj.getResponseHeader("Location");
                 return API.Request(b);
             } else {
-                if (API.XHRObj["readyState"] == 4 && API.XHRObj["status"] == 200) {
-                    return API.XHRObj["responseText"];
+                if (API.XHRObj.readyState == 4 && API.XHRObj.status == 200) {
+					alert(API.XHRObj.responseText);
+                    return API.XHRObj.responseText;
                 } else {
                     return "";
                 }
@@ -1867,12 +1869,12 @@ API.Request = function(b) {
 
 API.recieveData = function(a) {
     clearTimeout(API.stReq_timeout);
-    if (API.XHRObj["status"] == 200) {
-        if (a.toLowerCase()["indexOf"](".m3u") >= 0 && API.XHRObj["responseText"] != null && API.XHRObj["responseText"] != "") {
-            API.getChannel_list(API.XHRObj["responseText"])
+    if (API.XHRObj.status == 200) {
+        if (a.toLowerCase().indexOf(".m3u") >= 0 && API.XHRObj.responseText != null && API.XHRObj.responseText != "") {
+            API.getChannel_list(API.XHRObj.responseText)
         } else {
-            if (API.XHRObj["responseXML"] != null && API.XHRObj["responseXML"] != "") {
-                API.getChannel_list(API.XHRObj["responseXML"])
+            if (API.XHRObj.responseXML != null && API.XHRObj.responseXML != "") {
+                API.getChannel_list(API.XHRObj.responseXML)
             } else {
                 API.channels = [];
                 API.loadComplete();
@@ -1881,7 +1883,7 @@ API.recieveData = function(a) {
     } else {
         Display.status('<b style="color:yellow">НЕПРАВИЛЬНЫЙ  АДРЕС ИЛИ ПЛЕЙЛИСТА НЕТ! </b>');
         if (Main.FirstStart) {
-            if (API.XML_URL["indexOf"]("start.xml") < 0) {
+            if (API.XML_URL.indexOf("start.xml") < 0) {
                 API.XML_URL = "start.xml";
                 setTimeout("API.Request(API.XML_URL)", 3000);
             } else {
@@ -1897,7 +1899,7 @@ API.stopRequest = function() {
     if (API.XHRObj != null) {
         API.XHRObj["abort"]();
         API.XML_URL = Main.pre_pl_url;
-        Main.prev_pl_array["pop"]();
+        Main.prev_pl_array.pop();
         API.loadComplete();
     }
 };
@@ -1924,7 +1926,7 @@ API.ResetAll = function() {
 API.getChannel_list = function(y) {
     var x = function(X, W, V) {
         try {
-            var U = X.getElementsByTagName(W)[0]["childNodes"][0]["nodeValue"];
+            var U = X.getElementsByTagName(W)[0].childNodes[0].nodeValue;
             if (U == null) {
                 U = "";
             }
@@ -1939,7 +1941,7 @@ API.getChannel_list = function(y) {
     };
     var w = function(X, W, U) {
         try {
-            var V = X.getElementsByTagName(W)[0]["getAttributeNode"](U)["nodeValue"];
+            var V = X.getElementsByTagName(W)[0]["getAttributeNode"](U).nodeValue;
             if (V == null) {
                 V = "";
             }
@@ -1959,13 +1961,13 @@ API.getChannel_list = function(y) {
         var S = "";
         var R = "";
         var Q = "";
-        if (API.XML_URL["toLowerCase"]()["indexOf"](".m3u8") < 0) {
-            if (API.XML_URL["toLowerCase"]()["indexOf"](".m3u") >= 0) {
+        if (API.XML_URL.toLowerCase().indexOf(".m3u8") < 0) {
+            if (API.XML_URL.toLowerCase().indexOf(".m3u") >= 0) {
                 var N = {};
                 var L = 1;
                 var J = v.split("\x0A");
                 for (var d = 0; d < J.length; d++) {
-                    if ((J[d]["indexOf"]("#EXTINF:") >= 0 && (J[d + 1]["indexOf"]("://") > 0 || J[d + 2]["indexOf"]("://") > 0 || J[d + 1]["indexOf"]("/dtv") > -1 || J[d + 2]["indexOf"]("/dtv") > -1)) || J[d]["indexOf"]("#EXTM3U") >= 0) {
+                    if ((J[d].indexOf("#EXTINF:") >= 0 && (J[d + 1].indexOf("://") > 0 || J[d + 2].indexOf("://") > 0 || J[d + 1].indexOf("/dtv") > -1 || J[d + 2].indexOf("/dtv") > -1)) || J[d].indexOf("#EXTM3U") >= 0) {
                         var H = "";
                         var f = "";
                         var n = "";
@@ -1977,20 +1979,20 @@ API.getChannel_list = function(y) {
                         var o = "";
                         var i = "";
                         var g = "";
-                        J[d] = J[d]["replace"](/'/g, '"');
-                        g = parser(J[d], "cache=", " ")["replace"](/"/g, "");
+                        J[d] = J[d].replace(/'/g, '"');
+                        g = parser(J[d], "cache=", " ").replace(/"/g, "");
                         g = (g >= 0.5 && g <= 20) ? g : (g >= 50 && g <= 2000) ? g / 100 : "";
-                        f = lrdPr(parser(J[d], 'tvg-name="', '"')["replace"](/"/g, ""))["replace"](/_/g, " ");
+                        f = lrdPr(parser(J[d], 'tvg-name="', '"').replace(/"/g, "")).replace(/_/g, " ");
                         if (f != "" && f.indexOf("/m.tv.yandex.") < 0 && f.indexOf("channel=") < 0 && isNaN(parseInt(f))) {
                             var O = Ya_name_index_obj[f.toLowerCase()];
                             f = (O != undefined) ? O : "";
                         }
-                        n = parser(J[d], "tvg-shift=", " ")["replace"](/["\+]/g, "");
-                        p = lrdPr(parser(J[d], 'tvg-logo="', '"')["replace"](/"/g, ""))["replace"](/_/g, " ");
-                        P = parser(J[d], "aspect-ratio=", " ")["replace"](/"/g, "");
-                        P = (P.indexOf("16:9") >= 0 || P.toLowerCase()["indexOf"]("16x9") >= 0 || P.indexOf("0") == 0) ? "0" : (P.indexOf("14:9") >= 0 || P.toLowerCase()["indexOf"]("14x9") >= 0 || P.indexOf("1") == 0) ? "1" : (P.toLowerCase()["indexOf"]("4:3z2") >= 0 || P.toLowerCase()["indexOf"]("4x3z2") >= 0 || P.indexOf("2") == 0) ? "2" : (P.toLowerCase()["indexOf"]("4:3z1") >= 0 || P.toLowerCase()["indexOf"]("4x3z1") >= 0 || P.indexOf("3") == 0) ? "3" : (P.indexOf("4:3") >= 0 || P.toLowerCase()["indexOf"]("4x3") >= 0 || P.indexOf("4") == 0) ? "4" : (P.toLowerCase()["indexOf"]("x-zoom") >= 0 || P.indexOf("5") == 0) ? "5" : "";
-                        (P.toLowerCase()["indexOf"]("auto") >= 0 || P.indexOf("6") == 0) ? "6" : "";
-                        j = parser(J[d], "audio-track=", " ")["replace"](/"/g, "");
+                        n = parser(J[d], "tvg-shift=", " ").replace(/["\+]/g, "");
+                        p = lrdPr(parser(J[d], 'tvg-logo="', '"').replace(/"/g, "")).replace(/_/g, " ");
+                        P = parser(J[d], "aspect-ratio=", " ").replace(/"/g, "");
+                        P = (P.indexOf("16:9") >= 0 || P.toLowerCase().indexOf("16x9") >= 0 || P.indexOf("0") == 0) ? "0" : (P.indexOf("14:9") >= 0 || P.toLowerCase().indexOf("14x9") >= 0 || P.indexOf("1") == 0) ? "1" : (P.toLowerCase().indexOf("4:3z2") >= 0 || P.toLowerCase().indexOf("4x3z2") >= 0 || P.indexOf("2") == 0) ? "2" : (P.toLowerCase().indexOf("4:3z1") >= 0 || P.toLowerCase().indexOf("4x3z1") >= 0 || P.indexOf("3") == 0) ? "3" : (P.indexOf("4:3") >= 0 || P.toLowerCase().indexOf("4x3") >= 0 || P.indexOf("4") == 0) ? "4" : (P.toLowerCase().indexOf("x-zoom") >= 0 || P.indexOf("5") == 0) ? "5" : "";
+                        (P.toLowerCase().indexOf("auto") >= 0 || P.indexOf("6") == 0) ? "6" : "";
+                        j = parser(J[d], "audio-track=", " ").replace(/"/g, "");
                         j = (j != "") ? (parseInt(j) + 1).toString() : "";
                         if (d == 0) {
                             c = (p != "") ? p : "";
@@ -1999,9 +2001,9 @@ API.getChannel_list = function(y) {
                             S = (g != "") ? g : "";
                             u = (n != "") ? n : "";
                         } else {
-                            k = lrdPr(parser(J[d], 'group-title="', '"')["replace"](/"/g, ""));
+                            k = lrdPr(parser(J[d], 'group-title="', '"').replace(/"/g, ""));
                             o = lrdPr(parser(J[d], ","));
-                            var t = (J[d + 1]["indexOf"]("://") > 0 || J[d + 1]["indexOf"]("/dtv") > -1) ? J[d + 1] : J[d + 2];
+                            var t = (J[d + 1].indexOf("://") > 0 || J[d + 1].indexOf("/dtv") > -1) ? J[d + 1] : J[d + 2];
                             t = lrdPr(t);
                             p = (p != "") ? p : c;
                             if (p != "" && p.indexOf("://") < 0 && p.indexOf(".png") < 0) {
@@ -2121,7 +2123,7 @@ API.getChannel_list = function(y) {
         API.channels = [];
     }
     API.countPages();
-    if (API.categories["length"] > 2) {
+    if (API.categories.length > 2) {
         API.all_channels = API.channels;
     }
     API.loadComplete();
@@ -2129,7 +2131,7 @@ API.getChannel_list = function(y) {
 API.setCategory = function(c) {
     API.channels = [];
     Main.ResetSelectedPosition();
-    for (var a = 0; a < API.all_channels["length"]; a++) {
+    for (var a = 0; a < API.all_channels.length; a++) {
         if (API.all_channels[a][4] == c && c != "") {
             API.channels["push"](API.all_channels[a]);
         } else {
@@ -2138,16 +2140,16 @@ API.setCategory = function(c) {
             }
         }
     }
-    if (API.channels["length"] == 0) {
+    if (API.channels.length == 0) {
         var b = ["В этой категории ничего нет!", "stop", "", "В этой категории ничего нет!", "", "", "", "", "", "", "", "", "", ""];
         API.channels["push"](b);
     }
     API.countPages();
 };
 API.countPages = function() {
-    if (API.channels["length"] > 0) {
-        API.chan_pages = API.channels["length"];
-        API.last_page_channels_counter = API.channels["length"] % 10;
+    if (API.channels.length > 0) {
+        API.chan_pages = API.channels.length;
+        API.last_page_channels_counter = API.channels.length % 10;
         if (API.last_page_channels_counter == 0) {
             API.last_page_channels_counter = 10;
         }
@@ -2167,25 +2169,25 @@ var Selectbox = {
 };
 Selectbox.setBox = function(c, b) {
     try {
-        if (this["title"] != c) {
-            this["selected"] = 0;
-            this["selected_page"] = 0;
+        if (this.title != c) {
+            this.selected = 0;
+            this.selected_page = 0;
         }
         if (c == "Выбор качества") {
-            this["selected"] = this["url_selected"];
-            this["selected_page"] = 0;
+            this.selected = this.url_selected;
+            this.selected_page = 0;
         }
-        this["title"] = c;
-        this["pre_selected"] = this["selected"];
-        this["pre_selected_page"] = this["selected_page"];
-        this["select_list"] = b;
-        this["last_page_counter"] = b.length % 10;
-        if (this["last_page_counter"] == 0) {
-            this["last_page_counter"] = 10;
+        this.title = c;
+        this.pre_selected = this.selected;
+        this.pre_selected_page = this.selected_page;
+        this.select_list = b;
+        this.last_page_counter = b.length % 10;
+        if (this.last_page_counter == 0) {
+            this.last_page_counter = 10;
         }
-        this["pages"] = Math.round(b.length / 10);
-        if (this["last_page_counter"] > 0 && this["last_page_counter"] < 5) {
-            this["pages"] ++;
+        this.pages = Math.round(b.length / 10);
+        if (this.last_page_counter > 0 && this.last_page_counter < 5) {
+            this.pages ++;
         }
         Selectbox.updateBox();
     } catch (a) {}
@@ -2193,26 +2195,26 @@ Selectbox.setBox = function(c, b) {
 Selectbox.updateBox = function() {
     try {
         var f = 10;
-        this["selected_page"] = (this["selected_page"] > this["pages"] - 1) ? 0 : (this["selected_page"] < 0) ? this["pages"] - 1 : this["selected_page"];
-        if (this["selected_page"] == this["pages"] - 1) {
-            f = this["last_page_counter"];
-            if (this["selected"] > this["last_page_counter"] - 1) {
-                this["selected"] = this["last_page_counter"] - 1;
+        this.selected_page = (this.selected_page > this.pages - 1) ? 0 : (this.selected_page < 0) ? this.pages - 1 : this.selected_page;
+        if (this.selected_page == this.pages - 1) {
+            f = this.last_page_counter;
+            if (this.selected > this.last_page_counter - 1) {
+                this.selected = this.last_page_counter - 1;
             }
         }
-        if (this["selected_page"] == this["pages"] && this["last_page_counter"] < f + 1) {
-            f = this["last_page_counter"];
+        if (this.selected_page == this.pages && this.last_page_counter < f + 1) {
+            f = this.last_page_counter;
         }
-        var d = '<div><div style="text-align:center;width:100%;height:10px;padding:4px;font-size:20px;">' + this["title"] + "</div><br>";
+        var d = '<div><div style="text-align:center;width:100%;height:10px;padding:4px;font-size:20px;">' + this.title + "</div><br>";
         for (var a = 0; a < f; a++) {
-            var c = 10 * this["selected_page"] + a;
+            var c = 10 * this.selected_page + a;
             var b = "";
-            if (a == this["selected"]) {
+            if (a == this.selected) {
                 b = 'style="color:#FACC2E; border: 1px solid #FA8258" ';
             }
-            var i = (this["selected_page"] > 0) ? this["selected_page"].toString() + (1 + a) + ") " : (1 + a) + ") ";
-            if (this["select_list"][c][1]) {
-                d += "<li " + b + ">" + i + this["select_list"][c][1] + "</li>";
+            var i = (this.selected_page > 0) ? this.selected_page.toString() + (1 + a) + ") " : (1 + a) + ") ";
+            if (this.select_list[c][1]) {
+                d += "<li " + b + ">" + i + this.select_list[c][1] + "</li>";
             }
         }
         d += '<div style="height:25px;"><div id="navi_button"><img src="img/buttons/exit.png"></img></div><span id="navi_helpertext">Выход</span>';
@@ -2223,35 +2225,35 @@ Selectbox.updateBox = function() {
     } catch (g) {}
 };
 Selectbox.selectNextItem = function() {
-    this["selected"] ++;
-    if (this["selected"] >= 10 || (this["selected_page"] == this["pages"] - 1 && this["selected"] == this["last_page_counter"])) {
-        this["selected"] = 0;
-        this["selected_page"] ++;
+    this.selected ++;
+    if (this.selected >= 10 || (this.selected_page == this.pages - 1 && this.selected == this.last_page_counter)) {
+        this.selected = 0;
+        this.selected_page ++;
     }
     Selectbox.updateBox();
 };
 Selectbox.selectPrevItem = function() {
-    this["selected"] --;
-    if (this["selected_page"] == 0 && this["selected_channel"] < 0) {
-        this["selected"] = this["last_page_counter"] - 1;
-        this["selected_page"] = this["pages"] - 1;
+    this.selected --;
+    if (this.selected_page == 0 && this.selected_channel < 0) {
+        this.selected = this.last_page_counter - 1;
+        this.selected_page = this.pages - 1;
     }
-    if (this["selected"] < 0) {
-        this["selected"] = 10;
-        this["selected_page"] --;
+    if (this.selected < 0) {
+        this.selected = 10;
+        this.selected_page --;
     }
     Selectbox.updateBox();
 };
 Selectbox.selectNextPage = function() {
-    this["selected_page"] ++;
+    this.selected_page ++;
     Selectbox.updateBox();
 };
 Selectbox.selectPrevPage = function() {
-    this["selected_page"] --;
+    this.selected_page --;
     Selectbox.updateBox();
 };
 Selectbox.SelectCategory = function() {
-    var a = this["select_list"][10 * this["selected_page"] + this["selected"]][0];
+    var a = this.select_list[10 * this.selected_page + this.selected][0];
     getIdn("selectbox");
     Main.SavePrevPlaylist();
     API.setCategory(a);
@@ -2259,13 +2261,13 @@ Selectbox.SelectCategory = function() {
     Main.Menu();
 };
 Selectbox.SelectFav = function() {
-    var a = this["select_list"][10 * this["selected_page"] + this["selected"]][0];
+    var a = this.select_list[10 * this.selected_page + this.selected][0];
     Main.temp_fav_num = Main.fav_num;
     Main.fav_num = 1 + parseInt(a);
     Main.temp_fav_name = Main.fav_name;
-    Main.fav_name = this["select_list"][10 * this["selected_page"] + this["selected"]][1];
+    Main.fav_name = this.select_list[10 * this.selected_page + this.selected][1];
     Main.temp_fav_url = Main.fav_url;
-    Main.fav_url = this["select_list"][10 * this["selected_page"] + this["selected"]][2];
+    Main.fav_url = this.select_list[10 * this.selected_page + this.selected][2];
     if (Main.FAV && !Main.RED) {
         Main.opencommonFile(Main.fav_url);
     } else {
@@ -2282,8 +2284,8 @@ Selectbox.SelectFav = function() {
     getIdb("rightHalf");
 };
 Selectbox.SelectSize = function() {
-    this["url_selected"] = this["selected"];
-    var a = this["select_list"][10 * this["selected_page"] + this["selected"]][0];
+    this.url_selected = this.selected;
+    var a = this.select_list[10 * this.selected_page + this.selected][0];
     a = decLongUrl(a);
     getIdn("selectbox");
     Player.ch_t = Player.cur_time;
@@ -2298,34 +2300,34 @@ var Display = {
     run: false
 };
 Display.loadingshow = function() {
-    if (!this["run"]) {
+    if (!this.run) {
         getIdb("loading");
         Display.loadingshowTimer();
-        this["run"] = true;
+        this.run = true;
         Display.loadingstep();
     }
 };
 Display.loadinghide = function() {
-    this["run"] = false;
-    clearTimeout(this["loadingshow_timer"]);
+    this.run = false;
+    clearTimeout(this.loadingshow_timer);
     getIdn("loading");
 };
 Display.loadingstep = function() {
-    if (this["index"] < 10) {
-        getId("imgAnim")["src"] = "img/loading/loading_0" + this["index"] + ".png";
+    if (this.index < 10) {
+        getId("imgAnim").src = "img/loading/loading_0" + this.index + ".png";
     } else {
-        getId("imgAnim")["src"] = "img/loading/loading_" + this["index"] + ".png";
+        getId("imgAnim").src = "img/loading/loading_" + this.index + ".png";
     }
-    this["index"] ++;
-    if (this["index"] > 12) {
-        this["index"] = 1;
+    this.index ++;
+    if (this.index > 12) {
+        this.index = 1;
     }
-    if (this["run"]) {
+    if (this.run) {
         setTimeout("Display.loadingstep();", 200);
     }
 };
 Display.loadingshowTimer = function() {
-    this["loadingshow_timer"] = setTimeout("Player.ReturnMenu();", 60000);
+    this.loadingshow_timer = setTimeout("Player.ReturnMenu();", 60000);
 };
 Display.showplayer = function() {
     if (KeyHandler.Focus != 0) {
@@ -2336,34 +2338,34 @@ Display.showplayer = function() {
             getIdn("help_navi_l_player");
             getIdn("p_epg_line");
             if (Main.seriesE) {
-                getId("progressBarBG")["style"]["left"] = "0px";
-                getId("timeInfo")["style"]["left"] = "560px";
-                getId("resolution")["style"]["left"] = "725px";
-                getId("time")["style"]["left"] = "850px";
+                getId("progressBarBG").style.left = "0px";
+                getId("timeInfo").style.left = "560px";
+                getId("resolution").style.left = "725px";
+                getId("time").style.left = "850px";
             } else {
-                getId("progressBarBG")["style"]["left"] = "10px";
-                getId("timeInfo")["style"]["left"] = "580px";
-                getId("resolution")["style"]["left"] = "745px";
-                getId("time")["style"]["left"] = "860px";
+                getId("progressBarBG").style.left = "10px";
+                getId("timeInfo").style.left = "580px";
+                getId("resolution").style.left = "745px";
+                getId("time").style.left = "860px";
             }
             getIdb("p_info_line");
             getIdb("help_navi_vod_player");
-            getId("statusbar")["style"]["top"] = "68px";
+            getId("statusbar").style.top = "68px";
             if (Player.state == Player.PAUSA_VOD) {
                 getIdn("vod_pause");
                 getIdb("vod_play");
                 if (Main.seriesE) {
-                    getId("help_navi_vod_player")["style"]["left"] = "39px";
+                    getId("help_navi_vod_player").style.left = "39px";
                 } else {
-                    getId("help_navi_vod_player")["style"]["left"] = "48px";
+                    getId("help_navi_vod_player").style.left = "48px";
                 }
             } else {
                 getIdb("vod_pause");
                 getIdn("vod_play");
                 if (Main.seriesE) {
-                    getId("help_navi_vod_player")["style"]["left"] = "30px"
+                    getId("help_navi_vod_player").style.left = "30px"
                 } else {
-                    getId("help_navi_vod_player")["style"]["left"] = "40px"
+                    getId("help_navi_vod_player").style.left = "40px"
                 }
                 if (Player.repeat) {
                     Display.status("Режим повторного воспроизведения.");
@@ -2380,41 +2382,41 @@ Display.showplayer = function() {
                 getIdn("p_epg_line");
                 if (Main.seriesE) {
                     if (Main.PlayerMode == "1") {
-                        getId("help_navi_l_player")["style"]["left"] = "70px";
+                        getId("help_navi_l_player").style.left = "70px";
                     } else {
-                        getId("help_navi_l_player")["style"]["left"] = "130px";
+                        getId("help_navi_l_player").style.left = "130px";
                     }
-                    getId("progressBarBG")["style"]["left"] = "10px";
-                    getId("timeInfo")["style"]["left"] = "595px";
-                    getId("resolution")["style"]["left"] = "740px";
-                    getId("time")["style"]["left"] = "850px";
+                    getId("progressBarBG").style.left = "10px";
+                    getId("timeInfo").style.left = "595px";
+                    getId("resolution").style.left = "740px";
+                    getId("time").style.left = "850px";
                 } else {
                     if (Main.PlayerMode == "1") {
-                        getId("help_navi_l_player")["style"]["left"] = "80px";
+                        getId("help_navi_l_player").style.left = "80px";
                     } else {
-                        getId("help_navi_l_player")["style"]["left"] = "140px";
+                        getId("help_navi_l_player").style.left = "140px";
                     }
-                    getId("progressBarBG")["style"]["left"] = "20px";
-                    getId("timeInfo")["style"]["left"] = "605px";
-                    getId("resolution")["style"]["left"] = "750px";
-                    getId("time")["style"]["left"] = "860px";
+                    getId("progressBarBG").style.left = "20px";
+                    getId("timeInfo").style.left = "605px";
+                    getId("resolution").style.left = "750px";
+                    getId("time").style.left = "860px";
                 }
                 getIdb("help_navi_l_player");
                 if (Main.PlayerMode == "1") {
-                    if (Main.ya_epg_info_arr["length"] > 0 && Main.ya_prog_id == Main.chan_array_index) {
+                    if (Main.ya_epg_info_arr.length > 0 && Main.ya_prog_id == Main.chan_array_index) {
                         getIdb("p_info_line");
                         getIdb("p_epg_line");
                         var a = 302;
                         if (Main.seriesE) {
                             a = 280;
                         }
-                        if (getId("epg_info")["innerHTML"]["length"] > a) {
-                            getId("statusbar")["style"]["top"] = "120px";
+                        if (getId("epg_info").innerHTML.length > a) {
+                            getId("statusbar").style.top = "120px";
                         } else {
-                            getId("statusbar")["style"]["top"] = "100px";
+                            getId("statusbar").style.top = "100px";
                         }
                     } else {
-                        getId("statusbar")["style"]["top"] = "70px";
+                        getId("statusbar").style.top = "70px";
                         setTimeout("Main.UpdateChannelInfo()", 400);
                     }
                 }
@@ -2432,7 +2434,7 @@ Display.showplayer = function() {
         }
         getIdn("statusbar1");
         getIdb("player");
-        clearTimeout(this["infobar_timer"]);
+        clearTimeout(this.infobar_timer);
         if (Player.state != Player.PAUSA_VOD) {
             Display.infobarTimer();
         }
@@ -2440,20 +2442,20 @@ Display.showplayer = function() {
 };
 Display.hideplayer = function() {
     getIdn("player");
-    getId("statusbar")["style"]["top"] = "10px";
+    getId("statusbar").style.top = "10px";
     if (Main.epg_info_step != 0) {
         Main.epg_info_step = 0;
         GetNextEpgInfo();
     }
 };
 Display.infobarTimer = function() {
-    this["infobar_timer"] = setTimeout("Display.hideplayer()", 8000);
+    this.infobar_timer = setTimeout("Display.hideplayer()", 8000);
 };
 Display.status = function(b, a) {
     getIdn("version");
     getIdb("statusbar");
     widgetAPI.putInnerHTML(getId("status"), b);
-    clearTimeout(this["status_timer"]);
+    clearTimeout(this.status_timer);
     if (a == undefined) {
         Display.statusTimer(3000);
     } else {
@@ -2465,7 +2467,7 @@ Display.status = function(b, a) {
 Display.status1 = function(a) {
     getIdb("statusbar1");
     widgetAPI.putInnerHTML(getId("status1"), a);
-    clearTimeout(this["status1_timer"]);
+    clearTimeout(this.status1_timer);
     Display.status1Timer();
 };
 Display.hidestatus = function() {
@@ -2473,10 +2475,10 @@ Display.hidestatus = function() {
     getIdb("version");
 };
 Display.statusTimer = function(a) {
-    this["status_timer"] = setTimeout("Display.hidestatus()", a);
+    this.status_timer = setTimeout("Display.hidestatus()", a);
 };
 Display.status1Timer = function() {
-    this["status1_timer"] = setTimeout('getIdn("statusbar1")', 3000);
+    this.status1_timer = setTimeout('getIdn("statusbar1")', 3000);
 };
 var KeyHandler = {
     NumberEntered: "",
@@ -2558,7 +2560,7 @@ KeyHandler.setFocus = function(a) {
     }
 };
 KeyHandler.KanalSelector = function() {
-    if (KeyHandler.NumberEntered > API.channels["length"]) {
+    if (KeyHandler.NumberEntered > API.channels.length) {
         Display.status("ошибка ввода");
     } else {
         if (KeyHandler.NumberEntered > 0) {
@@ -2625,7 +2627,7 @@ KeyHandler.Keys10 = function(b) {
             Display.status1(KeyHandler.NumberEntered);
         }
         clearTimeout(this.ChSelectorTimeout);
-        this["ChSelectorTimeout"] = setTimeout("KeyHandler.KanalSelector()", 2000);
+        this.ChSelectorTimeout = setTimeout("KeyHandler.KanalSelector()", 2000);
     }
 };
 KeyHandler.RedFavKeyDown = function() {
@@ -2658,7 +2660,7 @@ KeyHandler.RedFavKeyDown = function() {
             Main.moveFavorites(-1);
             break;
         case tvKey.KEY_BLUE:
-            if (API.favorites["length"] > 1) {
+            if (API.favorites.length > 1) {
                 Main.showFavSelector()
             }
             break;
@@ -2690,7 +2692,7 @@ KeyHandler.GuideKeyDown = function() {
             widgetAPI.blockNavigation(event);
             Main.PlayPrevPlaylist();
             if (Player.state == Player.PLAYING_LIVE) {
-                this["guide_step"] = 1
+                this.guide_step = 1
             }
             break;
         case tvKey.KEY_EXIT:
@@ -2735,7 +2737,7 @@ KeyHandler.MainMenuKeyDown = function() {
             break;
         case 1086:
         case 84:
-            if (API.XML_URL["indexOf"]("start.xml") != 0) {
+            if (API.XML_URL.indexOf("start.xml") != 0) {
                 Main.start = true;
                 Main.playlist();
             } else {
@@ -2747,14 +2749,14 @@ KeyHandler.MainMenuKeyDown = function() {
         case tvKey.KEY_GUIDE:
             widgetAPI.blockNavigation(event);
             if (Main.play_chan_array_index != Main.chan_array_index) {
-                this["guide_step"] = 0;
+                this.guide_step = 0;
             }
-            if (Main.yandextv_mode && this["guide_step"] == 0 && Main.ya_prog_info_arr["length"] > 0) {
+            if (Main.yandextv_mode && this.guide_step == 0 && Main.ya_prog_info_arr.length > 0) {
                 Main.guide = true;
                 Main.ReadPlArr(API.XML_URL, Main.ya_prog_info_arr);
             } else {
-                if (Player.state == Player.PLAYING_LIVE && this["guide_step"] == 1) {
-                    this["guide_step"] = 0;
+                if (Player.state == Player.PLAYING_LIVE && this.guide_step == 1) {
+                    this.guide_step = 0;
                     Main.SetSelectedPosition();
                     getIdn("main");
                     Display.hidestatus();
@@ -2766,10 +2768,10 @@ KeyHandler.MainMenuKeyDown = function() {
             }
             break;
         case tvKey.KEY_INFO:
-            if (API.channels["length"] < 1000) {
+            if (API.channels.length < 1000) {
                 if (Main.help_info) {
                     for (var a = 0; a < Main.help_step; a++) {
-                        Main.prev_pl_array["pop"]();
+                        Main.prev_pl_array.pop();
                     }
                     Main.help_step = 0;
                     Main.PlayPrevPlaylist();
@@ -2813,7 +2815,7 @@ KeyHandler.MainMenuKeyDown = function() {
         case tvKey.KEY_RETURN:
             widgetAPI.blockNavigation(event);
             if (Player.state != Player.STOPPED && Main.XML_URL == API.XML_URL) {
-                this["guide_step"] = 0;
+                this.guide_step = 0;
                 Main.SetSelectedPosition();
                 getIdn("main");
                 Display.hidestatus();
@@ -2855,10 +2857,10 @@ KeyHandler.MainMenuKeyDown = function() {
             }
             break;
         case tvKey.KEY_RED:
-            if (!Main.help_info && !Main.FAV && API.categories["length"] > 2) {
+            if (!Main.help_info && !Main.FAV && API.categories.length > 2) {
                 Main.showCategorySelector();
             } else {
-                if (API.XML_URL["indexOf"]("history.dat") > 0) {
+                if (API.XML_URL.indexOf("history.dat") > 0) {
                     Main.delHistory(API.XML_URL);
                 } else {
                     Display.status("Недоступно!");
@@ -2866,8 +2868,8 @@ KeyHandler.MainMenuKeyDown = function() {
             }
             break;
         case tvKey.KEY_GREEN:
-            if (!Main.FAV && !Main.block_fav && API.XML_URL["indexOf"]("Open") < 0) {
-                if (API.favorites["length"] > 1) {
+            if (!Main.FAV && !Main.block_fav && API.XML_URL.indexOf("Open") < 0) {
+                if (API.favorites.length > 1) {
                     Main.showFavSelector();
                 } else {
                     Main.saveFavorites();
@@ -2877,12 +2879,12 @@ KeyHandler.MainMenuKeyDown = function() {
             }
             break;
         case tvKey.KEY_YELLOW:
-            if (!Main.block_fav && API.XML_URL["indexOf"]("Open") < 0) {
-                if (API.favorites["length"] < 2 && !Main.FAV) {
+            if (!Main.block_fav && API.XML_URL.indexOf("Open") < 0) {
+                if (API.favorites.length < 2 && !Main.FAV) {
                     Main.FAV = true;
                     Main.opencommonFile(Main.fav_url);
                 } else {
-                    if (API.favorites["length"] > 1) {
+                    if (API.favorites.length > 1) {
                         Main.FAV = true;
                         Main.showFavSelector();
                     }
@@ -2898,7 +2900,7 @@ KeyHandler.MainMenuKeyDown = function() {
             } else {
                 if (Player.state == Player.STOPPED) {
                     if (Main.ret) {
-                        this["bl"] = true;
+                        this.bl = true;
                     }
                     Main.PlayPrevPlaylist();
                 }
@@ -2929,7 +2931,7 @@ KeyHandler.MainMenuKeyDown = function() {
                     Main.Ya_flag_step++;
                     YandexGetUrl(GetYindex());
                 } else {
-                    if (API.XML_URL["indexOf"]("start.xml") == 0) {
+                    if (API.XML_URL.indexOf("start.xml") == 0) {
                         if (Main.ya_auto && !Main.ya_base_info) {
                             GetYaBaseInfo();
                         }
@@ -3346,7 +3348,7 @@ KeyHandler.LivePlayerKeyDown = function() {
         case tvKey.KEY_FF:
             widgetAPI.blockNavigation(event);
             if (Main.PlayerMode == "1") {
-                if (Main.epg_info_step <= Main.ya_epg_info_arr["length"] - 1) {
+                if (Main.epg_info_step <= Main.ya_epg_info_arr.length - 1) {
                     Main.epg_info_step++;
                     GetNextEpgInfo();
                 } else {
@@ -3379,12 +3381,12 @@ KeyHandler.LivePlayerKeyDown = function() {
             }
             break;
         case 192:
-            if (this["black_line"]) {
+            if (this.black_line) {
                 getIdn("black_line_top");
-                this["black_line"] = false;
+                this.black_line = false;
             } else {
                 getIdb("black_line_top");
-                this["black_line"] = true;
+                this.black_line = true;
             }
             break;
         case 655:
@@ -3560,7 +3562,7 @@ KeyHandler.VODPlayerKeyDown = function() {
             Player.ReturnMenu();
             break;
         case tvKey.KEY_RED:
-            if (Main.url_arr["length"] > 1) {
+            if (Main.url_arr.length > 1) {
                 Main.showSiseSelector();
                 Main.LoadTimer("getIdn('selectbox');getIdb('rightHalf');KeyHandler.setFocus(3);", 20000);
             } else {
@@ -3603,12 +3605,12 @@ KeyHandler.VODPlayerKeyDown = function() {
             Player.MinutesJump(-0.5);
             break;
         case 192:
-            if (this["black_line"]) {
+            if (this.black_line) {
                 getIdn("black_line_top");
-                this["black_line"] = false;
+                this.black_line = false;
             } else {
                 getIdb("black_line_top");
-                this["black_line"] = true;
+                this.black_line = true;
             }
             break;
         case tvKey.KEY_PLAY:
@@ -3681,31 +3683,31 @@ var Player = {
 };
 Player.init = function() {
     var b = true;
-    this["state"] = this["STOPPED"];
+    this.state = this.STOPPED;
     var a = getId("pluginObjectNNavi");
     var d = a.GetFirmware();
     d = d.split("-");
-    if (d[1] && (d[1]["indexOf"]("2011") != -1 || d[1]["indexOf"]("2012") != -1 || d[1]["indexOf"]("2013") != -1)) {
-        this["SefPlugin"] = getId("pluginObjectSef");
+    if (d[1] && (d[1].indexOf("2011") != -1 || d[1].indexOf("2012") != -1 || d[1].indexOf("2013") != -1)) {
+        this.SefPlugin = getId("pluginObjectSef");
     }
-    if (this["SefPlugin"] != null) {
-        this["Sef"] = true;
+    if (this.SefPlugin != null) {
+        this.Sef = true;
     } else {
-        this["plugin"] = getId("pluginPlayer");
+        this.plugin = getId("pluginPlayer");
     }
     var c = getId("pluginObjectTVMW");
-    if ((this["plugin"] != null || this["Sef"]) && c != null) {
-        this["Screen3Dplugin"] = getId("pluginObjectScreen3D");
+    if ((this.plugin != null || this.Sef) && c != null) {
+        this.Screen3Dplugin = getId("pluginObjectScreen3D");
         c.SetMediaSource();
-        if (this["plugin"]) {
-            this["plugin"]["OnConnectionFailed"] = "Player.OnConnectionFailed";
-            this["plugin"]["OnNetworkDisconnected"] = "Player.OnNetworkDisconnected";
-            this["plugin"]["OnStreamNotFound"] = "Player.OnStreamNotFound";
-            this["plugin"]["OnRenderError"] = "Player.OnRenderError";
-            this["plugin"]["OnBufferingStart"] = "Player.OnBufferingStart";
-            this["plugin"]["OnBufferingProgress"] = "Player.OnBufferingProgress";
-            this["plugin"]["OnBufferingComplete"] = "Player.OnBufferingComplete";
-            this["plugin"]["OnCurrentPlayTime"] = "Player.OnCurrentPlayTime"
+        if (this.plugin) {
+            this.plugin.OnConnectionFailed = "Player.OnConnectionFailed";
+            this.plugin.OnNetworkDisconnected = "Player.OnNetworkDisconnected";
+            this.plugin.OnStreamNotFound = "Player.OnStreamNotFound";
+            this.plugin.OnRenderError = "Player.OnRenderError";
+            this.plugin.OnBufferingStart = "Player.OnBufferingStart";
+            this.plugin.OnBufferingProgress = "Player.OnBufferingProgress";
+            this.plugin.OnBufferingComplete = "Player.OnBufferingComplete";
+            this.plugin.OnCurrentPlayTime = "Player.OnCurrentPlayTime"
         }
     } else {
         b = false;
@@ -3714,9 +3716,9 @@ Player.init = function() {
 };
 Player.get3DMode = function() {
     try {
-        if (this["Screen3Dplugin"] != null) {
-            if (1 == this["Screen3Dplugin"].Flag3DEffectSupport() || this["Screen3Dplugin"].Flag3DTVConnect() == 1) {
-                return this["mode3D"];
+        if (this.Screen3Dplugin != null) {
+            if (1 == this.Screen3Dplugin.Flag3DEffectSupport() || this.Screen3Dplugin.Flag3DTVConnect() == 1) {
+                return this.mode3D;
             } else {
                 return 0;
             }
@@ -3726,24 +3728,24 @@ Player.get3DMode = function() {
     }
 };
 Player.change3DMode = function(a) {
-    if (this["Screen3Dplugin"] != null) {
-        this["mode3D"] = a;
-        this["status3D"] = "";
-        if (1 == this["Screen3Dplugin"].Flag3DEffectSupport() || this["Screen3Dplugin"].Flag3DTVConnect() == 1) {
+    if (this.Screen3Dplugin != null) {
+        this.mode3D = a;
+        this.status3D = "";
+        if (1 == this.Screen3Dplugin.Flag3DEffectSupport() || this.Screen3Dplugin.Flag3DTVConnect() == 1) {
             switch (a) {
                 case 0:
-                    this["status3D"] = "3D OFF";
+                    this.status3D = "3D OFF";
                     break;
                 case 1:
-                    this["status3D"] = "SIDE - BY - SIDE";
+                    this.status3D = "SIDE - BY - SIDE";
                     break;
                 case 2:
-                    this["status3D"] = "TOP - BOTTOM";
+                    this.status3D = "TOP - BOTTOM";
                     break;
             }
             if (Main.seriesC) {
-                if (this["Screen3Dplugin"].Check3DEffectMode(a) == 1) {
-                    this["Screen3Dplugin"].Set3DEffectMode(a);
+                if (this.Screen3Dplugin.Check3DEffectMode(a) == 1) {
+                    this.Screen3Dplugin.Set3DEffectMode(a);
                 }
             } else {
                 Player.play(Player.url, 0);
@@ -3764,17 +3766,17 @@ Player.OnRenderError = function(a) {
     Player.error(a);
 };
 Player.error = function(a) {
-    if (this["state"] != this["STOPPED"] && a >= 1) {
-        this["eerr"] = (a == 1) ? "Неподдерживаемый контейнер" : (a == 2) ? "Неподдерживаемый видео кодек" : (a == 3) ? "Неподдерживаемый аудио кодек" : (a == 4) ? "Неподдерживаемое разрешение видео" : (a == 5) ? "Неправильная частота кадров" : (a == 6) ? "Поток повреждён !" : (a == 7) ? "Файл не найден" : (a == 8) ? "Обрыв сетевого соединения" : (a == 9) ? "Подключиться не удалось" : this["eerr"];
-        if (a < 7 && this["serr"] < 3) {
-            this["serr"] ++;
+    if (this.state != this.STOPPED && a >= 1) {
+        this.eerr = (a == 1) ? "Неподдерживаемый контейнер" : (a == 2) ? "Неподдерживаемый видео кодек" : (a == 3) ? "Неподдерживаемый аудио кодек" : (a == 4) ? "Неподдерживаемое разрешение видео" : (a == 5) ? "Неправильная частота кадров" : (a == 6) ? "Поток повреждён !" : (a == 7) ? "Файл не найден" : (a == 8) ? "Обрыв сетевого соединения" : (a == 9) ? "Подключиться не удалось" : this.eerr;
+        if (a < 7 && this.serr < 3) {
+            this.serr ++;
             if (a < 3 && a != 6) {
-                Player.play(this["url"], 0);
+                Player.play(this.url, 0);
             }
         } else {
-            if (this["eerr"] == "8") {
+            if (this.eerr == "8") {
                 try {
-                    setTimeout('Player.play(this["url"], 0)', 5000);
+                    setTimeout('Player.play(this.url, 0)', 5000);
                 } finally {
                     setTimeout("Player.ReturnMenu()", 500);
                 }
@@ -3786,9 +3788,9 @@ Player.error = function(a) {
     }
 };
 Player.AutoReStart = function() {
-    if (this["state"] != this["LOADING"] && this["total_time"] == 0) {
+    if (this.state != this.LOADING && this.total_time == 0) {
         var a = 10000;
-        if (Main.serieC && this["url"]["indexOf"]("udp://") >= 0) {
+        if (Main.serieC && this.url.indexOf("udp://") >= 0) {
             a = 15000;
         }
         Player.BufferingTimer("Player.play(Player.url,0)", a);
@@ -3796,49 +3798,49 @@ Player.AutoReStart = function() {
     }
 };
 Player.OnBufferingStart = function() {
-    if (this["state"] != this["STOPPED"]) {
+    if (this.state != this.STOPPED) {
         Player.AutoReStart();
-        if (!this["jump"] && !Main.Foto) {
+        if (!this.jump && !Main.Foto) {
             Display.status("Буфер : 1%");
         }
     }
 };
 Player.OnBufferingProgress = function(a) {
-    if (this["state"] != this["STOPPED"]) {
-        if (!this["jump"] && !Main.Foto) {
+    if (this.state != this.STOPPED) {
+        if (!this.jump && !Main.Foto) {
             Display.status("Буфер : " + a + "%", 5000);
         }
     }
 };
 Player.OnBufferingComplete = function() {
-    clearTimeout(this["buffering_timer"]);
-    if (this["state"] != this["STOPPED"]) {
-        if (this["state"] == this["LOADING"]) {
+    clearTimeout(this.buffering_timer);
+    if (this.state != this.STOPPED) {
+        if (this.state == this.LOADING) {
             Player.message = "";
-            getId("progressBar")["style"]["width"] = "0px";
+            getId("progressBar").style.width = "0px";
             try {
-                this["total_time"] = parseInt((this["Sef"]) ? this["SefPlugin"].Execute("GetDuration") : Player.plugin.GetDuration())
+                this.total_time = parseInt((this.Sef) ? this.SefPlugin.Execute("GetDuration") : Player.plugin.GetDuration())
             } catch (a) {
-                this["total_time"] = 0;
+                this.total_time = 0;
             }
-            if ((this["total_time"] > 0 && this["url"]["indexOf"]("mms://") != 0 && this["url"]["indexOf"](".m3u8") == -1) || this["url"]["indexOf"](".mp4.m3u8") > 0 || this["url"]["indexOf"](".mp3") > 0) {
-                this["state"] = this["PLAYING_VOD"];
+            if ((this.total_time > 0 && this.url.indexOf("mms://") != 0 && this.url.indexOf(".m3u8") == -1) || this.url.indexOf(".mp4.m3u8") > 0 || this.url.indexOf(".mp3") > 0) {
+                this.state = this.PLAYING_VOD;
                 KeyHandler.setFocus(3);
-                this["h_url"] = "vod_history.dat";
+                this.h_url = "vod_history.dat";
             } else {
-                this["state"] = this["PLAYING_LIVE"];
+                this.state = this.PLAYING_LIVE;
                 KeyHandler.setFocus(2);
-                this["h_url"] = "live_history.dat";
+                this.h_url = "live_history.dat";
             }
             Player.GetResolution();
             setTimeout("Player.GetVideoSize();", 1000);
             if (!Main.Foto) {
                 Player.GetAudioNum();
             }
-            if (this["status3D"] != "") {
-                Player.message = this["status3D"];
+            if (this.status3D != "") {
+                Player.message = this.status3D;
             }
-            if (Main.url_arr["length"] > 1) {
+            if (Main.url_arr.length > 1) {
                 Player.message += '<tr><table><tr><td><img src="img/buttons/red_m.png"></img></td><td>- Изменить качество</td></tr></table></tr>';
             }
             Main.LoadTimer('if(Player.message!="")Display.status("<table>"+Player.message+"</table>",6000);Main.saveHistory(Player.h_url);if(Player.state==Player.PLAYING_VOD)Player.getSaveTime();', 2000);
@@ -3846,32 +3848,32 @@ Player.OnBufferingComplete = function() {
             Display.loadinghide();
             Display.showplayer();
         }
-        if (this["jump"]) {
+        if (this.jump) {
             Display.showplayer();
             setTimeout("Display.hideplayer();", 1500);
-            this["jump"] = false;
+            this.jump = false;
         }
         Display.hidestatus();
     }
 };
 Player.BufferingTimer = function(b, a) {
-    clearTimeout(this["buffering_timer"]);
-    this["buffering_timer"] = setTimeout(b, a);
+    clearTimeout(this.buffering_timer);
+    this.buffering_timer = setTimeout(b, a);
 };
 Player.SetBuffer = function() {
     if (Main.buffer != "") {
         var a = parseInt((Main.buffer * 1048576), 10);
         var b = (Main.ibuffer > 0) ? parseInt((Main.buffer * a / 100), 10) : parseInt((a / 5), 10);
-        if (this["Sef"]) {
-            this["SefPlugin"].Execute("SetTotalBufferSize", a);
-            this["SefPlugin"].Execute("SetInitialBuffer", b);
-            this["SefPlugin"].Execute("SetInitialTimeOut", 20);
-            this["SefPlugin"].Execute("SetPendingBuffer", b);
+        if (this.Sef) {
+            this.SefPlugin.Execute("SetTotalBufferSize", a);
+            this.SefPlugin.Execute("SetInitialBuffer", b);
+            this.SefPlugin.Execute("SetInitialTimeOut", 20);
+            this.SefPlugin.Execute("SetPendingBuffer", b);
         } else {
-            this["plugin"].SetTotalBufferSize(a);
-            this["plugin"].SetInitialBuffer(b);
-            this["plugin"].SetInitialTimeOut(20);
-            this["plugin"].SetPendingBuffer(b);
+            this.plugin.SetTotalBufferSize(a);
+            this.plugin.SetInitialBuffer(b);
+            this.plugin.SetInitialTimeOut(20);
+            this.plugin.SetPendingBuffer(b);
         }
     }
 };
@@ -3884,42 +3886,42 @@ Player.deinit = function() {
     alert("Player deinit");
 };
 Player.stop = function() {
-    clearTimeout(this["buffering_timer"]);
-    this["message"] = "";
-    this["eerr"] = "";
-    this["w"] = 0;
-    this["h"] = 0;
-    this["Pw"] = parseInt(API.Pw);
-    this["Ph"] = parseInt(API.Ph);
-    this["serr"] = 0;
-    this["tnum"] = 0;
-    this["total_time"] = 0;
-    this["cur_time"] = 0;
-    this["save_time"] = 0;
-    this["ch"] = false;
-    this["jump"] = false;
-    this["long_pause"] = false;
-    if (this["state"] != this["STOPPED"]) {
-        this["state"] = this["STOPPED"];
+    clearTimeout(this.buffering_timer);
+    this.message = "";
+    this.eerr = "";
+    this.w = 0;
+    this.h = 0;
+    this.Pw = parseInt(API.Pw);
+    this.Ph = parseInt(API.Ph);
+    this.serr = 0;
+    this.tnum = 0;
+    this.total_time = 0;
+    this.cur_time = 0;
+    this.save_time = 0;
+    this.ch = false;
+    this.jump = false;
+    this.long_pause = false;
+    if (this.state != this.STOPPED) {
+        this.state = this.STOPPED;
         Player.SaveUrl();
-        if (this["Sef"]) {
-            this["SefPlugin"].Execute("Stop");
-            this["SefPlugin"].Execute("ClearScreen");
-            this["SefPlugin"].Close();
+        if (this.Sef) {
+            this.SefPlugin.Execute("Stop");
+            this.SefPlugin.Execute("ClearScreen");
+            this.SefPlugin.Close();
         } else {
-            if (this["plugin"] != null) {
-                this["plugin"].Stop();
-                this["plugin"].ClearScreen();
+            if (this.plugin != null) {
+                this.plugin.Stop();
+                this.plugin.ClearScreen();
             }
         }
     }
 };
 Player.stopV = function() {
     Player.stop();
-    this["repeat"] = false;
-    this["ch_t"] = 0;
-    this["mode3D"] = 0;
-    this["status3D"] = "";
+    this.repeat = false;
+    this.ch_t = 0;
+    this.mode3D = 0;
+    this.status3D = "";
     Selectbox.url_selected = 0;
     Main.ya_epg_info_arr = [];
     StopSlideShow();
@@ -3928,33 +3930,33 @@ Player.stopV = function() {
     Display.hidestatus();
 };
 Player.play = function(a, b) {
-    this["url"] = a;
+    this.url = a;
     Player.stop();
     Player.state = Player.LOADING;
     KeyHandler.setFocus(1);
     if (!Main.Foto) {
         Display.loadingshow();
     }
-    if (this["Sef"]) {
-        this.SEFPlay(this["url"], b)
+    if (this.Sef) {
+        this.SEFPlay(this.url, b)
     } else {
-        if (this["url"]["indexOf"](".mp3") > 0) {
+        if (this.url.indexOf(".mp3") > 0) {
             Main.buffer = 0.5;
         }
         Player.SetBuffer();
         Player.setSize(0, 0, 1);
-        this["plugin"].Play(this["url"]);
+        this.plugin.Play(this.url);
     }
 };
 Player.SaveUrl = function() {
-    if (this["cur_time"] > 0) {
-        var a = [this["url"] + "|" + this["cur_time"]];
+    if (this.cur_time > 0) {
+        var a = [this.url + "|" + this.cur_time];
         Main.readFile(a, "url.dat");
         if (a.length > 10) {
             a.pop();
         }
         for (var b = 1; b < a.length; b++) {
-            if (a[b]["indexOf"](this["url"]) == 0) {
+            if (a[b].indexOf(this.url) == 0) {
                 a.splice(b, 1);
                 break;
             }
@@ -3963,19 +3965,19 @@ Player.SaveUrl = function() {
     }
 };
 Player.getSaveTime = function() {
-    if (this["state"] == this["PLAYING_VOD"]) {
-        if (this["ch_t"] > 0 && this["ch"]) {
-            this["save_time"] = this["ch_t"];
+    if (this.state == this.PLAYING_VOD) {
+        if (this.ch_t > 0 && this.ch) {
+            this.save_time = this.ch_t;
             Main.LoadTimer('Display.status(" Возобновить ?",5000);', 7000);
             setTimeout("Player.save_time=0", 15000);
         } else {
             var b = [];
             Main.readFile(b, "url.dat");
             for (var c = 0; c < b.length; c++) {
-                if (b[c]["indexOf"](this["url"]) == 0) {
+                if (b[c].indexOf(this.url) == 0) {
                     var a = b[c];
                     a = a.split("|");
-                    this["save_time"] = a[1];
+                    this.save_time = a[1];
                     Main.LoadTimer('Display.status(" Возобновить ?",5000);', 7000);
                     setTimeout("Player.save_time=0", 20000);
                     break;
@@ -3985,10 +3987,10 @@ Player.getSaveTime = function() {
     }
 };
 Player.PlaySeveTime = function() {
-    if (this["state"] == this["PLAYING_VOD"]) {
-        var a = (this["save_time"] - this["cur_time"]) / 1000;
-        this["statusmessage"] = "Возобновляем!";
-        if (a > 0 && !this["jump"]) {
+    if (this.state == this.PLAYING_VOD) {
+        var a = (this.save_time - this.cur_time) / 1000;
+        this.statusmessage = "Возобновляем!";
+        if (a > 0 && !this.jump) {
             Player.JumpForward(a - 3);
         }
         Player.save_time = 0;
@@ -3996,79 +3998,79 @@ Player.PlaySeveTime = function() {
     }
 };
 Player.GetResolution = function() {
-    if (this["state"] != this["STOPPED"]) {
-        if (this["url"]["indexOf"](".mp3") < 0 && this["w"] == 0) {
+    if (this.state != this.STOPPED) {
+        if (this.url.indexOf(".mp3") < 0 && this.w == 0) {
             try {
-                if (this["Sef"]) {
-                    var b = this["SefPlugin"].Execute("GetVideoResolution");
+                if (this.Sef) {
+                    var b = this.SefPlugin.Execute("GetVideoResolution");
                     b = b.split("|");
                     if (b.length > 0) {
-                        this["w"] = b[0];
-                        this["h"] = b[1];
+                        this.w = b[0];
+                        this.h = b[1];
                     }
                 } else {
-                    this["h"] = this["plugin"].GetVideoHeight();
-                    this["w"] = this["plugin"].GetVideoWidth();
+                    this.h = this.plugin.GetVideoHeight();
+                    this.w = this.plugin.GetVideoWidth();
                 }
             } catch (c) {
-                this["w"] = 0;
-                this["h"] = 0;
+                this.w = 0;
+                this.h = 0;
             }
         }
-        if (this["w"] == 5) {
-            this["h"] = 432;
-            this["w"] = 540;
+        if (this.w == 5) {
+            this.h = 432;
+            this.w = 540;
         } else {
-            if (this["w"] == 4) {
-                this["h"] = 270;
-                this["w"] = 480;
+            if (this.w == 4) {
+                this.h = 270;
+                this.w = 480;
             } else {
-                if (this["w"] == 3) {
-                    this["h"] = 288;
-                    this["w"] = 384;
+                if (this.w == 3) {
+                    this.h = 288;
+                    this.w = 384;
                 } else {
-                    if (this["w"] < 128 || this["w"] == "") {
-                        this["h"] = 0;
-                        this["w"] = 0;
+                    if (this.w < 128 || this.w == "") {
+                        this.h = 0;
+                        this.w = 0;
                     }
                 }
             }
         }
-        var a = this["w"] + "X" + this["h"];
-        if (this["url"]["indexOf"](".mp3") > 0) {
+        var a = this.w + "X" + this.h;
+        if (this.url.indexOf(".mp3") > 0) {
             a = "- MP3 -";
         }
         widgetAPI.putInnerHTML(getId("resolution"), a);
     }
 };
 Player.GetVideoSize = function() {
-    if (this["state"] != this["STOPPED"]) {
-        if (this["w"] == 0 || this["w"] == "") {
+    if (this.state != this.STOPPED) {
+        if (this.w == 0 || this.w == "") {
             Player.GetResolution();
         }
         if (Player.mode3D == 0 && !Main.Foto) {
-            Player.size = (Main.ssize != "") ? parseInt(Main.ssize) : (API.Size != "") ? parseInt(API.Size) : parseInt(this["size"]);
+            Player.size = (Main.ssize != "") ? parseInt(Main.ssize) : (API.Size != "") ? parseInt(API.Size) : parseInt(this.size);
         } else {
             Player.size = 0;
         }
-        if (this["url"]["indexOf"](".mp3") < 0) {
+        if (this.url.indexOf(".mp3") < 0) {
             setTimeout("Player.setSize(Player.size,1,1);", 100);
         }
     }
 };
 Player.setSize = function(c, b, a) {
-    if (this["state"] != this["STOPPED"] && this["state"] != this["PAUSA_VOD"]) {
-        var d = this["w"];
-        var f = this["h"];
+    if (this.state != this.STOPPED && this.state != this.PAUSA_VOD) {
+        var d = this.w;
+        var f = this.h;
         if (b > 0) {
             if (((d / f < 1.35 && API.a_size1 < 6) || (d / f < 1.79 && d / f >= 1.35 && API.a_size2 < 6) || (d / f >= 1.79 && API.a_size3 < 6)) && a == 0) {
                 if (c > 5) {
                     c = 0;
                 }
             }
-            this["size"] = c;
+            this.size = c;
             Main.ssize = c.toString();
-            if (this["w"] == 0 || this["w"] == "") {
+            if (this.w == 0 || this.w == "") {
                 Player.GetResolution();
             }
         }
@@ -4083,7 +4085,7 @@ Player.setSize = function(c, b, a) {
         o = f;
         switch (c) {
             case 0:
-                if (d / f < 1.79 || this["w"] == 0) {
+                if (d / f < 1.79 || this.w == 0) {
                     e = "16x9 FULL";
                 } else {
                     e = "ORIGINAL";
@@ -4138,7 +4140,7 @@ Player.setSize = function(c, b, a) {
                 }
                 break;
             case 4:
-                if (d / f < 1.35 || this["w"] == 0) {
+                if (d / f < 1.35 || this.w == 0) {
                     e = "4x3";
                     p = 120;
                     l = 720;
@@ -4222,81 +4224,81 @@ Player.setSize = function(c, b, a) {
                 e = "Не определён!";
                 break;
         }
-        if ((b == 1 || (this["size"] == 6 && b == 0)) && a == 1) {
+        if ((b == 1 || (this.size == 6 && b == 0)) && a == 1) {
             Player.message = "<tr><center>" + e + "</center></tr>" + Player.message;
         } else {
-            if ((b > 0 || (this["size"] == 6 && b == 0 && a == 0)) && !Main.Foto) {
+            if ((b > 0 || (this.size == 6 && b == 0 && a == 0)) && !Main.Foto) {
                 Display.status(e);
             }
         }
-        if (this["Sef"]) {
-            this["SefPlugin"].Execute("SetDisplayArea", p, n, l, k);
-            this["SefPlugin"].Execute("SetCropArea", j, i, g, o);
+        if (this.Sef) {
+            this.SefPlugin.Execute("SetDisplayArea", p, n, l, k);
+            this.SefPlugin.Execute("SetCropArea", j, i, g, o);
         } else {
-            this["plugin"].SetDisplayArea(p, n, l, k);
-            this["plugin"].SetCropArea(j, i, g, o);
+            this.plugin.SetDisplayArea(p, n, l, k);
+            this.plugin.SetCropArea(j, i, g, o);
         }
     }
 };
 Player.JumpForward = function(a) {
-    if (this["state"] == this["PLAYING_VOD"]) {
-        Display.status(this["statusmessage"], 2000);
-        this["jump"] = true;
-        if (this["Sef"]) {
-            this["SefPlugin"].Execute("JumpForward", a);
+    if (this.state == this.PLAYING_VOD) {
+        Display.status(this.statusmessage, 2000);
+        this.jump = true;
+        if (this.Sef) {
+            this.SefPlugin.Execute("JumpForward", a);
         } else {
-            this["plugin"].JumpForward(a);
+            this.plugin.JumpForward(a);
         }
-        this["statusmessage"] = "";
+        this.statusmessage = "";
     }
 };
 Player.JumpBackward = function(b) {
-    if (this["state"] == this["PLAYING_VOD"]) {
+    if (this.state == this.PLAYING_VOD) {
         if (b > 3) {
-            Display.status(this["statusmessage"], 2000);
+            Display.status(this.statusmessage, 2000);
         }
-        this["jump"] = true;
-        if (this["Sef"]) {
-            if (this["url"]["indexOf"](".mp3") > 0) {
-                var a = (this["cur_time"] / 1000) - b;
-                Player.play(this["url"], a);
+        this.jump = true;
+        if (this.Sef) {
+            if (this.url.indexOf(".mp3") > 0) {
+                var a = (this.cur_time / 1000) - b;
+                Player.play(this.url, a);
             } else {
-                this["SefPlugin"].Execute("JumpBackward", b);
+                this.SefPlugin.Execute("JumpBackward", b);
             }
         } else {
-            this["plugin"].JumpBackward(b);
+            this.plugin.JumpBackward(b);
         }
-        this["statusmessage"] = "";
+        this.statusmessage = "";
     }
 };
 Player.MinutesJump = function(d) {
-    if (this["state"] == this["PLAYING_VOD"] && !this["jump"]) {
-        var b = this["cur_time"] / 60000 * -1;
-        var a = this["delta_time"] / 60000;
-        this["statusmessage"] = d + " мин.";
+    if (this.state == this.PLAYING_VOD && !this.jump) {
+        var b = this.cur_time / 60000 * -1;
+        var a = this.delta_time / 60000;
+        this.statusmessage = d + " мин.";
         var c = "";
         if (d >= 0) {
-            this["statusmessage"] = "+" + this["statusmessage"];
+            this.statusmessage = "+" + this.statusmessage;
             if (d < a) {
                 Player.JumpForward(d * 60);
             } else {
-                this["delta_time"] = 0;
+                this.delta_time = 0;
                 Player.TestTime();
             }
         } else {
             if (d > b) {
                 Player.JumpBackward(d * 60 * -1);
             } else {
-                this["delta_time"] = 0;
+                this.delta_time = 0;
                 Player.TestTime();
             }
         }
     }
 };
 Player.PercentJump = function(b) {
-    if (this["state"] == this["PLAYING_VOD"] && !this["jump"]) {
-        this["statusmessage"] = b * 10 + "%";
-        var a = (this["total_time"] * b / 10 - this["cur_time"]) / 1000;
+    if (this.state == this.PLAYING_VOD && !this.jump) {
+        this.statusmessage = b * 10 + "%";
+        var a = (this.total_time * b / 10 - this.cur_time) / 1000;
         if (a > 0) {
             Player.JumpForward(a);
         } else {
@@ -4307,30 +4309,30 @@ Player.PercentJump = function(b) {
     }
 };
 Player.resumeVideo = function() {
-    if (this["state"] == this["PAUSA_VOD"]) {
+    if (this.state == this.PAUSA_VOD) {
         Display.status(" > > > ");
-        if (this["Sef"]) {
-            this["SefPlugin"].Execute("Resume")
+        if (this.Sef) {
+            this.SefPlugin.Execute("Resume");
         } else {
-            this["plugin"].Resume()
+            this.plugin.Resume();
         }
-        this["state"] = this["PLAYING_VOD"];
-        if (this["url"]["indexOf"]("http://") >= 0 && Player.long_pause) {
+        this.state = this.PLAYING_VOD;
+        if (this.url.indexOf("http://") >= 0 && Player.long_pause) {
             setTimeout("Player.MinutesJump(-0.05);", 100);
         }
         Display.hideplayer();
-        clearTimeout(this["buffering_timer"]);
-        this["long_pause"] = false;
+        clearTimeout(this.buffering_timer);
+        this.long_pause = false;
     }
 };
 Player.pauseVideo = function() {
-    if (this["state"] == this["PLAYING_VOD"]) {
-        if (this["Sef"]) {
-            this["SefPlugin"].Execute("Pause");
+    if (this.state == this.PLAYING_VOD) {
+        if (this.Sef) {
+            this.SefPlugin.Execute("Pause");
         } else {
-            this["plugin"].Pause();
+            this.plugin.Pause();
         }
-        this["state"] = this["PAUSA_VOD"];
+        this.state = this.PAUSA_VOD;
         Display.showplayer();
         Display.status("Пауза", 0);
         Player.SaveUrl();
@@ -4338,19 +4340,19 @@ Player.pauseVideo = function() {
     }
 };
 Player.OnCurrentPlayTime = function(a) {
-    if (this["total_time"] > 0) {
-        this["cur_time"] = parseInt(a, 10);
-        TimeInfo(this["cur_time"], this["total_time"]);
-        this["delta_time"] = this["total_time"] - this["cur_time"];
+    if (this.total_time > 0) {
+        this.cur_time = parseInt(a, 10);
+        TimeInfo(this.cur_time, this.total_time);
+        this.delta_time = this.total_time - this.cur_time;
         Player.TestTime();
     }
 };
 Player.TestTime = function() {
-    if (this["delta_time"] == 0 && this["total_time"] != 0 && this["cur_time"] != 0) {
-        if (this["repeat"] && this["next"]) {
-            Player.play(this["url"]);
+    if (this.delta_time == 0 && this.total_time != 0 && this.cur_time != 0) {
+        if (this.repeat && this.next) {
+            Player.play(this.url);
         } else {
-            if (this["next"]) {
+            if (this.next) {
                 Main.block_info = true;
                 Main.selectNextChannel();
                 setTimeout("Main.PlayChannel()", 20);
@@ -4359,32 +4361,32 @@ Player.TestTime = function() {
             }
         }
     } else {
-        if (this["delta_time"] == 0) {
+        if (this.delta_time == 0) {
             Player.ReturnMenu();
             Display.status("Сбой в сети!");
         }
     }
 };
 Player.SEFPlay = function(a, b) {
-    this["SefPlugin"].Open("Player", "1.000", "Player");
-    this["SefPlugin"].Execute("InitPlayer", a);
-    this["SefPlugin"]["OnEvent"] = "Player.SefOnEvent";
+    this.SefPlugin.Open("Player", "1.000", "Player");
+    this.SefPlugin.Execute("InitPlayer", a);
+    this.SefPlugin.OnEvent = "Player.SefOnEvent";
     if (Player.get3DMode() != 0) {
         if (Main.buffer > 10) {
             Main.buffer = 10;
         }
-        this["SefPlugin"].Execute("SetPlayerProperty", "2", "3", Player.get3DMode())
+        this.SefPlugin.Execute("SetPlayerProperty", "2", "3", Player.get3DMode())
     } else {
-        if (this["url"]["indexOf"](".mp3") > 0) {
+        if (this.url.indexOf(".mp3") > 0) {
             if (Main.buffer > 0.5) {
                 Main.buffer = 0.5;
             }
-            this["SefPlugin"].Execute("SetPlayerProperty", "5", "0", "0");
+            this.SefPlugin.Execute("SetPlayerProperty", "5", "0", "0");
         }
     }
     Player.SetBuffer();
     Player.setSize(0, 0, 1);
-    this["SefPlugin"].Execute("StartPlayback", b);
+    this.SefPlugin.Execute("StartPlayback", b);
 };
 Player.SefOnEvent = function(a, b) {
     switch (a) {
@@ -4414,17 +4416,17 @@ Player.SefOnEvent = function(a, b) {
     }
 };
 Player.SEFSetNextAudioStream = function() {
-    if (this["state"] != this["STOPPED"]) {
-        if (!this["Sef"]) {
+    if (this.state != this.STOPPED) {
+        if (!this.Sef) {
             Display.status("Функция недоступна!");
         } else {
-            if (this["tnum"] < 2) {
+            if (this.tnum < 2) {
                 Display.status("Только одна звуковая дорожка!");
             } else {
-                var a = this["SefPlugin"].Execute("GetCurrentStreamID", 1);
+                var a = this.SefPlugin.Execute("GetCurrentStreamID", 1);
                 if (a >= 0) {
                     a++;
-                    if (a > (this["tnum"] - 1)) {
+                    if (a > (this.tnum - 1)) {
                         a = 0;
                     }
                     Player.SetAudioStream(a, 1);
@@ -4447,10 +4449,10 @@ Player.LangCodes = {
     8026747: "Украинская"
 };
 Player.SetAudioStream = function(d, b) {
-    if (this["tnum"] > d) {
+    if (this.tnum > d) {
         Main.a_num = (d + 1).toString();
-        this["SefPlugin"].Execute("SetStreamID", 1, d);
-        var a = this["SefPlugin"].Execute("GetStreamLanguageInfo", 1, d);
+        this.SefPlugin.Execute("SetStreamID", 1, d);
+        var a = this.SefPlugin.Execute("GetStreamLanguageInfo", 1, d);
         var c = Player.LangCodes[a];
         c = (c == null) ? "Неизвестная" : c;
         if (b > 0) {
@@ -4463,13 +4465,13 @@ Player.SetAudioStream = function(d, b) {
     }
 };
 Player.GetAudioNum = function() {
-    if (this["Sef"]) {
+    if (this.Sef) {
         try {
-            this["tnum"] = this["SefPlugin"].Execute("GetTotalNumOfStreamID", 1);
+            this.tnum = this.SefPlugin.Execute("GetTotalNumOfStreamID", 1);
         } catch (a) {
-            this["tnum"] = 0;
+            this.tnum = 0;
         }
-        if (this["tnum"] > 1) {
+        if (this.tnum > 1) {
             if (Main.a_num != "") {
                 Player.SetAudioStream((parseInt(Main.a_num) - 1), 0);
             } else {
@@ -4572,7 +4574,7 @@ SearchFormular = function() {
     a.setKeyFunc(tvKey.KEY_RETURN, function(i) {
         widgetAPI.blockNavigation(event);
         if (Main.xxx) {
-            Main.prev_pl_array["pop"]();
+            Main.prev_pl_array.pop();
         }
         Main.Menu();
         return false;
@@ -4580,7 +4582,7 @@ SearchFormular = function() {
     a.setKeyFunc(tvKey.KEY_EXIT, function(i) {
         widgetAPI.blockNavigation(event);
         if (Main.xxx) {
-            Main.prev_pl_array["pop"]();
+            Main.prev_pl_array.pop();
         }
         Main.Menu();
         return false;
@@ -4593,17 +4595,17 @@ Search_ok = function(b) {
     if (Main.search || Main.xxx) {
         b = "search_h";
     }
-    var a = lrdPr(getId(b)["value"]);
+    var a = lrdPr(getId(b).value);
     if (a == "") {
         Main.Menu();
     } else {
         if (Main.xxx && API.Xcode != a) {
-            Main.prev_pl_array["pop"]();
+            Main.prev_pl_array.pop();
             Main.Menu();
             Display.status("Неправильный код !");
         } else {
             if (Main.search || Main.xxx) {
-                if (Main.pl_url["indexOf"]("history.dat") > 0) {
+                if (Main.pl_url.indexOf("history.dat") > 0) {
                     setTimeout("Main.opencommonFile(Main.pl_url)", 1000);
                 } else {
                     API.XML_URL = Main.pl_url;
@@ -4620,8 +4622,8 @@ Search_ok = function(b) {
                 }
                 KeyHandler.setFocus(0);
             } else {
-                if (a.toLowerCase()["indexOf"](".m3u") > 0 || a.toLowerCase()["indexOf"](".xml") > 0 || a.toLowerCase()["indexOf"]("#") == 0) {
-                    if (a.toLowerCase()["indexOf"]("#") == 0) {
+                if (a.toLowerCase().indexOf(".m3u") > 0 || a.toLowerCase().indexOf(".xml") > 0 || a.toLowerCase().indexOf("#") == 0) {
+                    if (a.toLowerCase().indexOf("#") == 0) {
                         a = a.replace("#", "");
                     }
                     Main.pl_url = a;
@@ -4763,33 +4765,33 @@ ChannelSetupFormular = function() {
 };
 SaveValue = function() {
     try {
-        var l = lrdPr(getId("0")["value"]);
+        var l = lrdPr(getId("0").value);
         if (Main.url != "") {
-            var t = lrdPr(getId("1")["value"]);
+            var t = lrdPr(getId("1").value);
             var s = "";
         } else {
-            s = lrdPr(getId("1")["value"]);
+            s = lrdPr(getId("1").value);
             t = "";
         }
-        if (Ach(3)["length"] < 1000) {
-            var r = parseInt(Ach(3)["length"] / 100);
+        if (Ach(3).length < 1000) {
+            var r = parseInt(Ach(3).length / 100);
             var b = "";
             for (var k = 0; k < r + 1; k++) {
-                b += getId(2 + k)["value"];
+                b += getId(2 + k).value;
             }
             b = lrdPr(b);
         } else {
             b = Ach(3);
             r = 0;
         }
-        var a = lrdPr(getId(r + 3)["value"]);
+        var a = lrdPr(getId(r + 3).value);
         if (Main.url != "") {
-            var q = dPr(getId(r + 4)["value"]);
-            var g = dPr(getId(r + 5)["value"]);
-            var o = dPr(getId(r + 6)["value"]);
-            var c = dPr(getId(r + 7)["value"]);
-            var j = dPr(getId(r + 8)["value"]);
-            var f = dPr(getId(r + 9)["value"]);
+            var q = dPr(getId(r + 4).value);
+            var g = dPr(getId(r + 5).value);
+            var o = dPr(getId(r + 6).value);
+            var c = dPr(getId(r + 7).value);
+            var j = dPr(getId(r + 8).value);
+            var f = dPr(getId(r + 9).value);
         } else {
             q = "";
             g = "";
@@ -4814,11 +4816,11 @@ SaveValue = function() {
 };
 Scrol = function(b, a) {
     Main.scrolling = Main.scrolling + a;
-    getId(b)["style"]["margin"] = Main.scrolling + "px 0px 0px 0px ";
+    getId(b).style.margin = Main.scrolling + "px 0px 0px 0px ";
 };
 KeyHandler.SetapKeyDown = function() {
     var f = function() {
-        var l = getId(Main.setap_id)["value"];
+        var l = getId(Main.setap_id).value;
         for (var k = 0; k < a.length; k++) {
             if (l == a[k]) {
                 return k;
@@ -5025,7 +5027,7 @@ RunIme = function(e) {
     });
     d.setKeyFunc(tvKey.KEY_YELLOW, function(g) {
         widgetAPI.blockNavigation(event);
-        var f = getId(e)["value"];
+        var f = getId(e).value;
         f = (e == "0") ? API.XML_URL : (e == "1" && Main.pl_url != "") ? Main.pl_url : f;
         d.setString(f);
         return false;
@@ -5097,12 +5099,12 @@ SetupFormular = function() {
     getIdb("help_set_par");
     widgetAPI.putInnerHTML(getId("version"), " Настройка параметров , MAC = " + Main.MAC);
     var f = '</span></form><form style="color:#00ccff;font-size:17px;"><span>';
-    if (API.XML_URL["length"] < 200) {
+    if (API.XML_URL.length < 200) {
         var b = API.XML_URL;
         var a = "";
-        if (API.XML_URL["length"] > d) {
-            b = API.XML_URL["substr"](0, d);
-            var j = API.XML_URL["substr"](d);
+        if (API.XML_URL.length > d) {
+            b = API.XML_URL.substr(0, d);
+            var j = API.XML_URL.substr(d);
             var p = parseInt(j.length / c);
             for (var g = 0; g < p + 1; g++) {
                 var e = j.substring(0, c);
@@ -5129,16 +5131,16 @@ SetupFormular = function() {
     SetString("2", API.Login, 1);
     SetString("3", API.Pasword, 1);
     SetString("4", API.Proxy, 1);
-    var o = (API.Xcode == 0) ? "0" : (API.Xcode["length"] == 1) ? "#" : (API.Xcode["length"] == 2) ? "##" : (API.Xcode["length"] == 3) ? "###" : "####";
+    var o = (API.Xcode == 0) ? "0" : (API.Xcode.length == 1) ? "#" : (API.Xcode.length == 2) ? "##" : (API.Xcode.length == 3) ? "###" : "####";
     SetString("5", o, 1);
     SetString("6", API.Scode, 1);
     SetString("7", API.Favname, 1);
     SetString("8", API.CODE, 1);
     SetString("9", API.REG, 2);
-    o = (API.Timeshift["indexOf"]("-") < 0 && API.Timeshift != "0") ? "+" + API.Timeshift : API.Timeshift;
+    o = (API.Timeshift.indexOf("-") < 0 && API.Timeshift != "0") ? "+" + API.Timeshift : API.Timeshift;
     SetString("10", o, 2);
     SetString("11", STimemode[parseInt(API.Timemode)], 3);
-    o = (API.Timefix["indexOf"]("-") < 0 && API.Timefix != "0") ? "+" + API.Timefix : API.Timefix;
+    o = (API.Timefix.indexOf("-") < 0 && API.Timefix != "0") ? "+" + API.Timefix : API.Timefix;
     SetString("12", o, 2);
     o = (API.Size == "") ? "7" : API.Size;
     SetString("13", SSize[parseInt(o)], 3);
@@ -5169,34 +5171,34 @@ SetString = function(c, b, a) {
         b = " ";
     }
     widgetAPI.putInnerHTML(getId(c), b);
-    getId(c)["value"] = b;
+    getId(c).value = b;
     if (a == 1) {
         SetStyle1(c);
     } else {
         if (a == 2) {
             SetStyle1(c);
-            getId(c)["style"]["width"] = "52px";
+            getId(c).style.width = "52px";
         } else {
             if (a == 3) {
                 SetStyle1(c);
-                getId(c)["style"]["width"] = "120px";
+                getId(c).style.width = "120px";
             }
         }
     }
 };
 SetStyle1 = function(a) {
-    getId(a)["style"]["color"] = "black";
-    getId(a)["style"]["background"] = "#999999";
-    getId(a)["style"]["border"] = "2px solid #ffffff";
+    getId(a).style.color = "black";
+    getId(a).style.background = "#999999";
+    getId(a).style.border = "2px solid #ffffff";
 };
 SetStyle2 = function(a) {
-    getId(a)["style"]["color"] = "blue";
-    getId(a)["style"]["background"] = "#eeeeee";
-    getId(a)["style"]["border"] = "2px solid #999999";
+    getId(a).style.color = "blue";
+    getId(a).style.background = "#eeeeee";
+    getId(a).style.border = "2px solid #999999";
 };
 Return = function(a) {
     widgetAPI.blockNavigation(event);
-    if (API.channels["length"] > 0 && API.XML_URL == Main.pre_pl_url && a == 0) {
+    if (API.channels.length > 0 && API.XML_URL == Main.pre_pl_url && a == 0) {
         Main.Menu();
     } else {
         location.reload(true);
@@ -5204,31 +5206,31 @@ Return = function(a) {
 };
 onEnter = function() {
     try {
-        var w = getId("27")["value"];
+        var w = getId("27").value;
         if (w == "вкл") {
             var b = ["start.xml", "", "", "", "", "0", "0", "Основное|IP-TV|Фильмы|Сериалы", "213", "ru", "0", "0", "0", "", "100", "100", "2", "0", "0", "0", "0", "0", "1", "1", "0", "360p"];
         } else {
-            var G = lrdPr(getId("0")["value"]);
-            var v = lrdPr(getId("2")["value"]);
-            var t = lrdPr(getId("3")["value"]);
-            var r = (dPr(v) != "" && dPr(t) != "") ? lrdPr(getId("1")["value"]) : r = "";
-            var q = lrdPr(getId("4")["value"]);
-            var o = dPr(getId("5")["value"]);
-            o = (API.Xcode != 0 && (o == API.Xcode || o == Main.ver["substr"](2))) ? "0" : (API.Xcode != 0) ? API.Xcode : o;
-            var l = dPr(getId("6")["value"]);
-            var j = lrdPr(getId("7")["value"]);
-            var g = dPr(getId("8")["value"]);
-            var C = getId("9")["value"];
-            var d = getId("10")["value"];
-            var f = getId("11")["value"];
+            var G = lrdPr(getId("0").value);
+            var v = lrdPr(getId("2").value);
+            var t = lrdPr(getId("3").value);
+            var r = (dPr(v) != "" && dPr(t) != "") ? lrdPr(getId("1").value) : r = "";
+            var q = lrdPr(getId("4").value);
+            var o = dPr(getId("5").value);
+            o = (API.Xcode != 0 && (o == API.Xcode || o == Main.ver.substr(2))) ? "0" : (API.Xcode != 0) ? API.Xcode : o;
+            var l = dPr(getId("6").value);
+            var j = lrdPr(getId("7").value);
+            var g = dPr(getId("8").value);
+            var C = getId("9").value;
+            var d = getId("10").value;
+            var f = getId("11").value;
             for (var u in STimemode) {
                 if (STimemode[u] == f) {
                     f = u.toString();
                     break;
                 }
             }
-            var s = getId("12")["value"];
-            var c = getId("13")["value"];
+            var s = getId("12").value;
+            var c = getId("13").value;
             for (var u in SSize) {
                 if (SSize[u] == c) {
                     c = u.toString();
@@ -5236,41 +5238,41 @@ onEnter = function() {
                 }
             }
             c = (c == "7") ? "" : c;
-            var p = getId("14")["value"];
-            var n = getId("15")["value"];
-            var k = getId("16")["value"];
+            var p = getId("14").value;
+            var n = getId("15").value;
+            var k = getId("16").value;
             for (var u in ASize1) {
                 if (ASize1[u] == k) {
                     k = u.toString();
                     break;
                 }
             }
-            var i = getId("17")["value"];
+            var i = getId("17").value;
             for (var u in ASize2) {
                 if (ASize2[u] == i) {
                     i = u.toString();
                     break;
                 }
             }
-            var F = getId("18")["value"];
+            var F = getId("18").value;
             for (var u in ASize3) {
                 if (ASize3[u] == F) {
                     F = u.toString();
                     break;
                 }
             }
-            var E = getId("19")["value"];
-            var B = getId("20")["value"];
+            var E = getId("19").value;
+            var B = getId("20").value;
             E = (E == "квадратная" && B == "вкл") ? "0" : (E == "прямоугольная" && B == "вкл") ? "1" : (E == "квадратная" && B == "выкл") ? "2" : "3";
-            var a = getId("21")["value"];
-            var D = getId("22")["value"];
-            var A = getId("23")["value"];
+            var a = getId("21").value;
+            var D = getId("22").value;
+            var A = getId("23").value;
             A = (A == "вкл") ? "1" : "0";
-            var z = getId("24")["value"];
+            var z = getId("24").value;
             z = (z == "вкл") ? "1" : "0";
-            var y = getId("25")["value"];
+            var y = getId("25").value;
             y = (y == "вкл") ? "1" : "0";
-            var x = getId("26")["value"];
+            var x = getId("26").value;
             b = [G, r, v, t, q, o, l, j, g, C, d, f, s, c, p, n, k, i, F, E, a, D, A, z, y, x];
         }
         Main.writeFile(b, API.fn);
@@ -5285,7 +5287,7 @@ onEnter = function() {
 
 function getIdb(a) {
     try {
-        return getId(a)["style"]["display"] = "block";
+        return getId(a).style.display = "block";
     } catch (b) {
         return "";
     }
@@ -5293,7 +5295,7 @@ function getIdb(a) {
 
 function getIdn(a) {
     try {
-        return getId(a)["style"]["display"] = "none";
+        return getId(a).style.display = "none";
     } catch (b) {
         return "";
     }
@@ -5347,7 +5349,7 @@ function dSp(b) {
 }
 
 function lrdPr(b) {
-    var a = (typeof b == "string" && b != "") ? b.replace(/(^\s*)|(\s*)$/g, "")["replace"](/[\n\r\t]/g, "") : "";
+    var a = (typeof b == "string" && b != "") ? b.replace(/(^\s*)|(\s*)$/g, "").replace(/[\n\r\t]/g, "") : "";
     return a;
 }
 
@@ -5371,8 +5373,8 @@ function getYoutubeUrl(n) {
         var f = API.Request(d);
         f = f.match(/url_encoded_fmt_stream_map=(.*?)&/);
         if (f != null) {
-            if (f[1]["indexOf"]("itag") >= 0) {
-                var a = f[1]["split"]("%2C");
+            if (f[1].indexOf("itag") >= 0) {
+                var a = f[1].split("%2C");
                 if (decLongUrl(a[0]).indexOf('itag=43') > -1) {
                     a.splice(0, 1);
                 }
@@ -5400,19 +5402,19 @@ function getYoutubeUrl(n) {
                                 break;
                         }
                         if (k != "") {
-                            a[g] = a[g]["replace"]("itag=" + l + "&", "");
-                            if (a[g]["indexOf"]("&url=") > 0) {
-                                var c = a[g]["split"]("&url=");
+                            a[g] = a[g].replace("itag=" + l + "&", "");
+                            if (a[g].indexOf("&url=") > 0) {
+                                var c = a[g].split("&url=");
                                 a[g] = c[1];
                             } else {
-                                a[g] = a[g]["replace"]("url=", "");
+                                a[g] = a[g].replace("url=", "");
                             }
                             b = [a[g], k];
                             Main.url_arr["push"](b);
                             if (Main.ver > 2.53 && k.indexOf(API.Vquality) > -1) {
                                 flag = true;
                                 o = a[g];
-                                Selectbox.url_selected = Main.url_arr["length"] - 1;
+                                Selectbox.url_selected = Main.url_arr.length - 1;
                             }
                             if (flag == false) {
                                 if (k.indexOf(API.Vquality) < 0) {
@@ -5426,7 +5428,7 @@ function getYoutubeUrl(n) {
                         }
                     }
                 }
-                if (Main.url_arr["length"] > 0 && o == "") {
+                if (Main.url_arr.length > 0 && o == "") {
                     o = Main.url_arr[1][1];
                 }
             }
@@ -5446,7 +5448,7 @@ function getVkUrl(j) {
     if (d.indexOf('www.youtube.com') + 1) {
         var f = d.split('ajax.preload');
         var q = f[1].match(/http:(.*?)?autoplay/);
-        var c = q[1]["replace"](/\\/g, '');
+        var c = q[1].replace(/\\/g, '');
         c = c.replace("?", '');
         c = c.replace("//www.youtube.com/embed/", '');
         return getYoutubeUrl(c);
@@ -5464,7 +5466,7 @@ function getVkUrl(j) {
         var q = f[1].match(/http:(.*?)?extra/);
         alert(qual240 + ' ' + qual360 + ' ' + qual480 + ' ' + qual720);
         if (q != null) {
-            var c = q[1]["replace"](/\\\\\\/g, '');
+            var c = q[1].replace(/\\\\\\/g, '');
             c = c.replace("?", '');
             c = c.split("videos")
             c[0] = c[0].replace("//", '');
@@ -5493,7 +5495,7 @@ function getVkUrl(j) {
                 if (Main.ver > 2.53 && g.indexOf(API.Vquality) > -1) {
                     flag = true;
                     i = "http://" + c[0] + "videos" + c[1] + b;
-                    Selectbox.url_selected = Main.url_arr["length"] - 1;
+                    Selectbox.url_selected = Main.url_arr.length - 1;
                 }
                 if (flag == false) {
                     if (g.indexOf(API.Vquality) < 0) {
@@ -5502,7 +5504,7 @@ function getVkUrl(j) {
                     }
                 }
             }
-            if (Main.url_arr["length"] > 0 && i == "") {
+            if (Main.url_arr.length > 0 && i == "") {
                 i = Main.url_arr[0][0];
             }
         }
@@ -5547,7 +5549,7 @@ function getRuTubeUrl(j) {
         if (Main.ver > 2.53 && g.indexOf(API.Vquality) > -1) {
             flag = true;
             i = v + '|COMPONENT=HLS';
-            Selectbox.url_selected = Main.url_arr["length"] - 1;
+            Selectbox.url_selected = Main.url_arr.length - 1;
         }
         if (flag == false) {
             if (g.indexOf(API.Vquality) < 0) {
@@ -5556,7 +5558,7 @@ function getRuTubeUrl(j) {
             }
         }
     }
-    if (Main.url_arr["length"] > 0 && i == "") {
+    if (Main.url_arr.length > 0 && i == "") {
         i = Main.url_arr[0][0];
     }
     return i;
@@ -5618,10 +5620,10 @@ function YandexParsing(b, c, f, e) {
     YaAbort();
     Main.Ya_ready_timeout = setTimeout("Err();", 3000);
     Main.YaHTTP = new XMLHttpRequest();
-    Main.YaHTTP["onreadystatechange"] = function() {
-        if (Main.YaHTTP["readyState"] == 4 && Main.YaHTTP["status"] == 200) {
+    Main.YaHTTP.onreadystatechange = function() {
+        if (Main.YaHTTP.readyState == 4 && Main.YaHTTP.status == 200) {
             clearTimeout(Main.Ya_ready_timeout);
-            a = Main.YaHTTP["responseText"];
+            a = Main.YaHTTP.responseText;
             a = a.replace(/amp;/g, "");
             if (!Main.guide) {
                 var t = ["", "Фильмы", "Сериалы", "Детям", "Спорт"];
@@ -5705,7 +5707,7 @@ function YandexParsing(b, c, f, e) {
                         if (D.length == 2) {
                             var g = parseInt(D[0]) + parseInt(i);
                             D[0] = ((g > 23) ? (g - 24) : (g < 0) ? (g + 24) : g).toString();
-                            if (D[0]["length"] == 1) {
+                            if (D[0].length == 1) {
                                 D[0] = "0" + D[0];
                             }
                             y = D.join(":");
@@ -5759,7 +5761,7 @@ function YandexParsing(b, c, f, e) {
                             }
                         }
                     }
-                    if (Main.temp_ya_epg_info_arr["length"] > 0) {
+                    if (Main.temp_ya_epg_info_arr.length > 0) {
                         if (Player.state == Player.STOPPED || (Player.state == Player.PLAYING_LIVE && Main.play_chan_array_index == Main.chan_array_index)) {
                             Main.ya_prog_id = Main.chan_array_index;
                             Main.ya_epg_info_arr = Main.temp_ya_epg_info_arr;
@@ -5785,7 +5787,7 @@ function YandexParsing(b, c, f, e) {
                 }
                 H = parser(H, '&when=2">');
                 if (H != "") {
-                    H = H.replace("</a>", "")["replace"]('</div><div class="b-broadcast__info">', "</h3></td></tr></table>");
+                    H = H.replace("</a>", "").replace('</div><div class="b-broadcast__info">', "</h3></td></tr></table>");
                     var F = parser(a, '<div class="b-broadcast">', '<div class="b-broadcast__time">');
                 }
                 if (F != "") {
@@ -5812,14 +5814,14 @@ var Ya_icon_index_url_obj = {};
 var Ya_icon_name_url_obj = {};
 
 GetEpgInfo = function() {
-    if (Main.ya_epg_info_arr["length"] > 0) {
-        var a = Main.ya_epg_info_arr[0]["split"]("|");
+    if (Main.ya_epg_info_arr.length > 0) {
+        var a = Main.ya_epg_info_arr[0].split("|");
         var e = a[0];
         var d = a[1];
         a = d.split(":");
         Main.epg_t1 = parseInt((a[0] * 60 * 60 + a[1] * 60) * 1000);
-        if (Main.ya_epg_info_arr["length"] > 1) {
-            a = Main.ya_epg_info_arr[1]["split"]("|");
+        if (Main.ya_epg_info_arr.length > 1) {
+            a = Main.ya_epg_info_arr[1].split("|");
             var c = a[1];
             a = c.split(":");
             Main.epg_t2 = parseInt((a[0] * 60 * 60 + a[1] * 60) * 1000);
@@ -5840,12 +5842,12 @@ GetEpgInfo = function() {
     }
 };
 GetNextEpgInfo = function() {
-    if (Main.ya_epg_info_arr["length"] > 0) {
+    if (Main.ya_epg_info_arr.length > 0) {
         if (Main.epg_info_step == 1 && Main.temp_epg_info == "") {
-            Main.temp_epg_info = getId("epg_info")["innerHTML"];
+            Main.temp_epg_info = getId("epg_info").innerHTML;
         }
-        if (Main.epg_info_step > 0 && Main.epg_info_step <= Main.ya_epg_info_arr["length"]) {
-            var a = Main.ya_epg_info_arr[Main.epg_info_step - 1]["split"]("|");
+        if (Main.epg_info_step > 0 && Main.epg_info_step <= Main.ya_epg_info_arr.length) {
+            var a = Main.ya_epg_info_arr[Main.epg_info_step - 1].split("|");
             var d = a[0];
             var c = a[1];
             if (dPr(d) != "" && dPr(c) != "") {
@@ -5926,7 +5928,7 @@ function Super_parser(e) {
     if (e.indexOf("#germetJSParser") >= 0) {
         e = e.replace("#germetJSParser", "")
     }
-    if (Main.ver > 2.42 && Main.parser != "" && Main.parser["indexOf"]("://") > 0) {
+    if (Main.ver > 2.42 && Main.parser != "" && Main.parser.indexOf("://") > 0) {
         e = decLongUrl(e);
         var g = parser(e, "s_key=");
         c = decLongUrl(GetHash(Main.parser, e, g));
@@ -5947,7 +5949,7 @@ function Super_parser(e) {
                     } else {
                         if (e.indexOf("kinoprosmotr.net/") > 0) {
                             var b = API.Request(e);
-                            c = dSp(parser(b, ";file=", ".flv")["replace"](/\x5cn/, "") + ".flv");
+                            c = dSp(parser(b, ";file=", ".flv").replace(/\x5cn/, "") + ".flv");
                         } else {
                             if (e.indexOf("//vtraxe.com/") > 0) {
                                 var b = API.Request(e);
@@ -6013,7 +6015,7 @@ function Super_parser(e) {
                                                                     b = API.Request("http://static.video.yandex.ru/get-token/" + b + "?nc=0.50940609164536");
                                                                     b = parser(b, "token>", "</token>");
                                                                     b = API.Request(e.replace("md5hash", b));
-                                                                    c = parser(b, "video-location>", "</video-location>")["replace"]("&amp;", "&");
+                                                                    c = parser(b, "video-location>", "</video-location>").replace("&amp;", "&");
                                                                 } else {
                                                                     if (e.indexOf("/video.sibnet.ru") > 0) {
                                                                         var b = API.Request(e);
@@ -6022,7 +6024,7 @@ function Super_parser(e) {
                                                                     } else {
                                                                         if (e.indexOf("filmix.net/s/md5hash") > 0 || e.indexOf("filevideosvc.org/s/md5hash") > 0) {
                                                                             var b = API.Request("http://filmix.net/semejnyj/36974-tor-legenda-vikingov-legends-of-valhalla-thor-2011.html");
-                                                                            b = parser(b, ";file=", ";vast_preroll")["replace"]("&amp", "");
+                                                                            b = parser(b, ";file=", ";vast_preroll").replace("&amp", "");
                                                                             b = API.Request("http://gegen-abzocke.com/xml/nstrim/filmix/code.php?code_url=" + b);
                                                                             c = e.replace("md5hash", b);
                                                                         } else {
@@ -6055,7 +6057,7 @@ function Super_parser(e) {
                                                                                                     if (e.indexOf("watchcinema.ru") > 0) {
                                                                                                         e = API.Request(e);
                                                                                                         e = parser(e, '<iframe src="', '"');
-                                                                                                        e = e.replace("&amp;", "&")["replace"]("//vkontakte.ru/", "//vk.com/");
+                                                                                                        e = e.replace("&amp;", "&").replace("//vkontakte.ru/", "//vk.com/");
                                                                                                         e = API.Request(e);
                                                                                                         e = parser(e, 'src="http://www.youtube.com/embed/', "?");
                                                                                                         c = getYoutubeUrl(e);
