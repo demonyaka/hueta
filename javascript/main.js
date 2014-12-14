@@ -32,9 +32,7 @@ var Main = {
     guide: false,
     block_info: false,
     write: false,
-    usb_info: "",
     lost_date: "",
-    lost_chname: "",
     scrolling: 0,
     load_timer: null,
     prev_pl_array: [],
@@ -70,14 +68,10 @@ var Main = {
     search_on: "",
     region: "",
     parser: "",
-    usb_url: "",
     playlist_name: "",
-    ret_url: "",
     Kill: "",
     nuber_p: 1,
     step_read_dir: 1,
-    init_ext_js_step: 0,
-    init_id_url: 0,
     FAV: false,
     DEL: false,
     RED: false,
@@ -96,12 +90,11 @@ var Main = {
     Network: null,
     St: null,
     Audio: null,
-    St_size: null,
     IntervalUpdateTime: null,
     SlideShowInterval: null,
     version: "1.0.5",
     ver: "2014",
-	sort: false
+    sort: false
 };
 
 Main.onLoad = function() {
@@ -132,7 +125,6 @@ Main.onLoad = function() {
         if (API.init() && Player.init()) {
             window.onShow = Main.onShowEventTVKey;
             widgetAPI.sendReadyEvent();
-            Main.init_id_url = Math.round((Math.random() * 2.99) + 0.51) - 1;
             Display.status("Загрузка!", 14000);
             Display.loadingshow();
             var src;
@@ -630,7 +622,7 @@ Main.UpdateChannelInfo = function() {
 };
 GetYindex = function() {
     var url = (Ach(3) != "" && Ach(3).indexOf("/m.tv.yandex.") > 0) ? Ach(3) : (!isNaN(Ach(3)) && Ach(3) > 0 && Ach(3) < 2000) ? Ach(3) : (Main.ya_auto && Main.name != "") ? Ya_name_index_obj[Main.name.toLowerCase().replace(/\_/g, " ")] : "";
-	if (url == undefined) {
+    if (url == undefined) {
         url = "";
     }
     return url;
@@ -656,7 +648,7 @@ Main.showinfoList = function(b) {
             var a = "";
             var c = "";
             if (API.playlist_name != "") {
-				c = '<table width="100%"><tr><td style="text-align:center;font-size:20px;color:#00ccff">' + API.playlist_name + '</td></tr></table><table width="100%"><tr height="4px" bgcolor="#cccccc"><td></td></tr></table>';
+                c = '<table width="100%"><tr><td style="text-align:center;font-size:20px;color:#00ccff">' + API.playlist_name + '</td></tr></table><table width="100%"><tr height="4px" bgcolor="#cccccc"><td></td></tr></table>';
             }
             if (API.prev_page_text != "" && (API.prev_page_url != "" || (this.url == "" && API.prev_page_text.indexOf("В портал") == -1))) {
                 a += "<td><img src='img/buttons/rew.png'></img></td><td>" + API.prev_page_text + "</td>";
@@ -727,7 +719,7 @@ Main.SavePrevChannel = function() {
 Main.PlayPrevPlaylist = function() {
     if (KeyHandler.bl && this.prev_pl_array.length > this.nuber_p) {
         if (this.url != "" && (API.next_page_url == "" || API.prev_page_url == "")) {
-            this.nuber_p ++;
+            this.nuber_p++;
         }
         for (var f = 0; f < this.nuber_p - 1; f++) {
             this.prev_pl_array.pop();
@@ -805,10 +797,10 @@ Main.SavePrevPlaylist = function() {
 };
 Main.selectNextChannel = function() {
     if (Main.Update_Page) {
-        this.selected_channel ++;
+        this.selected_channel++;
         if (this.selected_channel >= 10 || (this.selected_page == API.chan_pages - 1 && this.selected_channel == API.last_page_channels_counter)) {
             this.selected_channel = 0;
-            this.selected_page ++;
+            this.selected_page++;
             Main.updatePage();
         } else {
             Main.updateChannel();
@@ -817,7 +809,7 @@ Main.selectNextChannel = function() {
 };
 Main.selectPrevChannel = function() {
     if (Main.Update_Page) {
-        this.selected_channel --;
+        this.selected_channel--;
         if (this.selected_page == 0 && this.selected_channel < 0) {
             this.selected_channel = API.last_page_channels_counter - 1;
             this.selected_page = API.chan_pages - 1;
@@ -825,7 +817,7 @@ Main.selectPrevChannel = function() {
         } else {
             if (this.selected_channel < 0) {
                 this.selected_channel = 9;
-                this.selected_page --;
+                this.selected_page--;
                 Main.updatePage();
             } else {
                 Main.updateChannel();
@@ -851,7 +843,7 @@ Main.selectNextPage = function() {
         ListNextPage();
     } else {
         if (Main.Update_Page) {
-            this.selected_page ++;
+            this.selected_page++;
             Main.updatePage();
         }
     }
@@ -877,7 +869,7 @@ Main.selectPrevPage = function() {
         ListPrevPage();
     } else {
         if (Main.Update_Page) {
-            this.selected_page --;
+            this.selected_page--;
             Main.updatePage();
         }
     }
@@ -1857,7 +1849,6 @@ API.Request = function(b) {
                 return API.Request(b);
             } else {
                 if (API.XHRObj.readyState == 4 && API.XHRObj.status == 200) {
-					alert(API.XHRObj.responseText);
                     return API.XHRObj.responseText;
                 } else {
                     return "";
@@ -2187,7 +2178,7 @@ Selectbox.setBox = function(c, b) {
         }
         this.pages = Math.round(b.length / 10);
         if (this.last_page_counter > 0 && this.last_page_counter < 5) {
-            this.pages ++;
+            this.pages++;
         }
         Selectbox.updateBox();
     } catch (a) {}
@@ -2225,31 +2216,31 @@ Selectbox.updateBox = function() {
     } catch (g) {}
 };
 Selectbox.selectNextItem = function() {
-    this.selected ++;
+    this.selected++;
     if (this.selected >= 10 || (this.selected_page == this.pages - 1 && this.selected == this.last_page_counter)) {
         this.selected = 0;
-        this.selected_page ++;
+        this.selected_page++;
     }
     Selectbox.updateBox();
 };
 Selectbox.selectPrevItem = function() {
-    this.selected --;
+    this.selected--;
     if (this.selected_page == 0 && this.selected_channel < 0) {
         this.selected = this.last_page_counter - 1;
         this.selected_page = this.pages - 1;
     }
     if (this.selected < 0) {
         this.selected = 10;
-        this.selected_page --;
+        this.selected_page--;
     }
     Selectbox.updateBox();
 };
 Selectbox.selectNextPage = function() {
-    this.selected_page ++;
+    this.selected_page++;
     Selectbox.updateBox();
 };
 Selectbox.selectPrevPage = function() {
-    this.selected_page --;
+    this.selected_page--;
     Selectbox.updateBox();
 };
 Selectbox.SelectCategory = function() {
@@ -2318,7 +2309,7 @@ Display.loadingstep = function() {
     } else {
         getId("imgAnim").src = "img/loading/loading_" + this.index + ".png";
     }
-    this.index ++;
+    this.index++;
     if (this.index > 12) {
         this.index = 1;
     }
@@ -2996,20 +2987,20 @@ KeyHandler.MainMenuKeyDown = function() {
                 }
             }
             break;
-		case tvKey.KEY_REC:
-			widgetAPI.blockNavigation(event);
-			if(Main.sort == false) {
-				API.channels.sort();
-				Main.updatePage();
-				Main.sort = true;
-			} else if (Main.sort == true){
-				API.channels.reverse();
-				Main.updatePage();
-				Main.sort = false;
-			} else {
-				Main.sort = false;
-			}
-			break;
+        case tvKey.KEY_REC:
+            widgetAPI.blockNavigation(event);
+            if (Main.sort == false) {
+                API.channels.sort();
+                Main.updatePage();
+                Main.sort = true;
+            } else if (Main.sort == true) {
+                API.channels.reverse();
+                Main.updatePage();
+                Main.sort = false;
+            } else {
+                Main.sort = false;
+            }
+            break;
         case tvKey.KEY_STOP:
             widgetAPI.blockNavigation(event);
             if (Main.FAV) {
@@ -3769,7 +3760,7 @@ Player.error = function(a) {
     if (this.state != this.STOPPED && a >= 1) {
         this.eerr = (a == 1) ? "Неподдерживаемый контейнер" : (a == 2) ? "Неподдерживаемый видео кодек" : (a == 3) ? "Неподдерживаемый аудио кодек" : (a == 4) ? "Неподдерживаемое разрешение видео" : (a == 5) ? "Неправильная частота кадров" : (a == 6) ? "Поток повреждён !" : (a == 7) ? "Файл не найден" : (a == 8) ? "Обрыв сетевого соединения" : (a == 9) ? "Подключиться не удалось" : this.eerr;
         if (a < 7 && this.serr < 3) {
-            this.serr ++;
+            this.serr++;
             if (a < 3 && a != 6) {
                 Player.play(this.url, 0);
             }
@@ -4649,7 +4640,7 @@ function RunImeS(e, c) {
         d.setKeypadPos(110, 75);
     } else {
         d.setKeypadPos(110, 75);
-		d.setQWERTYPos(0, 75);
+        d.setQWERTYPos(0, 75);
     }
     getId(e)["focus"]();
     d.setKeyFunc(tvKey.KEY_UP, function(f) {
@@ -5464,7 +5455,6 @@ function getVkUrl(j) {
         count = qual240 + qual360 + qual480 + qual720;
         var f = d.split('url240');
         var q = f[1].match(/http:(.*?)?extra/);
-        alert(qual240 + ' ' + qual360 + ' ' + qual480 + ' ' + qual720);
         if (q != null) {
             var c = q[1].replace(/\\\\\\/g, '');
             c = c.replace("?", '');
@@ -5884,7 +5874,6 @@ function GetHash(c, b, f) {
     if (e[0] != "") {
         var d = API.Request(e[0]);
         d = parser(d, e[1], e[2]);
-        alert("hash =" + d);
         if (f != "") {
             a = API.Request(c + "action=get_result_url_hash&s_key=" + f + "&hash=" + d + "&url=" + b);
         } else {
@@ -5923,6 +5912,13 @@ function decLongUrl(a) {
     return a;
 }
 
+function getFsToVideo(url) {
+    var request = API.Request(url);
+    request = request.split('is_first: 1,');
+    video_url = request[1].match(/\/get\/play\/(.*?)',/);
+    return video_url[1];
+}
+
 function Super_parser(e) {
     var c = e;
     if (e.indexOf("#germetJSParser") >= 0) {
@@ -5930,8 +5926,14 @@ function Super_parser(e) {
     }
     if (Main.ver > 2.42 && Main.parser != "" && Main.parser.indexOf("://") > 0) {
         e = decLongUrl(e);
-        var g = parser(e, "s_key=");
-        c = decLongUrl(GetHash(Main.parser, e, g));
+        if (e.indexOf('fs.to') > -1) {
+            var parser = Main.parser.split('|');
+            c = e.replace("md5hash", getFsToVideo(parser[0]));
+        } else {
+            var g = parser(e, "s_key=");
+            c = decLongUrl(GetHash(Main.parser, e, g));
+        }
+
     } else {
         if (e.indexOf("vk.com") > 0 || e.indexOf("vk.com/video_") > 0) {
             c = getVkUrl(e);
