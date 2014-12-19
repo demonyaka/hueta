@@ -2988,7 +2988,6 @@ KeyHandler.MainMenuKeyDown = function() {
             }
             break;
         case tvKey.KEY_REC:
-            widgetAPI.blockNavigation(event);
             if (Main.sort == false) {
                 API.channels.sort();
                 Main.updatePage();
@@ -3678,7 +3677,7 @@ Player.init = function() {
     var a = getId("pluginObjectNNavi");
     var d = a.GetFirmware();
     d = d.split("-");
-    if (d[1] && (d[1].indexOf("2011") != -1 || d[1].indexOf("2012") != -1 || d[1].indexOf("2013") != -1)) {
+    if (d[1] && (d[1].indexOf("2011") != -1 || d[1].indexOf("2012") != -1 || d[1].indexOf("2013") != -1) || d[1].indexOf("2014") != -1) {
         this.SefPlugin = getId("pluginObjectSef");
     }
     if (this.SefPlugin != null) {
@@ -4159,9 +4158,9 @@ Player.setSize = function(c, b, a) {
                         o = f * (2 - Player.Ph / 100);
                         i = f * (Player.Ph / 200 - 0.5);
                     }
-                    e = "X-ZOOM";
+                    e = "X-ZOOM - изменить размеры вы можете нажав на CH LIST";
                     if (Main.SetZoom) {
-                        e += " _ w=" + Player.Pw + "% _ h=" + Player.Ph + "%";
+                        e = "X-ZOOM ширина=" + Player.Pw + "%  высота=" + Player.Ph + "%";
                     }
                 }
                 break;
