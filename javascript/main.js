@@ -5925,9 +5925,10 @@ function Super_parser(e) {
     }
     if (Main.ver > 2.42 && Main.parser != "" && Main.parser.indexOf("://") > 0) {
         e = decLongUrl(e);
-        if (e.indexOf('fs.to') > -1) {
-            var parser = Main.parser.split('|');
-            c = e.replace("md5hash", getFsToVideo(parser[0]));
+        if (e.indexOf('http://fs.to/get/play/md5hash') > 0) {
+            var parserfs = Main.parser;
+			parserfs.split('|');
+            c = e.replace("md5hash", getFsToVideo(parserfs[0]));
         } else {
             var g = parser(e, "s_key=");
             c = decLongUrl(GetHash(Main.parser, e, g));
