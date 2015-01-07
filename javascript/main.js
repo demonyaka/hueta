@@ -1873,6 +1873,7 @@ API.recieveData = function(a) {
             if (API.XML_URL.indexOf("start.xml") < 0) {
                 API.XML_URL = "start.xml";
                 setTimeout("API.Request(API.XML_URL)", 3000);
+                setTimeout("API.Request(API.XML_URL)", 3000);
             } else {
                 setTimeout("getIdb('main');SetupFormular()", 3000);
             }
@@ -5787,7 +5788,7 @@ function YandexParsing(b, c, f, e) {
         }
     };
     if (Main.seriesC || Main.seriesD || Main.seriesE) {
-        Main.yandexHttp["open"]("GET", 'http://nstreamevoo.atservers.net/evo/yandex.php?url=' + encodeURIComponent(b + e), true);
+        Main.yandexHttp["open"]("GET", 'http://nstreamevo.kumuki.com/evo/yandex.php?url=' + encodeURIComponent(b + e), true);
     } else {
         Main.yandexHttp["open"]("GET", b + e, true);
     }
@@ -5907,6 +5908,23 @@ function decLongUrl(a) {
     return a;
 }
 
+function getFsToVideo(url) {
+    var urlBrb = url.replace('cxz.to', 'brb.to');
+    var response = API.Request(urlBrb);
+    var video_url;
+    if (response != undefined) {
+        response = response.split('is_first: 1,');
+        video_url = response[1].match(/download_url: '(.*?)',/);
+        video_url = 'http://brb.to' + video_url[1];
+    } else {
+        response = API.Request(url);
+        response = response.split('is_first: 1,');
+        video_url = response[1].match(/download_url: '(.*?)',/);
+        video_url = 'http://cxz.to' + video_url[1];
+    }
+    return video_url;
+}
+
 function Super_parser(e) {
     var c = e;
     if (e.indexOf("#germetJSParser") >= 0) {
@@ -5917,134 +5935,138 @@ function Super_parser(e) {
         var g = parser(e, "s_key=");
         c = decLongUrl(GetHash(Main.parser, e, g));
     } else {
-        if (e.indexOf("vk.com") > 0 || e.indexOf("vk.com/video_") > 0) {
-            c = getVkUrl(e);
+        if (e.indexOf("cxz.to") > 0) {
+            c = getFsToVideo(decLongUrl(e));
         } else {
-            if (e.indexOf("youtube.com/watch?v=") > 0) {
-                var i = e.substr(e.indexOf("=") + 1);
-                c = lrdPr(getYoutubeUrl(i));
+            if (e.indexOf("vk.com") > 0 || e.indexOf("vk.com/video_") > 0) {
+                c = getVkUrl(e);
             } else {
-                if (e.indexOf("rutube.ru/video/") > 0) {
-                    c = getRuTubeUrl(e);
+                if (e.indexOf("youtube.com/watch?v=") > 0) {
+                    var i = e.substr(e.indexOf("=") + 1);
+                    c = lrdPr(getYoutubeUrl(i));
                 } else {
-                    if (e.indexOf("//kino-v-online.ru/kino/md5") > 0 || e.indexOf("//kino-v-online.ru/serial/md5") > 0) {
-                        var b = API.Request("http://kino-v-online.ru/2796-materik-online-film.html");
-                        c = e.replace("md5hash", parser(b, "/kino/", "/"));
+                    if (e.indexOf("rutube.ru/video/") > 0) {
+                        c = getRuTubeUrl(e);
                     } else {
-                        if (e.indexOf("kinoprosmotr.net/") > 0) {
-                            var b = API.Request(e);
-                            c = dSp(parser(b, ";file=", ".flv").replace(/\x5cn/, "") + ".flv");
+                        if (e.indexOf("//kino-v-online.ru/kino/md5") > 0 || e.indexOf("//kino-v-online.ru/serial/md5") > 0) {
+                            var b = API.Request("http://kino-v-online.ru/2796-materik-online-film.html");
+                            c = e.replace("md5hash", parser(b, "/kino/", "/"));
                         } else {
-                            if (e.indexOf("//vtraxe.com/") > 0) {
+                            if (e.indexOf("kinoprosmotr.net/") > 0) {
                                 var b = API.Request(e);
-                                b = parser(b, "3Fv=", "&");
-                                c = API.Request("http://gegen-abzocke.com/xml/nstrim/uletno/code.php?code_url=" + b);
+                                c = dSp(parser(b, ";file=", ".flv").replace(/\x5cn/, "") + ".flv");
                             } else {
-                                if (e.indexOf("kino-dom.tv/s/md5") > 0) {
-                                    var b = API.Request("http://kino-dom.tv/drama/1110-taynyy-krug-the-sesret-sirsle-1-sezon-1-seriya-eng-onlayn.html");
-                                    c = e.replace("md5hash", parser(b, "file=http://kino-dom.tv/", "/play/"));
+                                if (e.indexOf("//vtraxe.com/") > 0) {
+                                    var b = API.Request(e);
+                                    b = parser(b, "3Fv=", "&");
+                                    c = API.Request("http://gegen-abzocke.com/xml/nstrim/uletno/code.php?code_url=" + b);
                                 } else {
-                                    if (e.indexOf("linecinema.org/s/md5") > 0) {
-                                        var b = API.Request("http://www.linecinema.org/newsz/boevyk-online/508954-bliznecy-drakony-twin-dragons-1992-dvdrip-onlayn.html");
-                                        c = e.replace("md5hash", parser(b, "linecinema.org/s/", "/"));
+                                    if (e.indexOf("kino-dom.tv/s/md5") > 0) {
+                                        var b = API.Request("http://kino-dom.tv/drama/1110-taynyy-krug-the-sesret-sirsle-1-sezon-1-seriya-eng-onlayn.html");
+                                        c = e.replace("md5hash", parser(b, "file=http://kino-dom.tv/", "/play/"));
                                     } else {
-                                        if (e.indexOf(".igru-film.net/") > 0) {
-                                            var b = parser(e, "xyss", "xys");
-                                            e = parser(e, "ssa", "xyss");
-                                            b = API.Request("http://fepcom.net/" + b);
-                                            b = parser(b, ";file=", "&");
-                                            b = API.Request("http://gegen-abzocke.com/xml/nstrim/fepcom/code.php?code_url=" + b);
-                                            c = e.replace("md5hash", b);
+                                        if (e.indexOf("linecinema.org/s/md5") > 0) {
+                                            var b = API.Request("http://www.linecinema.org/newsz/boevyk-online/508954-bliznecy-drakony-twin-dragons-1992-dvdrip-onlayn.html");
+                                            c = e.replace("md5hash", parser(b, "linecinema.org/s/", "/"));
                                         } else {
-                                            if (e.indexOf("kinoylei.ru/video/") > 0) {
-                                                var b = API.Request("http://kinoylei.ru/load/zhanry/boevik/otstavnik_2/38-1-0-2280");
-                                                b = parser(b, '"myvideo" src="', '">');
-                                                b = API.Request(b);
-                                                b = parser(b, "--", '"');
+                                            if (e.indexOf(".igru-film.net/") > 0) {
+                                                var b = parser(e, "xyss", "xys");
+                                                e = parser(e, "ssa", "xyss");
+                                                b = API.Request("http://fepcom.net/" + b);
+                                                b = parser(b, ";file=", "&");
+                                                b = API.Request("http://gegen-abzocke.com/xml/nstrim/fepcom/code.php?code_url=" + b);
                                                 c = e.replace("md5hash", b);
                                             } else {
-                                                if (e.indexOf("nowfilms.ru/video/md5hash") > 0) {
-                                                    var b = parser(e, "xyss", "xys");
-                                                    e = parser(e, "ssa", "xyss");
-                                                    b = API.Request("http://" + b);
-                                                    var a = parser(b, ";pl=", '"');
-                                                    if (a.indexOf("/tmp/") > 0) {
-                                                        b = API.Request(a);
-                                                        a = parser(e, "/md5hash/", "xys");
-                                                        if (b.indexOf(a) > 0) {
-                                                            var f = b.substr(b.indexOf(a) - 23, 22);
-                                                            c = e.replace("md5hash", f);
+                                                if (e.indexOf("kinoylei.ru/video/") > 0) {
+                                                    var b = API.Request("http://kinoylei.ru/load/zhanry/boevik/otstavnik_2/38-1-0-2280");
+                                                    b = parser(b, '"myvideo" src="', '">');
+                                                    b = API.Request(b);
+                                                    b = parser(b, "--", '"');
+                                                    c = e.replace("md5hash", b);
+                                                } else {
+                                                    if (e.indexOf("nowfilms.ru/video/md5hash") > 0) {
+                                                        var b = parser(e, "xyss", "xys");
+                                                        e = parser(e, "ssa", "xyss");
+                                                        b = API.Request("http://" + b);
+                                                        var a = parser(b, ";pl=", '"');
+                                                        if (a.indexOf("/tmp/") > 0) {
+                                                            b = API.Request(a);
+                                                            a = parser(e, "/md5hash/", "xys");
+                                                            if (b.indexOf(a) > 0) {
+                                                                var f = b.substr(b.indexOf(a) - 23, 22);
+                                                                c = e.replace("md5hash", f);
+                                                            }
+                                                        } else {
+                                                            c = parser(b, ";file=", '"');
                                                         }
                                                     } else {
-                                                        c = parser(b, ";file=", '"');
-                                                    }
-                                                } else {
-                                                    if (e.indexOf("//77.120.119") > 0) {
-                                                        e = API.Request(e);
-                                                        e = parser(e, 'file":"', '"');
-                                                        c = API.Request("http://gegen-abzocke.com/xml/nstrim/liveonline/code.php?code_url=" + e);
-                                                    } else {
-                                                        if (e.indexOf("uletno.info/") > 0) {
+                                                        if (e.indexOf("//77.120.119") > 0) {
                                                             e = API.Request(e);
                                                             e = parser(e, 'file":"', '"');
-                                                            c = API.Request("http://gegen-abzocke.com/xml/nstrim/uletno/code.php?code_url=" + e);
+                                                            c = API.Request("http://gegen-abzocke.com/xml/nstrim/liveonline/code.php?code_url=" + e);
                                                         } else {
-                                                            if (e.indexOf("//kinostok.tv/video/") > 0) {
+                                                            if (e.indexOf("uletno.info/") > 0) {
                                                                 e = API.Request(e);
-                                                                e = parser(e, 'file: "', '"');
-                                                                c = API.Request("http://gegen-abzocke.com/xml/nstrim/kinostok/code.php?code_url=" + e);
+                                                                e = parser(e, 'file":"', '"');
+                                                                c = API.Request("http://gegen-abzocke.com/xml/nstrim/uletno/code.php?code_url=" + e);
                                                             } else {
-                                                                if (e.indexOf("/streaming.video.") > 0) {
-                                                                    var b = parser(e, "get-location/", "/m");
-                                                                    b = API.Request("http://static.video.yandex.ru/get-token/" + b + "?nc=0.50940609164536");
-                                                                    b = parser(b, "token>", "</token>");
-                                                                    b = API.Request(e.replace("md5hash", b));
-                                                                    c = parser(b, "video-location>", "</video-location>").replace("&amp;", "&");
+                                                                if (e.indexOf("//kinostok.tv/video/") > 0) {
+                                                                    e = API.Request(e);
+                                                                    e = parser(e, 'file: "', '"');
+                                                                    c = API.Request("http://gegen-abzocke.com/xml/nstrim/kinostok/code.php?code_url=" + e);
                                                                 } else {
-                                                                    if (e.indexOf("/video.sibnet.ru") > 0) {
-                                                                        var b = API.Request(e);
-                                                                        b = b.replace("&amp;", "&");
-                                                                        c = parser(b, "<file>", "</file>");
+                                                                    if (e.indexOf("/streaming.video.") > 0) {
+                                                                        var b = parser(e, "get-location/", "/m");
+                                                                        b = API.Request("http://static.video.yandex.ru/get-token/" + b + "?nc=0.50940609164536");
+                                                                        b = parser(b, "token>", "</token>");
+                                                                        b = API.Request(e.replace("md5hash", b));
+                                                                        c = parser(b, "video-location>", "</video-location>").replace("&amp;", "&");
                                                                     } else {
-                                                                        if (e.indexOf("filmix.net/s/md5hash") > 0 || e.indexOf("filevideosvc.org/s/md5hash") > 0) {
-                                                                            var b = API.Request("http://filmix.net/semejnyj/36974-tor-legenda-vikingov-legends-of-valhalla-thor-2011.html");
-                                                                            b = parser(b, ";file=", ";vast_preroll").replace("&amp", "");
-                                                                            b = API.Request("http://gegen-abzocke.com/xml/nstrim/filmix/code.php?code_url=" + b);
-                                                                            c = e.replace("md5hash", b);
+                                                                        if (e.indexOf("/video.sibnet.ru") > 0) {
+                                                                            var b = API.Request(e);
+                                                                            b = b.replace("&amp;", "&");
+                                                                            c = parser(b, "<file>", "</file>");
                                                                         } else {
-                                                                            if (e.indexOf("http://streaming2.video.yandex.ru") >= 0) {
-                                                                                c = e.replace("streaming2", "streaming");
+                                                                            if (e.indexOf("filmix.net/s/md5hash") > 0 || e.indexOf("filevideosvc.org/s/md5hash") > 0) {
+                                                                                var b = API.Request("http://filmix.net/semejnyj/36974-tor-legenda-vikingov-legends-of-valhalla-thor-2011.html");
+                                                                                b = parser(b, ";file=", ";vast_preroll").replace("&amp", "");
+                                                                                b = API.Request("http://gegen-abzocke.com/xml/nstrim/filmix/code.php?code_url=" + b);
+                                                                                c = e.replace("md5hash", b);
                                                                             } else {
-                                                                                if (e.indexOf("bigcinema.tv") > 0) {
-                                                                                    var b = API.Request("http://bigcinema.tv/movie/prometey---prometheus.html");
-                                                                                    b = parser(b, 'file:"', '"');
-                                                                                    b = API.Request("http://gegen-abzocke.com/xml/nstrim/bigcinema/code.php?code_url=" + b);
-                                                                                    c = e.replace("md5hash", b);
+                                                                                if (e.indexOf("http://streaming2.video.yandex.ru") >= 0) {
+                                                                                    c = e.replace("streaming2", "streaming");
                                                                                 } else {
-                                                                                    if (e.indexOf("allserials.tv/s/md5") > 0) {
-                                                                                        var b = API.Request("http://allserials.tv/serial-2166-osennie-cvety-1-sezon.html");
-                                                                                        c = e.replace("md5hash", parser(b, ".tv/pl/", "/"));
+                                                                                    if (e.indexOf("bigcinema.tv") > 0) {
+                                                                                        var b = API.Request("http://bigcinema.tv/movie/prometey---prometheus.html");
+                                                                                        b = parser(b, 'file:"', '"');
+                                                                                        b = API.Request("http://gegen-abzocke.com/xml/nstrim/bigcinema/code.php?code_url=" + b);
+                                                                                        c = e.replace("md5hash", b);
                                                                                     } else {
-                                                                                        if (e.indexOf("kinopod.org/get/md5") > 0) {
-                                                                                            var b = API.Request("http://kinopod.ru/video.html?id=22110");
-                                                                                            c = e.replace("md5hash", parser(b, "/get/", "/"));
+                                                                                        if (e.indexOf("allserials.tv/s/md5") > 0) {
+                                                                                            var b = API.Request("http://allserials.tv/serial-2166-osennie-cvety-1-sezon.html");
+                                                                                            c = e.replace("md5hash", parser(b, ".tv/pl/", "/"));
                                                                                         } else {
-                                                                                            if (e.indexOf("allinspace.com/") > 0) {
-                                                                                                e = parser(e, "&", "&&");
-                                                                                                e = API.Request(e);
-                                                                                                c = parser(e, "<td width=80px ><a href='", "' > Download </a>");
+                                                                                            if (e.indexOf("kinopod.org/get/md5") > 0) {
+                                                                                                var b = API.Request("http://kinopod.ru/video.html?id=22110");
+                                                                                                c = e.replace("md5hash", parser(b, "/get/", "/"));
                                                                                             } else {
-                                                                                                if (e.indexOf("77.91.77") > 0) {
-                                                                                                    var b = API.Request("http://inetcom.tv/channel/russia_1");
-                                                                                                    c = e + "?sid=" + parser(b, "?sid=", "'");
+                                                                                                if (e.indexOf("allinspace.com/") > 0) {
+                                                                                                    e = parser(e, "&", "&&");
+                                                                                                    e = API.Request(e);
+                                                                                                    c = parser(e, "<td width=80px ><a href='", "' > Download </a>");
                                                                                                 } else {
-                                                                                                    if (e.indexOf("watchcinema.ru") > 0) {
-                                                                                                        e = API.Request(e);
-                                                                                                        e = parser(e, '<iframe src="', '"');
-                                                                                                        e = e.replace("&amp;", "&").replace("//vkontakte.ru/", "//vk.com/");
-                                                                                                        e = API.Request(e);
-                                                                                                        e = parser(e, 'src="http://www.youtube.com/embed/', "?");
-                                                                                                        c = getYoutubeUrl(e);
+                                                                                                    if (e.indexOf("77.91.77") > 0) {
+                                                                                                        var b = API.Request("http://inetcom.tv/channel/russia_1");
+                                                                                                        c = e + "?sid=" + parser(b, "?sid=", "'");
+                                                                                                    } else {
+                                                                                                        if (e.indexOf("watchcinema.ru") > 0) {
+                                                                                                            e = API.Request(e);
+                                                                                                            e = parser(e, '<iframe src="', '"');
+                                                                                                            e = e.replace("&amp;", "&").replace("//vkontakte.ru/", "//vk.com/");
+                                                                                                            e = API.Request(e);
+                                                                                                            e = parser(e, 'src="http://www.youtube.com/embed/', "?");
+                                                                                                            c = getYoutubeUrl(e);
+                                                                                                        }
                                                                                                     }
                                                                                                 }
                                                                                             }

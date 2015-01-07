@@ -4,13 +4,12 @@
 <channel>
 <title>БЕЛАРУСЬ</title>
 <description>ONLINER.BY</description>
-<playlist_url>http://nstreamevoo.atservers.net/4254/start.xml</playlist_url>
+<playlist_url>http://nstreamevo.kumuki.com/4254/start.xml</playlist_url>
 </channel>
 <channel>
 <title>EVO Portal</title>
-<description><![CDATA[ <font size="5" color="33FF00">Просмотр доступен только пользователям группы EVO.</font>
-	<br> <font size="5"> Подробная информация тут: http://nstreamevoo.atservers.net</font>]]></description>
-<playlist_url>http://nstreamevoo.atservers.net/evo/portal/start.xml</playlist_url>
+<description><![CDATA[<font size="5"> Подробная информация тут: http://nstreamevo.kumuki.com</font>]]></description>
+<playlist_url>http://nstreamevo.kumuki.com/evo/portal/start.xml</playlist_url>
 </channel>
 <channel> 
     <title>Smart portal</title> 
