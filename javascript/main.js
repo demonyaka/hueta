@@ -5594,7 +5594,10 @@ function Err() {
     Main.showinfoList("Ничего не найдено!");
 }
 
-function YndParsePage(b, c, f, e, a) {
+
+
+function YandexParsing(b, c, f, e) {
+    var a = "";
     if (T.delta < -6) {
         T.delta = 0;
     }
@@ -5602,187 +5605,6 @@ function YndParsePage(b, c, f, e, a) {
     if (!Main.guide) {
         b = b + d;
     }
-    if (!Main.guide) {
-        var t = ["", "Фильмы", "Сериалы", "Детям", "Спорт"];
-        Main.yandexFlagName = '<font style="color:#ff3300;padding-left:15px;font-size:17px;">' + t[Main.yandexFlagStep] + "</font>";
-        a = a.split('<body>');
-        a = a[1].split('<div class="b-direct">');
-        a = a[0];
-        var r = '</div><div class="b-select">';
-        var p = a.indexOf(r);
-        if (p < 0) {
-            Err();
-            return;
-        }
-        var n = '<div class="b-banner">';
-        var l = a.indexOf(n);
-        if (l > 0 && l < p) {
-            p = l;
-        }
-        n = '<div class="b-text">';
-        l = a.indexOf(n);
-        if (l > 0) {
-            r = a.indexOf('</div></div><div class="b-select">');
-            if (r < 0) {
-                Err();
-                return;
-            } else {
-                var l = a.substring(l + n.length, r);
-                if (l != "") {
-                    if (e == "" && T.delta != 0) {
-                        T.delta = 100;
-                    }
-                    Main.showinfoList(l);
-                } else {
-                    T.delta = 0;
-                    YandexGetUrl();
-                }
-            }
-        } else {
-            n = '<a href="/' + c + "/?day=" + d + "&when=2" + e + "&channel=" + f + '">';
-            l = a.indexOf(n);
-            if (l < 0) {
-                Err();
-                return;
-            }
-            a = a.substring(l + n.length, p);
-            var j = a.substr(0, 2);
-            a = a.replace(j, "");
-            r = '</a><br /><a href="/' + c + "/?day=" + d + "&when=2" + e + "&channel=" + f + '" class="day">';
-            p = a.indexOf(r);
-            if (p < 0) {
-                Err();
-                return;
-            }
-            a = a.replace(r, "");
-            var x = a.substr(0, 2);
-            var v = parser(a, '<th class="channel">', "</th></tr>");
-            if (v == "") {
-                Err();
-                return;
-            }
-            a = a.substr(a.indexOf("</th></tr>") + 10);
-            var u = "";
-            var s = '<table><td style="vertical-align:top;color:#00ccff;font-weight:bolder;padding-right:8px"><u>';
-            var k = 1;
-            var q = "";
-            var o = "";
-            var P = "";
-            var O = "";
-            var M = "";
-            Main.yandexProgramInfoArray = [];
-            var i = (Main.timeshift != "") ? Main.timeshift : (API.Timeshift != "") ? API.Timeshift : 0;
-            var K = a.split("</td></tr>");
-            for (var A = 0; A < K.length; A++) {
-                a = K[A];
-                var I = a.indexOf('<tr class="gone">');
-                var G = parser(a, '<td class="time"><a href="/' + c + "/program/", '">');
-                var E = "http://m.tv.yandex." + API.REG + "/" + c + "/program/" + G.replace("<tr>", "");
-                var y = parser(a, G + '">', "</a>");
-                var w = parser(a, "</a></td><td>");
-                if (G == "" || y == "" || w == "") {
-                    break;
-                }
-                var D = y.split(":");
-                if (D.length == 2) {
-                    var g = parseInt(D[0]) + parseInt(i);
-                    D[0] = ((g > 23) ? (g - 24) : (g < 0) ? (g + 24) : g).toString();
-                    if (D[0].length == 1) {
-                        D[0] = "0" + D[0];
-                    }
-                    y = D.join(":");
-                }
-                k++;
-                var C = false;
-                var B = "<font>";
-                var L = "</u></td><td>" + B;
-                if (I > -1) {
-                    C = true;
-                    k = 1;
-                    B = '<font style="color:#999999">';
-                    L = "</u></td><td>" + B;
-                    o = s + y + L + w + "</font></td></table>";
-                    P = B + w + "</font>";
-                    O = E;
-                    M = y;
-                }
-                if (k == 2 && T.delta == 0) {
-                    B = '<font style="color:#ffff99;font-weight:bold;">';
-                    L = "</u></td><td>" + B;
-                }
-                if (k == 2 && T.delta == 0 && !Main.yandexAllDay) {
-                    u = o + s + y + L + w + "</font></td></table>";
-                    q = B + w + "</font>";
-                } else {
-                    if ((Main.yandexAllDay && C) || T.delta < 0) {
-                        u += s + y + L + w + "</font></td></table>";
-                        q = B + w + "</font>";
-                    } else {
-                        if (!C) {
-                            u += s + y + L + w + "</font></td></table>";
-                            q = B + w + "</font>";
-                        }
-                    }
-                }
-                if (q != "") {
-                    if (KeyHandler.Focus == 0) {
-                        if (k == 2 && T.delta == 0 && !Main.yandexAllDay && P != "") {
-                            var J = '<font style="position:absolute;left:9px;padding-top:1px;font-size:22px;color:#00ccff;text-align:center;">' + M + "</font>";
-                            var z = [P, "stop", "0.png", O, "", "", "", "", "", "", J, "", "", ""];
-                            Main.yandexProgramInfoArray["push"](z);
-                        }
-                        J = '<font style="position:absolute;left:9px;padding-top:1px;font-size:22px;color:#00ccff;text-align:center;">' + y + "</font>";
-                        z = [q, "stop", "0.png", E, "", "", "", "", "", "", J, "", "", ""];
-                        Main.yandexProgramInfoArray["push"](z);
-                    }
-                    if (T.delta == 0 && e == "") {
-                        var N = dSp(q + "|" + y);
-                        Main.tempYandexEpgInfoArray["push"](N);
-                    }
-                }
-            }
-            if (Main.tempYandexEpgInfoArray.length > 0) {
-                if (Player.state == Player.STOPPED || (Player.state == Player.PLAYING_LIVE && Main.playChannelArrayIndex == Main.channelArrayIndex)) {
-                    Main.yandexProgramId = Main.channelArrayIndex;
-                    Main.yandexEpgInfoArray = Main.tempYandexEpgInfoArray;
-                    GetEpgInfo();
-                }
-            }
-            if (KeyHandler.Focus == 0 && Main.yandexTvMode) {
-                if (j != "" && x != "") {
-                    Main.lostDate = '<font style="color:#00cc99; padding-left:5px;">' + j + ".- " + x + "</font>";
-                }
-                if (v != "") {
-                    Main.lostDate += '<font style="color:#00ccff;padding-left:15px;">' + v + "</font>";
-                }
-                u = u.replace("<br>", "");
-                Main.showinfoList(u);
-            }
-        }
-    } else {
-        var H = parser(a, '<div class="b-broadcast__time">', '</div></div><div class="b-pager">');
-        if (H == "") {
-            Err();
-            return;
-        }
-        H = parser(H, '&when=2">');
-        if (H != "") {
-            H = H.replace("</a>", "").replace('</div><div class="b-broadcast__info">', "</h3></td></tr></table>");
-            var F = parser(a, '<div class="b-broadcast">', '<div class="b-broadcast__time">');
-        }
-        if (F != "") {
-            F = F.replace('class="b-broadcast__img" alt="" title=""', "");
-        }
-        if (H != "" && Main.yandexTvMode) {
-            Main.showinfoList('<table style="font-size:20px;"><table><tr><td style="vertical-align:top;padding-right:8px;">' + F + '</td><td style="color:#00ccff;"><h3>' + H + "</table>");
-        } else {
-            Main.showinfoList("Подробного описания нет!");
-        }
-    }
-}
-
-function YandexParsing(b, c, f, e) {
-    var a = "";
     YaAbort();
     Main.yandexReadyTimeout = setTimeout("Err();", 3000);
     Main.yandexHttp = new XMLHttpRequest();
@@ -5797,7 +5619,183 @@ function YandexParsing(b, c, f, e) {
                 a = Main.yandexHttp.responseText;
                 a = a.replace(/amp;/g, "");
                 a = a.replace(/<br\/>/g, "<br />");
-                YndParsePage(b, c, f, e, a);
+                if (!Main.guide) {
+                    var t = ["", "Фильмы", "Сериалы", "Детям", "Спорт"];
+                    Main.yandexFlagName = '<font style="color:#ff3300;padding-left:15px;font-size:17px;">' + t[Main.yandexFlagStep] + "</font>";
+                    a = a.split('<body>');
+                    a = a[1].split('<div class="b-direct">');
+                    a = a[0];
+                    var r = '</div><div class="b-select">';
+                    var p = a.indexOf(r);
+                    if (p < 0) {
+                        Err();
+                        return;
+                    }
+                    var n = '<div class="b-banner">';
+                    var l = a.indexOf(n);
+                    if (l > 0 && l < p) {
+                        p = l;
+                    }
+                    n = '<div class="b-text">';
+                    l = a.indexOf(n);
+                    if (l > 0) {
+                        r = a.indexOf('</div></div><div class="b-select">');
+                        if (r < 0) {
+                            Err();
+                            return;
+                        } else {
+                            var l = a.substring(l + n.length, r);
+                            if (l != "") {
+                                if (e == "" && T.delta != 0) {
+                                    T.delta = 100;
+                                }
+                                Main.showinfoList(l);
+                            } else {
+                                T.delta = 0;
+                                YandexGetUrl();
+                            }
+                        }
+                    } else {
+                        n = '<a href="/' + c + "/?day=" + d + "&when=2" + e + "&channel=" + f + '">';
+                        l = a.indexOf(n);
+                        if (l < 0) {
+                            Err();
+                            return;
+                        }
+                        a = a.substring(l + n.length, p);
+                        var j = a.substr(0, 2);
+                        a = a.replace(j, "");
+                        r = '</a><br /><a href="/' + c + "/?day=" + d + "&when=2" + e + "&channel=" + f + '" class="day">';
+                        p = a.indexOf(r);
+                        if (p < 0) {
+                            Err();
+                            return;
+                        }
+                        a = a.replace(r, "");
+                        var x = a.substr(0, 2);
+                        var v = parser(a, '<th class="channel">', "</th></tr>");
+                        if (v == "") {
+                            Err();
+                            return;
+                        }
+                        a = a.substr(a.indexOf("</th></tr>") + 10);
+                        var u = "";
+                        var s = '<table><td style="vertical-align:top;color:#00ccff;font-weight:bolder;padding-right:8px"><u>';
+                        var k = 1;
+                        var q = "";
+                        var o = "";
+                        var P = "";
+                        var O = "";
+                        var M = "";
+                        Main.yandexProgramInfoArray = [];
+                        var i = (Main.timeshift != "") ? Main.timeshift : (API.Timeshift != "") ? API.Timeshift : 0;
+                        var K = a.split("</td></tr>");
+                        for (var A = 0; A < K.length; A++) {
+                            a = K[A];
+                            var I = a.indexOf('<tr class="gone">');
+                            var G = parser(a, '<td class="time"><a href="/' + c + "/program/", '">');
+                            var E = "http://m.tv.yandex." + API.REG + "/" + c + "/program/" + G.replace("<tr>", "");
+                            var y = parser(a, G + '">', "</a>");
+                            var w = parser(a, "</a></td><td>");
+                            if (G == "" || y == "" || w == "") {
+                                break;
+                            }
+                            var D = y.split(":");
+                            if (D.length == 2) {
+                                var g = parseInt(D[0]) + parseInt(i);
+                                D[0] = ((g > 23) ? (g - 24) : (g < 0) ? (g + 24) : g).toString();
+                                if (D[0].length == 1) {
+                                    D[0] = "0" + D[0];
+                                }
+                                y = D.join(":");
+                            }
+                            k++;
+                            var C = false;
+                            var B = "<font>";
+                            var L = "</u></td><td>" + B;
+                            if (I > -1) {
+                                C = true;
+                                k = 1;
+                                B = '<font style="color:#999999">';
+                                L = "</u></td><td>" + B;
+                                o = s + y + L + w + "</font></td></table>";
+                                P = B + w + "</font>";
+                                O = E;
+                                M = y;
+                            }
+                            if (k == 2 && T.delta == 0) {
+                                B = '<font style="color:#ffff99;font-weight:bold;">';
+                                L = "</u></td><td>" + B;
+                            }
+                            if (k == 2 && T.delta == 0 && !Main.yandexAllDay) {
+                                u = o + s + y + L + w + "</font></td></table>";
+                                q = B + w + "</font>";
+                            } else {
+                                if ((Main.yandexAllDay && C) || T.delta < 0) {
+                                    u += s + y + L + w + "</font></td></table>";
+                                    q = B + w + "</font>";
+                                } else {
+                                    if (!C) {
+                                        u += s + y + L + w + "</font></td></table>";
+                                        q = B + w + "</font>";
+                                    }
+                                }
+                            }
+                            if (q != "") {
+                                if (KeyHandler.Focus == 0) {
+                                    if (k == 2 && T.delta == 0 && !Main.yandexAllDay && P != "") {
+                                        var J = '<font style="position:absolute;left:9px;padding-top:1px;font-size:22px;color:#00ccff;text-align:center;">' + M + "</font>";
+                                        var z = [P, "stop", "0.png", O, "", "", "", "", "", "", J, "", "", ""];
+                                        Main.yandexProgramInfoArray["push"](z);
+                                    }
+                                    J = '<font style="position:absolute;left:9px;padding-top:1px;font-size:22px;color:#00ccff;text-align:center;">' + y + "</font>";
+                                    z = [q, "stop", "0.png", E, "", "", "", "", "", "", J, "", "", ""];
+                                    Main.yandexProgramInfoArray["push"](z);
+                                }
+                                if (T.delta == 0 && e == "") {
+                                    var N = dSp(q + "|" + y);
+                                    Main.tempYandexEpgInfoArray["push"](N);
+                                }
+                            }
+                        }
+                        if (Main.tempYandexEpgInfoArray.length > 0) {
+                            if (Player.state == Player.STOPPED || (Player.state == Player.PLAYING_LIVE && Main.playChannelArrayIndex == Main.channelArrayIndex)) {
+                                Main.yandexProgramId = Main.channelArrayIndex;
+                                Main.yandexEpgInfoArray = Main.tempYandexEpgInfoArray;
+                                GetEpgInfo();
+                            }
+                        }
+                        if (KeyHandler.Focus == 0 && Main.yandexTvMode) {
+                            if (j != "" && x != "") {
+                                Main.lostDate = '<font style="color:#00cc99; padding-left:5px;">' + j + ".- " + x + "</font>";
+                            }
+                            if (v != "") {
+                                Main.lostDate += '<font style="color:#00ccff;padding-left:15px;">' + v + "</font>";
+                            }
+                            u = u.replace("<br>", "");
+                            Main.showinfoList(u);
+                        }
+                    }
+                } else {
+                    var H = parser(a, '<div class="b-broadcast__time">', '</div></div><div class="b-pager">');
+                    if (H == "") {
+                        Err();
+                        return;
+                    }
+                    H = parser(H, '&when=2">');
+                    if (H != "") {
+                        H = H.replace("</a>", "").replace('</div><div class="b-broadcast__info">', "</h3></td></tr></table>");
+                        var F = parser(a, '<div class="b-broadcast">', '<div class="b-broadcast__time">');
+                    }
+                    if (F != "") {
+                        F = F.replace('class="b-broadcast__img" alt="" title=""', "");
+                    }
+                    if (H != "" && Main.yandexTvMode) {
+                        Main.showinfoList('<table style="font-size:20px;"><table><tr><td style="vertical-align:top;padding-right:8px;">' + F + '</td><td style="color:#00ccff;"><h3>' + H + "</table>");
+                    } else {
+                        Main.showinfoList("Подробного описания нет!");
+                    }
+                }
             }
         }
     };
